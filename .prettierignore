@@ -1,0 +1,26 @@
+# Ignore artifacts:
+build
+coverage
+
+# Next.js build output
+.next
+out
+
+# Node modules
+node_modules
+
+# Package manager files
+package-lock.json
+yarn.lock
+
+# Environment variables
+.env*
+
+# Public assets
+public
+
+# Generated files
+*.generated.*
+
+# TypeScript build info
+tsconfig.tsbuildinfo
