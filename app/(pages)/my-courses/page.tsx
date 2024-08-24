@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { FaCheckCircle } from 'react-icons/fa';
+import { FaPhotoVideo } from 'react-icons/fa';
 
 const CategoryTag = ({ name, count }: any) => (
   <button className='mb-3 mr-3 inline-flex items-center rounded-full bg-gray-700 px-4 py-2 text-sm font-medium text-white hover:bg-gray-600'>
@@ -9,8 +9,8 @@ const CategoryTag = ({ name, count }: any) => (
 
 const CourseCard = () => (
   <div className='rounded-lg border border-gray-600 bg-gray-100 p-4 shadow-sm transition-shadow hover:shadow-lg'>
-    <div className='mb-4 flex h-40 w-full items-center justify-center rounded-lg bg-green-200'>
-      <FaCheckCircle size={48} className='text-green-600' />
+    <div className='mb-4 flex h-40 w-full items-center justify-center rounded-lg bg-gray-200'>
+      <FaPhotoVideo size={48} className='text-gray-500' />
     </div>
     <div className='mb-2 text-lg font-semibold text-gray-900'>
       Digital Marketing
@@ -29,12 +29,12 @@ const CourseCard = () => (
     </div>
     <div className='mb-4 text-sm text-gray-600'>1hr 15min · 12 Lessons</div>
     <button className='w-full rounded-md bg-black px-4 py-2 text-white hover:bg-gray-800'>
-      View Certificate
+      Resume Course
     </button>
   </div>
 );
 
-function CompletedCourses() {
+function MyCourses() {
   const categories = [
     { name: 'UI/UX', count: 50 },
     { name: 'HTML,CSS', count: 24 },
@@ -92,4 +92,4 @@ function CompletedCourses() {
   );
 }
 
-export default CompletedCourses;
+export default MyCourses;
