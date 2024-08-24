@@ -2,6 +2,8 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { FiX } from 'react-icons/fi';
+import { MdOutlineMenu } from 'react-icons/md';
 import wifinewslogo from '../../_assets/images/wifinews-logo-color.jpeg';
 
 function Navigation() {
@@ -11,69 +13,64 @@ function Navigation() {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
   return (
-    <div className='container mx-auto'>
-      <header>
-        <nav className='navbar flex w-full flex-wrap items-center justify-between bg-white text-lg text-gray-700'>
-          <div className='relative h-[40px] w-[174px]'>
-            <Link href='/'>
-              <Image
-                src={wifinewslogo}
-                alt='wifinews-logo'
-                fill
-                sizes='174px'
-                className='object-contain'
-                priority
-              />
-            </Link>
-          </div>
+    <header>
+      <nav className='my-4 flex w-full flex-wrap items-center justify-between bg-white px-4 text-lg text-gray-700'>
+        <div className='relative h-[40px] w-[174px]'>
+          <Link href='/'>
+            <Image
+              src={wifinewslogo}
+              alt='wifinews-logo'
+              fill
+              sizes='174px'
+              className='object-contain'
+              priority
+            />
+          </Link>
+        </div>
 
-          <button
-            onClick={toggleMenu}
-            className='block h-6 w-6 cursor-pointer md:hidden'
-            aria-label='Toggle menu'
-          >
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              fill='none'
-              viewBox='0 0 24 24'
-              stroke='currentColor'
-            >
-              <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                strokeWidth='2'
-                d='M4 6h16M4 12h16M4 18h16'
-              />
-            </svg>
-          </button>
+        <button
+          onClick={toggleMenu}
+          className='block h-[32px] w-[32px] cursor-pointer lg:hidden'
+          aria-label='Toggle menu'
+        >
+          {isMenuOpen ? (
+            <FiX size={32} />
+          ) : (
+            <MdOutlineMenu size={32} color='#FF4644' />
+          )}
+        </button>
 
-          <div
-            className={`w-full md:flex md:w-auto md:items-center ${
-              isMenuOpen ? 'block' : 'hidden'
-            }`}
-          >
-            <ul className='pt-4 text-base text-gray-700 md:flex md:justify-between md:pt-0'>
-              {[
-                'Home',
-                'Topics for discussion',
-                'Featured articles',
-                'Free learning material',
-              ].map((item) => (
-                <li key={item}>
-                  <Link
-                    href='#'
-                    className='block py-2 hover:text-purple-400 md:p-4'
-                  >
-                    {item}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </nav>
-      </header>
-    </div>
+        <div
+          className={`${
+            isMenuOpen ? 'block' : 'hidden'
+          } w-full lg:flex lg:w-auto lg:items-center`}
+        >
+          <ul className='pt-4 text-base text-gray-700 lg:flex lg:justify-between lg:pt-0'>
+            {[
+              'Home',
+              'Topics for discussion',
+              'Featured articles',
+              'Free learning material',
+            ].map((item, index) => (
+              <li key={index}>
+                <Link
+                  href='#'
+                  onClick={closeMenu}
+                  className='block py-2 uppercase hover:text-[#FF4644] lg:p-4'
+                >
+                  {item}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </nav>
+    </header>
   );
 }
 
