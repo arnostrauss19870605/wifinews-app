@@ -1,21 +1,15 @@
-import Image from 'next/image';
-import wifinewslogo from '../../_assets/images/logo.png';
+import Link from 'next/link';
 
 function Register() {
   return (
-    <div className='container mx-auto px-4 py-8'>
-      <div className='mx-auto max-w-md'>
-        <div className='mb-8 text-center'>
-          <Image
-            src={wifinewslogo}
-            alt='WifiNews Logo'
-            width={174}
-            height={0}
-            className='mx-auto h-auto w-full max-w-[174px]'
-            priority
-          />
-        </div>
-
+    <div
+      className='flex items-center justify-center'
+      style={{ minHeight: 'calc(100vh - 220px)' }}
+    >
+      <div className='w-full max-w-md space-y-8'>
+        <h2 className='text-center text-2xl font-bold uppercase text-gray-900'>
+          Register
+        </h2>
         <form className='space-y-6'>
           <div className='grid grid-cols-2 gap-4'>
             <div>
@@ -105,10 +99,19 @@ function Register() {
               type='button'
               className='w-full rounded-lg bg-slate-950 px-4 py-2 font-medium text-white hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2'
             >
-              Sign Up
+              Register
             </button>
           </div>
         </form>
+
+        <div className='mt-4 text-center'>
+          <p className='text-sm text-gray-600'>
+            Already have an account?{' '}
+            <Link href='/login' className='text-[#FF4644] hover:underline'>
+              Login
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );

@@ -14,7 +14,7 @@ function Navigation() {
 
   useEffect(() => {
     // List of paths where the navigation should be visible
-    const allowedPaths = ['/', '/posts', '/topics'];
+    const allowedPaths = ['/', '/posts', '/topics', '/login', '/register'];
 
     // Check if the current path matches any of the allowed paths or dynamic paths
     const isMatchingPath =

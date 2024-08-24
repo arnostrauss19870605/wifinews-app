@@ -1,7 +1,6 @@
 'use client';
 import { useState } from 'react';
-import Image from 'next/image';
-import wifinewslogo from '../../_assets/images/logo.png';
+import Link from 'next/link';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -9,26 +8,20 @@ function Login() {
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    // Here you would typically handle the login logic
     console.log('Login attempt with:', { email, password });
   };
 
   return (
-    <div className='container mx-auto px-4 py-8'>
-      <div className='mx-auto max-w-md'>
-        <div className='mb-8 text-center'>
-          <Image
-            src={wifinewslogo}
-            alt='WifiNews Logo'
-            width={174}
-            height={0}
-            className='mx-auto h-auto w-full max-w-[174px]'
-            priority
-          />
-        </div>
-
-        <form onSubmit={handleSubmit}>
-          <div className='mb-4'>
+    <div
+      className='flex items-center justify-center'
+      style={{ minHeight: 'calc(100vh - 220px)' }}
+    >
+      <div className='w-full max-w-md space-y-8'>
+        <h2 className='text-center text-2xl font-bold uppercase text-gray-900'>
+          Login
+        </h2>
+        <form onSubmit={handleSubmit} className='space-y-6'>
+          <div>
             <label
               htmlFor='email'
               className='mb-2 block text-sm font-medium text-gray-700'
@@ -47,7 +40,7 @@ function Login() {
             />
           </div>
 
-          <div className='mb-6'>
+          <div>
             <label
               htmlFor='password'
               className='mb-2 block text-sm font-medium text-gray-700'
@@ -75,6 +68,15 @@ function Login() {
             </button>
           </div>
         </form>
+
+        <div className='mt-6 text-center'>
+          <p className='text-sm text-gray-600'>
+            Don&apos;t have an account?{' '}
+            <Link href='/register' className='text-[#FF4644] hover:underline'>
+              Register
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );
