@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import Image from 'next/image';
-import wifinewslogo from '../../_assets/images/wifinews-logo-color.jpeg';
+import wifinewslogo from '../../_assets/images/logo.png';
 
 function Login() {
   const [email, setEmail] = useState('');

@@ -1,4 +1,4 @@
-import { FaBook } from 'react-icons/fa';
+import { BsBookmarkStarFill } from 'react-icons/bs';
 import ArticleCard from '@/app/_components/ArticleCard';
 
 function PopularReading() {
@@ -8,31 +8,31 @@ function PopularReading() {
         Popular Reading
       </h2>
       <ArticleCard
-        icon={<FaBook className='text-grey-500' />}
+        icon={<BsBookmarkStarFill className='text-grey-500' />}
         title='Popular Post 1'
         description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
         link='#'
       />
       <ArticleCard
-        icon={<FaBook className='text-grey-500' />}
+        icon={<BsBookmarkStarFill className='text-grey-500' />}
         title='Popular Post 2'
         description='Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
         link='#'
       />
       <ArticleCard
-        icon={<FaBook className='text-grey-500' />}
+        icon={<BsBookmarkStarFill className='text-grey-500' />}
         title='Popular Post 3'
         description='Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.'
         link='#'
       />
       <ArticleCard
-        icon={<FaBook className='text-grey-500' />}
+        icon={<BsBookmarkStarFill className='text-grey-500' />}
         title='Popular Post 4'
         description='Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore.'
         link='#'
       />
       <ArticleCard
-        icon={<FaBook className='text-grey-500' />}
+        icon={<BsBookmarkStarFill className='text-grey-500' />}
         title='Popular Post 5'
         description='Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia.'
         link='#'

@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import wifinewslogo from '../../_assets/images/wifinews-logo-color.jpeg';
+import wifinewslogo from '../../_assets/images/logo.png';
 
 function DashboardHeader() {
   return (

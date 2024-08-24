@@ -1,7 +1,7 @@
 import Image from 'next/image';
-import wifinewslogo from '../../_assets/images/wifinews-logo-color.jpeg';
+import wifinewslogo from '../../_assets/images/logo.png';
 
-function SignUp() {
+function Register() {
   return (
     <div className='container mx-auto px-4 py-8'>
       <div className='mx-auto max-w-md'>
@@ -114,4 +114,4 @@ function SignUp() {
   );
 }
 
-export default SignUp;
+export default Register;

@@ -1,13 +1,29 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FiX } from 'react-icons/fi';
 import { MdOutlineMenu } from 'react-icons/md';
-import wifinewslogo from '../../_assets/images/wifinews-logo-color.jpeg';
+import wifinewslogo from '../../_assets/images/logo.png';
 
 function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    // List of paths where the navigation should be visible
+    const allowedPaths = ['/', '/posts', '/topics'];
+
+    // Check if the current path matches any of the allowed paths or dynamic paths
+    const isMatchingPath =
+      allowedPaths.includes(pathname) ||
+      pathname.startsWith('/posts/') ||
+      pathname.startsWith('/topics/');
+
+    setIsVisible(isMatchingPath);
+  }, [pathname]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -16,6 +32,10 @@ function Navigation() {
   const closeMenu = () => {
     setIsMenuOpen(false);
   };
+
+  if (!isVisible) {
+    return null;
+  }
 
   return (
     <header>
@@ -52,18 +72,30 @@ function Navigation() {
         >
           <ul className='pt-4 text-base text-gray-700 lg:flex lg:justify-between lg:pt-0'>
             {[
-              'Home',
-              'Topics for discussion',
-              'Featured articles',
-              'Free learning material',
+              {
+                name: 'Home',
+                href: '/',
+              },
+              {
+                name: 'Posts',
+                href: '/posts',
+              },
+              {
+                name: 'Topics',
+                href: '/topics',
+              },
+              {
+                name: 'Learn',
+                href: '/login',
+              },
             ].map((item, index) => (
               <li key={index}>
                 <Link
-                  href='#'
+                  href={item.href}
                   onClick={closeMenu}
                   className='block py-2 uppercase hover:text-[#FF4644] lg:p-4'
                 >
-                  {item}
+                  {item.name}
                 </Link>
               </li>
             ))}

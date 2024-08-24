@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import logo from '../../_assets/images/wifinews-logo-color.jpeg';
+import logo from '../../_assets/images/logo.png';
 
 const Footer = () => {
   return (
