@@ -1,10 +1,8 @@
 import Image from 'next/image';
-import DashboardHeader from '../../_components/DashboardHeader';
 
 function CompletedCourse() {
   return (
     <>
-      <DashboardHeader />
       <div className='container'>
         <div className='mb-5 text-base font-semibold'>
           List of completed course

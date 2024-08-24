@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import DashboardHeader from '../../_components/DashboardHeader';
 
 const CategoryTag = ({ name, count }: any) => (
   <span className='mb-3 mr-3 inline-flex items-center rounded-md bg-gray-200 px-3 py-3 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500'>
@@ -39,7 +38,6 @@ function Dashboard() {
 
   return (
     <>
-      <DashboardHeader />
       <div className='container'>
         <div className='search-bar'>
           <input

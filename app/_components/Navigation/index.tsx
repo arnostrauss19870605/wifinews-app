@@ -5,25 +5,22 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { FiX } from 'react-icons/fi';
 import { MdOutlineMenu } from 'react-icons/md';
+import { FaUserCircle } from 'react-icons/fa';
 import wifinewslogo from '../../_assets/images/logo.png';
 
 function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
-    // List of paths where the navigation should be visible
-    const allowedPaths = ['/', '/posts', '/topics', '/login', '/register'];
-
-    // Check if the current path matches any of the allowed paths or dynamic paths
-    const isMatchingPath =
-      allowedPaths.includes(pathname) ||
-      pathname.startsWith('/posts/') ||
-      pathname.startsWith('/topics/');
-
-    setIsVisible(isMatchingPath);
-  }, [pathname]);
+    if (isMenuOpen) {
+      // Disable scrolling on the body when the menu is open
+      document.body.style.overflow = 'hidden';
+    } else {
+      // Re-enable scrolling on the body when the menu is closed
+      document.body.style.overflow = '';
+    }
+  }, [isMenuOpen]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -33,29 +30,70 @@ function Navigation() {
     setIsMenuOpen(false);
   };
 
-  if (!isVisible) {
-    return null;
-  }
+  // Replace 'User' with the actual user's first name
+  const userFirstName = 'User';
+
+  const menuItems = [
+    { name: 'Home', href: '/' },
+    { name: 'Posts', href: '/posts' },
+    { name: 'Topics', href: '/topics' },
+    { name: 'Learn', href: '/login' },
+  ];
 
   return (
-    <header>
-      <nav className='my-4 flex w-full flex-wrap items-center justify-between bg-white px-4 text-lg text-gray-700'>
-        <div className='relative h-[40px] w-[174px]'>
-          <Link href='/'>
-            <Image
-              src={wifinewslogo}
-              alt='wifinews-logo'
-              fill
-              sizes='174px'
-              className='object-contain'
-              priority
-            />
-          </Link>
+    <header className='bg-white shadow'>
+      <nav className='container mx-auto flex items-center justify-between p-4'>
+        <div className='flex items-center'>
+          <div className='relative h-[40px] w-[174px]'>
+            <Link href='/'>
+              <Image
+                src={wifinewslogo}
+                alt='wifinews-logo'
+                fill
+                sizes='174px'
+                className='object-contain'
+                priority
+              />
+            </Link>
+          </div>
+        </div>
+
+        <div className='hidden lg:flex lg:flex-1 lg:justify-center'>
+          <ul className='flex space-x-8 text-base text-gray-700'>
+            {menuItems.map((item, index) => (
+              <li key={index}>
+                <Link
+                  href={item.href}
+                  className={`uppercase hover:text-[#FF4644] ${
+                    pathname === item.href ? 'font-semibold text-[#FF4644]' : ''
+                  }`}
+                >
+                  <span
+                    className={`${
+                      pathname === item.href
+                        ? 'underline underline-offset-4'
+                        : ''
+                    }`}
+                  >
+                    {item.name.charAt(0)}
+                  </span>
+                  {item.name.slice(1)}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className='hidden lg:flex lg:items-center'>
+          <FaUserCircle size={36} className='text-gray-700' />
+          <span className='ml-2 text-base text-gray-700'>
+            Hi, {userFirstName}
+          </span>
         </div>
 
         <button
           onClick={toggleMenu}
-          className='block h-[32px] w-[32px] cursor-pointer lg:hidden'
+          className='ml-4 block h-[32px] w-[32px] cursor-pointer lg:hidden'
           aria-label='Toggle menu'
         >
           {isMenuOpen ? (
@@ -65,43 +103,53 @@ function Navigation() {
           )}
         </button>
 
-        <div
-          className={`${
-            isMenuOpen ? 'block' : 'hidden'
-          } w-full lg:flex lg:w-auto lg:items-center`}
-        >
-          <ul className='pt-4 text-base text-gray-700 lg:flex lg:justify-between lg:pt-0'>
-            {[
-              {
-                name: 'Home',
-                href: '/',
-              },
-              {
-                name: 'Posts',
-                href: '/posts',
-              },
-              {
-                name: 'Topics',
-                href: '/topics',
-              },
-              {
-                name: 'Learn',
-                href: '/login',
-              },
-            ].map((item, index) => (
-              <li key={index}>
-                <Link
-                  href={item.href}
-                  onClick={closeMenu}
-                  className='block py-2 uppercase hover:text-[#FF4644] lg:p-4'
+        {isMenuOpen && (
+          <div className='fixed inset-0 z-50 flex flex-col bg-white'>
+            <div className='flex items-center justify-between p-4'>
+              <div className='flex items-center'>
+                <FaUserCircle size={36} className='text-gray-700' />
+                <span className='ml-2 text-base text-gray-700'>
+                  Hi, {userFirstName}
+                </span>
+              </div>
+              <button
+                onClick={closeMenu}
+                className='block h-[32px] w-[32px] cursor-pointer'
+                aria-label='Close menu'
+              >
+                <FiX size={32} color='#FF4644' />
+              </button>
+            </div>
+
+            <ul className='flex flex-col items-center space-y-4 p-4 text-base text-gray-700'>
+              {menuItems.map((item, index) => (
+                <li
+                  key={index}
+                  className={`w-full pt-4 text-center first:border-t-0 ${
+                    pathname === item.href
+                      ? 'font-bold text-[#FF4644]'
+                      : 'border-t border-gray-300'
+                  }`}
                 >
-                  {item.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
+                  <Link
+                    href={item.href}
+                    onClick={closeMenu}
+                    className='block py-2 uppercase hover:text-[#FF4644]'
+                  >
+                    {item.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </nav>
+      {isMenuOpen && (
+        <div
+          className='fixed inset-0 z-40 bg-black opacity-50'
+          onClick={closeMenu}
+        />
+      )}
     </header>
   );
 }
