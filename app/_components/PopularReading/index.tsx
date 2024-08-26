@@ -1,44 +1,18 @@
-import { BsBookmarkStarFill } from 'react-icons/bs';
-import ArticleCard from '@/app/_components/ArticleCard';
+import popularArticles from '@/app/_data/popular-articles';
 
-function PopularReading() {
+export default function PopularReading() {
   return (
-    <div className='my-5'>
-      <h2 className='mb-4 text-center text-2xl font-semibold'>
-        Popular Reading
-      </h2>
-      <ArticleCard
-        icon={<BsBookmarkStarFill className='text-grey-500' />}
-        title='Popular Post 1'
-        description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-        link='#'
-      />
-      <ArticleCard
-        icon={<BsBookmarkStarFill className='text-grey-500' />}
-        title='Popular Post 2'
-        description='Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
-        link='#'
-      />
-      <ArticleCard
-        icon={<BsBookmarkStarFill className='text-grey-500' />}
-        title='Popular Post 3'
-        description='Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.'
-        link='#'
-      />
-      <ArticleCard
-        icon={<BsBookmarkStarFill className='text-grey-500' />}
-        title='Popular Post 4'
-        description='Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore.'
-        link='#'
-      />
-      <ArticleCard
-        icon={<BsBookmarkStarFill className='text-grey-500' />}
-        title='Popular Post 5'
-        description='Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia.'
-        link='#'
-      />
+    <div className='mx-auto max-w-6xl px-4 py-8'>
+      <h2 className='mb-6 text-xl font-semibold'>Popular Readings</h2>
+
+      <div className='space-y-6'>
+        {popularArticles.map((article) => (
+          <div key={article.id} className='rounded-lg bg-white p-4 shadow'>
+            <h4 className='text-md font-medium'>{article.title}</h4>
+            <p className='text-sm text-gray-500'>{article.source}</p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
-
-export default PopularReading;

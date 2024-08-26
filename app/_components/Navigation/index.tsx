@@ -35,7 +35,7 @@ function Navigation() {
 
   const menuItems = [
     { name: 'Home', href: '/' },
-    { name: 'Posts', href: '/posts' },
+    { name: 'News', href: '/news' },
     { name: 'Topics', href: '/topics' },
     { name: 'Learn', href: '/login' },
   ];
