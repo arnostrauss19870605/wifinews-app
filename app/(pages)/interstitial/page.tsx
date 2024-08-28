@@ -1,3 +1,5 @@
+'use client';
+import React from 'react';
 import ConnectWiFi from '@/app/_components/ConnectWiFi';
 import LearningMaterial from '@/app/_components/LearningMaterial';
 import DiscussionForum from '@/app/_components/DiscussionForum';
@@ -7,7 +9,13 @@ import News from '@/app/(pages)/news/page';
 function Interstitial() {
   return (
     <>
-      <ConnectWiFi step={3} />
+      <ConnectWiFi
+        step={3}
+        redirectUrl='https://www.google.com'
+        timerDuration={10}
+        showButtonAt={10}
+        showButton={false}
+      />
       <AdSection />
       <LearningMaterial />
       <AdSection />
