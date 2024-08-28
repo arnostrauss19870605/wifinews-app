@@ -11,7 +11,7 @@ function Interstitial() {
     <>
       <ConnectWiFi
         step={3}
-        redirectUrl='https://www.google.com'
+        redirectUrl='https://bobbies.hotspot.yourspot.co.za/lv/login'
         timerDuration={10}
         showButtonAt={10}
         showButton={false}
