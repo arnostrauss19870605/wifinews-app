@@ -1,11 +1,11 @@
 import { FaWifi } from 'react-icons/fa';
 import ProgressIndicator from '@/app/_components/ProgressIndicator';
 
-function ConnectWiFi() {
+function ConnectWiFi({ step }: any) {
   return (
     <>
       <div className='mb-5'>
-        <ProgressIndicator />
+        <ProgressIndicator step={step} />
       </div>
       <div className='my-10 text-center'>
         <h2 className='mb-4 text-2xl font-semibold'>Connect to WiFi</h2>

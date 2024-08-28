@@ -22,7 +22,7 @@ function Landing() {
   return (
     <div className='flex min-h-screen flex-col px-4 py-10'>
       <div className='mb-5 text-center'>
-        <ProgressIndicator />
+        <ProgressIndicator step={1} />
         <p className='mt-2 text-lg font-semibold text-gray-700'>
           View these ads for
         </p>

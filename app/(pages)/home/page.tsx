@@ -7,7 +7,7 @@ import News from '@/app/(pages)/news/page';
 function Home() {
   return (
     <>
-      <ConnectWiFi />
+      <ConnectWiFi step={2} />
       <AdSection />
       <LearningMaterial />
       <AdSection />
