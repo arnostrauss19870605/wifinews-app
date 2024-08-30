@@ -1,19 +1,28 @@
 'use client';
 import { usePathname, useSearchParams } from 'next/navigation';
 import Script from 'next/script';
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
+import Image from 'next/image';
 
 // Environment variables for Google Analytics and Yandex Metrika IDs
 const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 const YANDEX_METRIKA_ID = process.env.NEXT_PUBLIC_YANDEX_METRIKA_ID;
 
 export default function Analytics() {
+  return (
+    <Suspense fallback={null}>
+      <AnalyticsContent />
+    </Suspense>
+  );
+}
+
+function AnalyticsContent() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
   useEffect(() => {
     // Ensure analytics only run in production
-    if (process.env.NODE_ENV !== 'development') {
+    if (process.env.NODE_ENV !== 'production') {
       console.info('Analytics are disabled in non-production environments.');
       return;
     }
@@ -97,10 +106,12 @@ export default function Analytics() {
           </Script>
           <noscript>
             <div>
-              <img
+              <Image
                 src={`https://mc.yandex.ru/watch/${YANDEX_METRIKA_ID}`}
                 style={{ position: 'absolute', left: '-9999px' }}
                 alt=''
+                width={1}
+                height={1}
               />
             </div>
           </noscript>
