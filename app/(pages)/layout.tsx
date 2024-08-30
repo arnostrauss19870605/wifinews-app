@@ -4,6 +4,7 @@ import '@/app/_styles/globals.css';
 import Container from '@/app/_components/Container';
 import Navigation from '@/app/_components/Navigation';
 import Footer from '@/app/_components/Footer';
+import Analytics from '@/app/_components/Analytics';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -24,6 +25,7 @@ export default function RootLayout({
         <Navigation />
         <Container>{children}</Container>
         <Footer />
+        <Analytics />
       </body>
     </html>
   );
