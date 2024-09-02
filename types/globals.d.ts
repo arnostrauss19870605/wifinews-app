@@ -31,7 +31,16 @@ interface Googletag {
   pubads: () => PubAds;
   enableServices: () => void;
   defineSlot: (adUnitPath: string, size: any[], divId: string) => GoogletagSlot;
+  defineOutOfPageSlot: (
+    adUnitPath: string,
+    divId: string | googletag.enums.OutOfPageFormat
+  ) => GoogletagSlot | null;
   sizeMapping: () => SizeMappingBuilder;
+  enums: {
+    OutOfPageFormat: {
+      REWARDED: 'rewarded';
+    };
+  };
 }
 
 // Define PubAds type
@@ -41,13 +50,15 @@ interface PubAds {
   addEventListener: (eventType: string, listener: Function) => void;
   refresh: (slots?: GoogletagSlot[]) => void;
   setTargeting: (key: string, value: string | string[]) => void;
+  enableAsyncRendering: () => void; // Add this method for async rendering
 }
 
 // Define Slot type with correct methods
 interface GoogletagSlot {
   addService: (service: any) => GoogletagSlot;
   setTargeting: (key: string, value: string | string[]) => GoogletagSlot;
-  defineSizeMapping: (sizeMapping: SizeMappingBuilder) => GoogletagSlot;
+  defineSizeMapping: (sizeMapping: SizeMappingBuilder) => GoogletagSlot; // Correct method defined here
+  setForceSafeFrame: (forceSafeFrame: boolean) => void; // For rewarded slot
 }
 
 // Define SizeMappingBuilder type
