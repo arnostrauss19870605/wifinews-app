@@ -5,6 +5,8 @@ import Container from '@/app/_components/Container';
 import Navigation from '@/app/_components/Navigation';
 import Footer from '@/app/_components/Footer';
 import Analytics from '@/app/_components/Analytics';
+import Advertisement from '@/app/_components/Advertisement';
+import GTag from '@/app/_components/GTag'; // Import GTag component
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -26,6 +28,8 @@ export default function RootLayout({
         <Container>{children}</Container>
         <Footer />
         <Analytics />
+        <Advertisement />
+        <GTag />
       </body>
     </html>
   );
