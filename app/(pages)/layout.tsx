@@ -1,5 +1,5 @@
+import React from 'react';
 import type { Metadata } from 'next';
-import Script from 'next/script';
 import { Inter } from 'next/font/google';
 import '@/app/_styles/globals.css';
 import Container from '@/app/_components/Container';
@@ -22,23 +22,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <head>
-        {/* Add Google Publisher Tag Script */}
-        <Script
-          id='google-publisher-tag'
-          strategy='afterInteractive'
-          src='https://securepubads.g.doubleclick.net/tag/js/gpt.js'
-        />
-        <Script id='google-ad-init' strategy='afterInteractive'>
-          {`
-            window.googletag = window.googletag || {cmd: []};
-            googletag.cmd.push(function() {
-              googletag.pubads().enableSingleRequest();
-              googletag.enableServices();
-            });
-          `}
-        </Script>
-      </head>
       <body className={inter.className}>
         <Navigation />
         <Container>{children}</Container>
