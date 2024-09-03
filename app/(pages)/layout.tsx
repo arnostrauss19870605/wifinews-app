@@ -1,12 +1,11 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import { Inter } from 'next/font/google';
 import '@/app/_styles/globals.css';
 import Container from '@/app/_components/Container';
 import Navigation from '@/app/_components/Navigation';
 import Footer from '@/app/_components/Footer';
-import Analytics from '@/app/_components/Analytics';
-import Advertisement from '@/app/_components/Advertisement';
-import GTag from '@/app/_components/GTag'; // Import GTag component
+import { GoogleAnalytics } from '@next/third-parties/google';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -23,13 +22,30 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
+      <head>
+        {/* Add Google Publisher Tag Script */}
+        <Script
+          id='google-publisher-tag'
+          strategy='afterInteractive'
+          src='https://securepubads.g.doubleclick.net/tag/js/gpt.js'
+        />
+        <Script id='google-ad-init' strategy='afterInteractive'>
+          {`
+            window.googletag = window.googletag || {cmd: []};
+            googletag.cmd.push(function() {
+              googletag.pubads().enableSingleRequest();
+              googletag.enableServices();
+            });
+          `}
+        </Script>
+      </head>
       <body className={inter.className}>
         <Navigation />
         <Container>{children}</Container>
         <Footer />
-        <Analytics />
-        <Advertisement />
-        <GTag />
+        <GoogleAnalytics
+          gaId={`${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}`}
+        />
       </body>
     </html>
   );
