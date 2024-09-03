@@ -6,6 +6,7 @@ import Container from '@/app/_components/Container';
 import Navigation from '@/app/_components/Navigation';
 import Footer from '@/app/_components/Footer';
 import { GoogleAnalytics } from '@next/third-parties/google';
+import Script from 'next/script';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -22,6 +23,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
+      <head>
+        <Script
+          src='https://securepubads.g.doubleclick.net/tag/js/gpt.js'
+          strategy='afterInteractive'
+        />
+      </head>
       <body className={inter.className}>
         <Navigation />
         <Container>{children}</Container>

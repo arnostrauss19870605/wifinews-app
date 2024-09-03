@@ -6,12 +6,6 @@ import News from '@/app/(pages)/news/page';
 function Home() {
   return (
     <div className='pt-[20px]'>
-      {/* Load GPT Library */}
-      <Script
-        src='https://securepubads.g.doubleclick.net/tag/js/gpt.js'
-        strategy='afterInteractive'
-      />
-
       {/* GPT Configuration and Ad Display */}
       <Script id='gpt-home-setup' strategy='afterInteractive'>
         {`
