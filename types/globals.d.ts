@@ -1,5 +1,3 @@
-// types/globals.d.ts
-
 declare namespace googletag {
   interface PubAdsService {
     enableSingleRequest(): PubAdsService;
