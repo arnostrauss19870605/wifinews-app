@@ -1,7 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import ProgressIndicator from '@/app/_components/ProgressIndicator';
-import RewardedAdComponent from '@/app/_components/RewardedAdComponent';
 
 function Landing() {
   const [landingTimer, setLandingTimer] = useState(10);
@@ -28,7 +27,6 @@ function Landing() {
           </p>
         </div>
       </div>
-      <RewardedAdComponent />
     </>
   );
 }
