@@ -1,71 +1,66 @@
-interface Window {
-  gtag: (
-    command: string,
-    eventName: string,
-    params?: Record<string, any>
-  ) => void;
-  ym: (
-    counterId: number,
-    action: string,
-    params?: Record<string, any> | string
-  ) => void;
-  googletag: Googletag;
-  dataLayer: any[];
-}
+// types/globals.d.ts
 
-// Declare gtag and ym globally
-declare var gtag: (
-  command: string,
-  eventName: string,
-  params?: Record<string, any>
-) => void;
-declare var ym: (
-  counterId: number,
-  action: string,
-  params?: Record<string, any> | string
-) => void;
+declare namespace googletag {
+  interface PubAdsService {
+    enableSingleRequest(): PubAdsService;
+    collapseEmptyDivs(collapse?: boolean): PubAdsService;
+    enableAsyncRendering(): PubAdsService;
+    disableInitialLoad(): PubAdsService;
+    refresh(): void;
+    addEventListener(eventType: string, listener: Function): void;
+  }
 
-// Define googletag type
-interface Googletag {
-  cmd: Function[];
-  pubads: () => PubAds;
-  enableServices: () => void;
-  defineSlot: (adUnitPath: string, size: any[], divId: string) => GoogletagSlot;
-  defineOutOfPageSlot: (
+  interface Slot {
+    addService(service: PubAdsService): Slot;
+    setForceSafeFrame(force: boolean): Slot;
+    setTargeting(key: string, value: string | string[]): Slot;
+  }
+
+  interface OutOfPageSlot extends Slot {}
+
+  interface GPT {
+    cmd: { push: (callback: () => void) => void };
+    pubads: () => PubAdsService;
+    defineSlot(
+      adUnitPath: string,
+      size: (string | [number, number])[],
+      divId: string
+    ): Slot;
+    defineOutOfPageSlot(
+      adUnitPath: string,
+      opt_div?: string | googletag.enums.OutOfPageFormat
+    ): OutOfPageSlot | null;
+    display(divId: string): void;
+    enableServices(): void;
+  }
+
+  namespace enums {
+    enum OutOfPageFormat {
+      REWARDED = 'rewarded',
+      INTERSTITIAL = 'interstitial',
+      STICKY = 'sticky',
+    }
+  }
+
+  const cmd: GPT['cmd'];
+  function pubads(): PubAdsService;
+  function defineSlot(
     adUnitPath: string,
-    divId: string | googletag.enums.OutOfPageFormat
-  ) => GoogletagSlot | null;
-  sizeMapping: () => SizeMappingBuilder;
-  enums: {
-    OutOfPageFormat: {
-      REWARDED: 'rewarded';
-    };
-  };
+    size: (string | [number, number])[],
+    divId: string
+  ): Slot;
+  function defineOutOfPageSlot(
+    adUnitPath: string,
+    opt_div?: string | googletag.enums.OutOfPageFormat
+  ): OutOfPageSlot | null;
+  function display(divId: string): void;
+  function enableServices(): void;
 }
 
-// Define PubAds type
-interface PubAds {
-  enableSingleRequest: () => void;
-  collapseEmptyDivs: () => void;
-  addEventListener: (eventType: string, listener: Function) => void;
-  refresh: (slots?: GoogletagSlot[]) => void;
-  setTargeting: (key: string, value: string | string[]) => void;
-  enableAsyncRendering: () => void; // Add this method for async rendering
+declare global {
+  interface Window {
+    googletag: typeof googletag;
+  }
 }
 
-// Define Slot type with correct methods
-interface GoogletagSlot {
-  addService: (service: any) => GoogletagSlot;
-  setTargeting: (key: string, value: string | string[]) => GoogletagSlot;
-  defineSizeMapping: (sizeMapping: SizeMappingBuilder) => GoogletagSlot; // Correct method defined here
-  setForceSafeFrame: (forceSafeFrame: boolean) => void; // For rewarded slot
-}
-
-// Define SizeMappingBuilder type
-interface SizeMappingBuilder {
-  addSize: (
-    viewportSize: number[],
-    adSizes: (string | number[])[]
-  ) => SizeMappingBuilder;
-  build: () => any;
-}
+export {};

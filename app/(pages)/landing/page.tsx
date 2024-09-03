@@ -1,6 +1,5 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import AdSection from '@/app/_components/Ads/AdSection';
 import ProgressIndicator from '@/app/_components/ProgressIndicator';
 import Modal from '@/app/_components/Modal';
 
@@ -69,7 +68,6 @@ function Landing() {
           {landingTimer} seconds
         </p>
       </div>
-      <AdSection />
 
       {/* First Modal */}
       <Modal
@@ -114,7 +112,6 @@ function Landing() {
         <p className='my-5 text-center text-xl font-semibold text-gray-800'>
           Please wait while we connect you...
         </p>
-        <AdSection />
         <p className='text-center font-semibold text-gray-700'>
           Time remaining: {modalTimer} seconds
         </p>
