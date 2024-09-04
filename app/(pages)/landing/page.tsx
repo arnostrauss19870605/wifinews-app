@@ -2,14 +2,13 @@
 import React, { useState, useEffect } from 'react';
 import Script from 'next/script';
 import ProgressIndicator from '@/app/_components/ProgressIndicator';
-import Modal from '@/app/_components/Modal'; // Import your Modal component
 
 const Landing: React.FC = () => {
   const [isRewardModalVisible, setIsRewardModalVisible] = useState(false);
-  const [isGrantModalVisible, setIsGrantModalVisible] = useState(false); // New state for grant modal
   const [landingTimer, setLandingTimer] = useState(35);
 
   useEffect(() => {
+    // Timer for countdown, similar to Django implementation
     const addSeconds = (
       numOfSeconds: number,
       date: Date = new Date()
@@ -31,7 +30,7 @@ const Landing: React.FC = () => {
 
         if (timeLeft <= 0) {
           clearInterval(timerInterval);
-          nextPage(); // Navigate to the next page
+          nextPage();
         } else {
           setLandingTimer(timeLeft);
         }
@@ -42,9 +41,7 @@ const Landing: React.FC = () => {
     };
 
     if (typeof window !== 'undefined') {
-      document.addEventListener('DOMContentLoaded', () => {
-        firstTimer();
-      });
+      firstTimer(); // Start the timer without waiting for DOMContentLoaded
     }
 
     return () => clearInterval(timerInterval);
@@ -63,6 +60,12 @@ const Landing: React.FC = () => {
 
   return (
     <>
+      {/* Google Publisher Tags script */}
+      <Script
+        src='https://securepubads.g.doubleclick.net/tag/js/gpt.js'
+        strategy='beforeInteractive'
+      />
+
       {/* Rewarded Ad Script */}
       <Script id='gpt-rewarded-ad-setup' strategy='beforeInteractive'>
         {`
@@ -77,25 +80,32 @@ const Landing: React.FC = () => {
 
             googletag.pubads().addEventListener('rewardedSlotReady', (evt) => {
               rewardedSlotReady = true;
-              setIsRewardModalVisible(true); // Open the modal
-              const watchAdButton = document.getElementById('watchAdBtn');
-              const noThanksButton = document.getElementById('noThanksBtn');
+              const trigger = document.getElementById('rewardModal');
+              if (trigger) {
+                trigger.style.display = 'flex'; // Fix to use 'flex' instead of 'block'
+                document.body.style.overflow = 'hidden'; // Prevent scrolling
 
-              const makeVisibleFn = (e) => {
-                evt.makeRewardedVisible();
-                e.preventDefault();
-                watchAdButton?.removeEventListener('click', makeVisibleFn);
-                noThanksButton?.removeEventListener('click', closeModalFn);
-                setIsRewardModalVisible(false); // Close the modal
-              };
+                const watchAdButton = document.getElementById('watchAdBtn');
+                const noThanksButton = document.getElementById('noThanksBtn');
 
-              const closeModalFn = () => {
-                setIsRewardModalVisible(false); // Close the modal
-                googletag.destroySlots([rewardedSlot]);
-              };
+                const makeVisibleFn = (e) => {
+                  evt.makeRewardedVisible();
+                  e.preventDefault();
+                  watchAdButton?.removeEventListener('click', makeVisibleFn);
+                  noThanksButton?.removeEventListener('click', closeModalFn);
+                  trigger.style.display = 'none';
+                  document.body.style.overflow = ''; // Restore scrolling
+                };
 
-              watchAdButton?.addEventListener('click', makeVisibleFn);
-              noThanksButton?.addEventListener('click', closeModalFn);
+                const closeModalFn = () => {
+                  trigger.style.display = 'none';
+                  document.body.style.overflow = ''; // Restore scrolling
+                  googletag.destroySlots([rewardedSlot]);
+                };
+
+                watchAdButton?.addEventListener('click', makeVisibleFn);
+                noThanksButton?.addEventListener('click', closeModalFn);
+              }
             });
 
             let grantedState = false;
@@ -123,7 +133,7 @@ const Landing: React.FC = () => {
       </Script>
 
       {/* Main Content */}
-      <div className='flex min-h-screen flex-col items-center justify-center px-4 py-10'>
+      <div className='flex min-h-screen flex-col items-center px-4 py-10'>
         <div className='mb-5 text-center'>
           <ProgressIndicator step={1} />
           <p className='mt-2 text-lg font-semibold text-gray-700'>
@@ -136,39 +146,57 @@ const Landing: React.FC = () => {
       </div>
 
       {/* Reward Modal */}
-      <Modal
-        isOpen={isRewardModalVisible}
-        onClose={() => setIsRewardModalVisible(false)}
+      <div
+        id='rewardModal'
+        className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4'
+        style={{
+          display: isRewardModalVisible ? 'flex' : 'none',
+          paddingBottom: '60px',
+        }}
       >
-        <p className='mb-4'>To get free Wi-Fi, you need to watch these ads</p>
-        <input
-          type='button'
-          className='lg_btn mr-2 cursor-pointer rounded-lg bg-blue-500 px-4 py-2 text-white'
-          id='watchAdBtn'
-          value='Yes, I want free Wi-Fi!'
-        />
-        <input
-          type='button'
-          className='btn cursor-pointer rounded-lg bg-gray-500 px-4 py-2 text-white'
-          id='noThanksBtn'
-          value='No Thanks'
-        />
-        <p className='mt-4'>
-          I do not want Free Wi-Fi and will remain on this page.
-        </p>
-      </Modal>
+        <div
+          className='rounded-lg bg-white p-6 text-center shadow-lg'
+          style={{ maxWidth: '500px', maxHeight: '80vh', width: '100%' }}
+        >
+          <p className='mb-4'>To get free Wi-Fi, you need to watch these ads</p>
+          <input
+            type='button'
+            className='lg_btn mr-2 cursor-pointer rounded-lg bg-black px-4 py-2 text-white'
+            id='watchAdBtn'
+            value='Yes, I want free Wi-Fi!'
+          />
+          <input
+            type='button'
+            className='btn cursor-pointer rounded-lg bg-gray-500 px-4 py-2 text-white'
+            id='noThanksBtn'
+            value='No Thanks'
+          />
+          <p className='mt-4'>
+            I do not want Free Wi-Fi and will remain on this page.
+          </p>
+        </div>
+      </div>
 
       {/* Grant Modal */}
-      <Modal isOpen={isGrantModalVisible} onClose={nextPage}>
-        <p id='grantParagraph' className='mb-4'></p>
-        <input
-          type='button'
-          className='btn cursor-pointer rounded-lg bg-blue-500 px-4 py-2 text-white'
-          id='grantCloseBtn'
-          value='Close'
-          onClick={nextPage}
-        />
-      </Modal>
+      <div
+        id='grantModal'
+        className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4'
+        style={{ display: 'none' }}
+      >
+        <div
+          className='rounded-lg bg-white p-6 text-center shadow-lg'
+          style={{ maxWidth: '500px', maxHeight: '80vh', width: '100%' }}
+        >
+          <p id='grantParagraph' className='mb-4'></p>
+          <input
+            type='button'
+            className='btn cursor-pointer rounded-lg bg-blue-500 px-4 py-2 text-white'
+            id='grantCloseBtn'
+            value='Close'
+            onClick={nextPage}
+          />
+        </div>
+      </div>
 
       {/* Directly including ads div as in Django implementation */}
       <div
