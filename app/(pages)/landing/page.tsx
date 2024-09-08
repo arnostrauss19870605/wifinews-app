@@ -211,6 +211,17 @@ const Landing: React.FC = () => {
             {landingTimer} seconds
           </p>
         </div>
+
+        {/* Ad Slots Divs */}
+        <div className='my-4 flex w-full items-center justify-center'>
+          <div id='div-gpt-ad-7092085-1'></div>
+        </div>
+        <div className='my-4 flex w-full items-center justify-center'>
+          <div id='div-gpt-ad-7092085-2'></div>
+        </div>
+        <div className='my-4 flex w-full items-center justify-center'>
+          <div id='div-gpt-ad-7092085-3'></div>
+        </div>
       </div>
 
       {/* Reward Modal */}
@@ -265,17 +276,6 @@ const Landing: React.FC = () => {
             onClick={() => router.push('/home' + window.location.search)}
           />
         </div>
-      </div>
-
-      {/* Ad Slots Divs */}
-      <div className='my-4 flex w-full items-center justify-center'>
-        <div id='div-gpt-ad-7092085-1'></div>
-      </div>
-      <div className='my-4 flex w-full items-center justify-center'>
-        <div id='div-gpt-ad-7092085-2'></div>
-      </div>
-      <div className='my-4 flex w-full items-center justify-center'>
-        <div id='div-gpt-ad-7092085-3'></div>
       </div>
     </>
   );
