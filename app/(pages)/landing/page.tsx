@@ -228,6 +228,7 @@ const Landing: React.FC = () => {
             className='btn cursor-pointer rounded-lg bg-gray-500 px-4 py-2 text-white'
             id='noThanksBtn'
             value='No Thanks'
+            onClick={cancelPage}
           />
           <p className='mt-4'>
             I do not want Free Wi-Fi and will remain on this page.
