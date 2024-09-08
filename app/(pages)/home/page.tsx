@@ -102,8 +102,8 @@ function Home() {
       <ConnectWiFi
         step={2}
         redirectUrl='/interstitial'
-        timerDuration={16}
-        showButtonAt={6}
+        timerDuration={20}
+        showButtonAt={10}
         showButton={true}
       />
 
