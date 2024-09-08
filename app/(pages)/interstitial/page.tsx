@@ -169,11 +169,6 @@ function Interstitial() {
         showButtonAt={10}
         showButton={false}
       />
-      <LearningMaterial />
-      <DiscussionForum />
-      <div className='my-10'>
-        <News />
-      </div>
 
       {/* Divs for Ad Slots */}
       <div className='my-4 flex w-full items-center justify-center'>
@@ -184,6 +179,12 @@ function Interstitial() {
       </div>
       <div className='my-4 flex w-full items-center justify-center'>
         <div id='div-gpt-ad-6110814-3'></div>
+      </div>
+
+      <LearningMaterial />
+      <DiscussionForum />
+      <div className='my-10'>
+        <News />
       </div>
 
       {/* Reward Modal */}
