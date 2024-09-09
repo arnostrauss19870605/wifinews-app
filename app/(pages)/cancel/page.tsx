@@ -6,7 +6,6 @@ function NoThankYou() {
   const [isFromInterstitial, setIsFromInterstitial] = useState(false);
 
   useEffect(() => {
-    // Check if the user came from the interstitial page
     console.log('Referrer:', document.referrer);
     console.log(
       'Is from interstitial:',
@@ -30,17 +29,17 @@ function NoThankYou() {
         {`
           window.googletag = window.googletag || {cmd: []};
 
-          const queryValues = window.location.search;
-          const urlParams = new URLSearchParams(queryValues);
-          let utm_medium = "NULL";
-          if (urlParams.has('utm_medium')) {
-            utm_medium = urlParams.get('utm_medium') || "NULL";
-            console.log("Utm Medium exists as:", utm_medium);
-          } else {
-            console.log("Utm Medium does not exist, value to be populated:", utm_medium);
-          }
-
           googletag.cmd.push(function() {
+            const queryValues = window.location.search;
+            const urlParams = new URLSearchParams(queryValues);
+            let utm_medium = "NULL";
+            if (urlParams.has('utm_medium')) {
+              utm_medium = urlParams.get('utm_medium') || "NULL";
+              console.log("Utm Medium exists as:", utm_medium);
+            } else {
+              console.log("Utm Medium does not exist, value to be populated:", utm_medium);
+            }
+
             const mapping3 = googletag.sizeMapping()
               .addSize([1400, 0], ['fluid', [728, 90], [300, 250], [300, 600], [468, 60]])
               .addSize([1200, 0], ['fluid', [728, 90], [468, 60], [300, 250], [300, 600]])
