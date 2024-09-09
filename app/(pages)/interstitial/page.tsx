@@ -5,10 +5,11 @@ import ConnectWiFi from '@/app/_components/ConnectWiFi';
 import LearningMaterial from '@/app/_components/LearningMaterial';
 import DiscussionForum from '@/app/_components/DiscussionForum';
 import News from '@/app/(pages)/news/page';
+import { useRouter } from 'next/navigation';
 
 function Interstitial() {
   const [isRewardModalVisible, setIsRewardModalVisible] = useState(false);
-
+  const router = useRouter();
   useEffect(() => {
     const initializeRewardedAd = () => {
       (window as any).googletag = (window as any).googletag || { cmd: [] };
@@ -73,7 +74,7 @@ function Interstitial() {
             );
             if (!grantedState) {
               console.log('Rewarded Slot was not granted.');
-              // Redirect to cancel page or handle accordingly
+              router.push('/cancel' + window.location.search);
             } else {
               googletag.destroySlots([rewardedSlot]);
               window.location.href =
@@ -87,6 +88,10 @@ function Interstitial() {
 
     initializeRewardedAd();
   }, []);
+
+  const cancelPage = () => {
+    router.push('/cancel' + window.location.search);
+  };
 
   return (
     <>
@@ -216,6 +221,7 @@ function Interstitial() {
             className='btn cursor-pointer rounded-lg bg-gray-500 px-4 py-2 text-white'
             id='noThanksBtn'
             value='No Thanks'
+            onClick={cancelPage}
           />
           <p className='mt-4'>
             I do not want Free Wi-Fi and will remain on this page.
