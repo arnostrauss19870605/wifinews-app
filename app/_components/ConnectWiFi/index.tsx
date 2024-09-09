@@ -1,4 +1,3 @@
-'use client';
 import React, { useState, useEffect } from 'react';
 import { FaWifi } from 'react-icons/fa';
 import ProgressIndicator from '@/app/_components/ProgressIndicator';
@@ -24,28 +23,24 @@ function ConnectWiFi({
   const router = useRouter();
 
   useEffect(() => {
-    // Countdown timer
     const countdownInterval = setInterval(() => {
       setTimer((prev) => (prev > 0 ? prev - 1 : 0));
     }, 1000);
 
-    // Show button when the timer reaches the specified time
     if (showButton && timer === showButtonAt) {
       setButtonVisible(true);
     }
 
-    // Redirect when timer reaches 0
     if (timer === 0) {
       clearInterval(countdownInterval);
-      window.location.href = redirectUrl;
+      router.push(redirectUrl);
     }
 
     return () => clearInterval(countdownInterval);
-  }, [timer, redirectUrl, showButton, showButtonAt]);
+  }, [timer, redirectUrl, showButton, showButtonAt, router]);
 
   const handleConnect = () => {
-    // Redirect to the specified URL when the button is clicked
-    window.location.href = redirectUrl;
+    router.push(redirectUrl);
   };
 
   return (

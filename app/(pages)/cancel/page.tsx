@@ -1,9 +1,11 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Script from 'next/script';
+import { useRouter } from 'next/navigation';
 
 function NoThankYou() {
   const [isFromInterstitial, setIsFromInterstitial] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     console.log('Referrer:', document.referrer);
@@ -17,9 +19,9 @@ function NoThankYou() {
 
   const handleRedirect = () => {
     if (isFromInterstitial) {
-      window.location.replace('/interstitial');
+      router.push('/interstitial');
     } else {
-      window.location.replace('/landing');
+      router.push('/landing');
     }
   };
 
