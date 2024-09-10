@@ -11,41 +11,44 @@ const Landing: React.FC = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const addSeconds = (
-      numOfSeconds: number,
-      date: Date = new Date()
-    ): Date => {
-      date.setSeconds(date.getSeconds() + numOfSeconds);
-      return date;
-    };
+    if (!isRewardModalVisible) {
+      const addSeconds = (
+        numOfSeconds: number,
+        date: Date = new Date()
+      ): Date => {
+        date.setSeconds(date.getSeconds() + numOfSeconds);
+        return date;
+      };
 
-    let timerInterval: NodeJS.Timeout;
+      let timerInterval: NodeJS.Timeout;
 
-    const firstTimer = () => {
-      const totalTime = 35;
-      const futureTime = addSeconds(totalTime);
+      const firstTimer = () => {
+        const totalTime = 35;
+        const futureTime = addSeconds(totalTime);
 
-      function updateTimer() {
-        const timeLeft = Math.floor(
-          (futureTime.getTime() - new Date().getTime()) / 1000
-        );
+        function updateTimer() {
+          const timeLeft = Math.floor(
+            (futureTime.getTime() - new Date().getTime()) / 1000
+          );
 
-        if (timeLeft <= 0) {
-          clearInterval(timerInterval);
-          setLandingTimer(0); // Ensure it reaches zero
-        } else {
-          setLandingTimer(timeLeft);
+          if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            setLandingTimer(0);
+            router.push(appendUtmParams('/home'));
+          } else {
+            setLandingTimer(timeLeft);
+          }
         }
-      }
 
-      updateTimer();
-      timerInterval = setInterval(updateTimer, 1000);
-    };
+        updateTimer();
+        timerInterval = setInterval(updateTimer, 1000);
+      };
 
-    firstTimer();
+      firstTimer();
 
-    return () => clearInterval(timerInterval);
-  }, []);
+      return () => clearInterval(timerInterval);
+    }
+  }, [isRewardModalVisible, router]);
 
   useEffect(() => {
     const initializeRewardedAd = () => {
