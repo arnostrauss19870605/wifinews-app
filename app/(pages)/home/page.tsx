@@ -1,14 +1,44 @@
 'use client';
+import React, { useState, useEffect } from 'react';
 import Script from 'next/script';
 import { useRouter } from 'next/navigation';
 import LearningMaterial from '@/app/_components/LearningMaterial';
 import DiscussionForum from '@/app/_components/DiscussionForum';
 import News from '@/app/(pages)/news/page';
-import ConnectWiFi from '@/app/_components/ConnectWiFi';
+import ProgressIndicator from '@/app/_components/ProgressIndicator';
 import { getUtmParams, appendUtmParams } from '@/app/_utils/utm.util';
+import { FaWifi } from 'react-icons/fa';
 
 function Home() {
+  const [timer, setTimer] = useState(20);
+  const [isButtonVisible, setButtonVisible] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    const countdownInterval = setInterval(() => {
+      setTimer((prevTimer) => {
+        if (prevTimer > 0) {
+          const newTime = prevTimer - 1;
+          if (newTime <= 10) {
+            setButtonVisible(true);
+          }
+          return newTime;
+        }
+        return 0;
+      });
+    }, 1000);
+
+    if (timer === 0) {
+      clearInterval(countdownInterval);
+      router.push(appendUtmParams('/interstitial'));
+    }
+
+    return () => clearInterval(countdownInterval);
+  }, [timer, router]);
+
+  const handleConnect = () => {
+    router.push(appendUtmParams('/interstitial'));
+  };
 
   return (
     <div>
@@ -97,37 +127,51 @@ function Home() {
         `}
       </Script>
 
-      <ConnectWiFi
-        step={2}
-        redirectUrl={appendUtmParams('/interstitial')}
-        timerDuration={20}
-        showButtonAt={10}
-        showButton={true}
-      />
+      <div className='flex min-h-screen flex-col items-center px-4 py-10'>
+        <div className='mb-5 text-center'>
+          <ProgressIndicator step={2} />
+          <p className='mt-2 text-lg font-semibold text-gray-700'>
+            View these ads for
+          </p>
+          <p className='text-xl font-bold text-gray-800'>{timer} seconds</p>
+        </div>
 
-      <div className='my-4 flex w-full items-center justify-center'>
-        <div id='div-gpt-ad-6641866-1'></div>
-      </div>
+        <div className='mb-4 flex justify-center'>
+          {isButtonVisible && (
+            <button
+              type='button'
+              className='flex items-center rounded-lg bg-slate-950 px-6 py-3 font-medium text-white focus:outline-none lg:px-10'
+              onClick={handleConnect}
+            >
+              <FaWifi className='mr-2' /> Connect Now
+            </button>
+          )}
+        </div>
 
-      <LearningMaterial />
-      <DiscussionForum />
-      <div className='my-10'>
-        <News />
-      </div>
-      <div className='my-4 flex w-full items-center justify-center'>
-        <div id='div-gpt-ad-6641866-2'></div>
-      </div>
-      <div className='my-4 flex w-full items-center justify-center'>
-        <div id='div-gpt-ad-6641866-3'></div>
-      </div>
-      <div className='my-4 flex w-full items-center justify-center'>
-        <div id='div-gpt-ad-6641866-4'></div>
-      </div>
-      <div className='my-4 flex w-full items-center justify-center'>
-        <div id='div-gpt-ad-6641866-5'></div>
-      </div>
-      <div className='my-4 flex w-full items-center justify-center'>
-        <div id='div-gpt-ad-6641866-6'></div>
+        <div className='my-4 flex w-full items-center justify-center'>
+          <div id='div-gpt-ad-6641866-1'></div>
+        </div>
+
+        <LearningMaterial />
+        <DiscussionForum />
+        <div className='my-10'>
+          <News />
+        </div>
+        <div className='my-4 flex w-full items-center justify-center'>
+          <div id='div-gpt-ad-6641866-2'></div>
+        </div>
+        <div className='my-4 flex w-full items-center justify-center'>
+          <div id='div-gpt-ad-6641866-3'></div>
+        </div>
+        <div className='my-4 flex w-full items-center justify-center'>
+          <div id='div-gpt-ad-6641866-4'></div>
+        </div>
+        <div className='my-4 flex w-full items-center justify-center'>
+          <div id='div-gpt-ad-6641866-5'></div>
+        </div>
+        <div className='my-4 flex w-full items-center justify-center'>
+          <div id='div-gpt-ad-6641866-6'></div>
+        </div>
       </div>
     </div>
   );
