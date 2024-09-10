@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import Script from 'next/script';
 import { useRouter } from 'next/navigation';
+import { getUtmParams, appendUtmParams } from '@/app/_utils/utm.util';
 
 interface NoThankYouClientProps {
   initialIsFromInterstitial: boolean;
@@ -21,9 +22,9 @@ export default function NoThankYouClient({
 
   const handleRedirect = () => {
     if (isFromInterstitial) {
-      router.push('/interstitial');
+      router.push(appendUtmParams('/interstitial'));
     } else {
-      router.push('/landing');
+      router.push(appendUtmParams('/landing'));
     }
   };
 
@@ -34,15 +35,11 @@ export default function NoThankYouClient({
           window.googletag = window.googletag || {cmd: []};
 
           googletag.cmd.push(function() {
-            const queryValues = window.location.search;
-            const urlParams = new URLSearchParams(queryValues);
-            let utm_medium = "NULL";
-            if (urlParams.has('utm_medium')) {
-              utm_medium = urlParams.get('utm_medium') || "NULL";
-              console.log("Utm Medium exists as:", utm_medium);
-            } else {
-              console.log("Utm Medium does not exist, value to be populated:", utm_medium);
-            }
+            const utmParams = ${JSON.stringify(getUtmParams())};
+            console.log("cancel utm params =>",utmParams);
+            Object.entries(utmParams).forEach(([key, value]) => {
+              googletag.pubads().setTargeting(key, value);
+            });
 
             const mapping3 = googletag.sizeMapping()
               .addSize([1400, 0], ['fluid', [728, 90], [300, 250], [300, 600], [468, 60]])
@@ -73,7 +70,6 @@ export default function NoThankYouClient({
             }
 
             googletag.pubads().enableSingleRequest();
-            googletag.pubads().setTargeting('Medium', [utm_medium]);
             googletag.pubads().collapseEmptyDivs();
             googletag.pubads().setCentering(true);
             googletag.enableServices();

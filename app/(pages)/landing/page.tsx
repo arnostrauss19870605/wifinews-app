@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Script from 'next/script';
 import { useRouter } from 'next/navigation';
 import ProgressIndicator from '@/app/_components/ProgressIndicator';
+import { getUtmParams, appendUtmParams } from '@/app/_utils/utm.util';
 
 const Landing: React.FC = () => {
   const [isRewardModalVisible, setIsRewardModalVisible] = useState(false);
@@ -110,10 +111,10 @@ const Landing: React.FC = () => {
             );
             if (!grantedState) {
               console.log('Rewarded Slot was not granted.');
-              router.push('/cancel' + window.location.search);
+              router.push(appendUtmParams('/cancel'));
             } else {
               googletag.destroySlots([rewardedSlot]);
-              router.push('/home' + window.location.search);
+              router.push(appendUtmParams('/home'));
             }
           });
 
@@ -125,7 +126,7 @@ const Landing: React.FC = () => {
   }, [router]);
 
   const cancelPage = () => {
-    router.push('/cancel' + window.location.search);
+    router.push(appendUtmParams('/cancel'));
   };
 
   return (
@@ -140,46 +141,42 @@ const Landing: React.FC = () => {
         {`
           window.googletag = window.googletag || {cmd: []};
 
-          const my_queryValues = window.location.search;
-          const my_urlParams = new URLSearchParams(my_queryValues);
-          var utm_medium = "NULL"
-          if (my_urlParams.has('utm_medium') === true){
-            utm_medium = my_urlParams.get('utm_medium');
-            console.log("Utm Medium does exist as :" ,utm_medium );
-          } else {
-            console.log("Utm Medium does not exist, value to be populated : ", utm_medium);
-          }
-
           googletag.cmd.push(function() {
+            const utmParams = ${JSON.stringify(getUtmParams())};
+            console.log("landing utm params =>",utmParams);
+            Object.entries(utmParams).forEach(([key, value]) => {
+              googletag.pubads().setTargeting(key, value);
+            });
+
             var mapping1 = googletag.sizeMapping()
-            .addSize([1400, 0], [[728, 90], 'fluid'])
-            .addSize([1200, 0], [[728, 90], 'fluid'])
-            .addSize([1000, 0], [[728, 90], 'fluid'])
-            .addSize([700, 0], [[468, 60], [320, 50], [300, 50], 'fluid', [300, 250], [320, 100], [300, 100]])
-            .addSize([600, 0], [[468, 60], [320, 50], [300, 50], 'fluid', [300, 100], [320, 100], [300, 250]])
-            .addSize([400, 0], [[320, 50], [300, 50], 'fluid', [320, 100], [300, 250], [300, 100]])
-            .addSize([300, 0], [[320, 50], [300, 250], [320, 100], [300, 50], [300, 100], 'fluid'])
-            .build();
+              .addSize([1400, 0], [[728, 90], 'fluid'])
+              .addSize([1200, 0], [[728, 90], 'fluid'])
+              .addSize([1000, 0], [[728, 90], 'fluid'])
+              .addSize([700, 0], [[468, 60], [320, 50], [300, 50], 'fluid', [300, 250], [320, 100], [300, 100]])
+              .addSize([600, 0], [[468, 60], [320, 50], [300, 50], 'fluid', [300, 100], [320, 100], [300, 250]])
+              .addSize([400, 0], [[320, 50], [300, 50], 'fluid', [320, 100], [300, 250], [300, 100]])
+              .addSize([300, 0], [[320, 50], [300, 250], [320, 100], [300, 50], [300, 100], 'fluid'])
+              .build();
 
             var mapping2 = googletag.sizeMapping()
-            .addSize([1400, 0], [[320, 480], [300, 250], [300, 600], 'fluid'])
-            .addSize([1200, 0], [[320, 480], [300, 250], [300, 600], 'fluid'])
-            .addSize([1000, 0], [[320, 480], [300, 250], [300, 600], 'fluid'])
-            .addSize([700, 0], [[320, 480], [300, 250], [300, 600], 'fluid'])
-            .addSize([600, 0], [[320, 480], [300, 250], [300, 600], 'fluid'])
-            .addSize([400, 0], [[300, 250], [300, 600], [320, 480], 'fluid'])
-            .addSize([300, 0], [[300, 250], [300, 600], [320, 480], 'fluid'])
-            .build();
+              .addSize([1400, 0], [[320, 480], [300, 250], [300, 600], 'fluid'])
+              .addSize([1200, 0], [[320, 480], [300, 250], [300, 600], 'fluid'])
+              .addSize([1000, 0], [[320, 480], [300, 250], [300, 600], 'fluid'])
+              .addSize([700, 0], [[320, 480], [300, 250], [300, 600], 'fluid'])
+              .addSize([600, 0], [[320, 480], [300, 250], [300, 600], 'fluid'])
+              .addSize([400, 0], [[300, 250], [300, 600], [320, 480], 'fluid'])
+              .addSize([300, 0], [[300, 250], [300, 600], [320, 480], 'fluid'])
+              .build();
 
             var mapping4 = googletag.sizeMapping()
-            .addSize([1400, 0], [[728, 90], 'fluid'])
-            .addSize([1200, 0], [[728, 90], 'fluid'])
-            .addSize([1000, 0], [[728, 90], 'fluid'])
-            .addSize([700, 0], ['fluid', [468, 60], [320, 50], [300, 50], [320, 100], [300, 100]])
-            .addSize([600, 0], ['fluid', [468, 60], [320, 50], [300, 50], [320, 100], [300, 100]])
-            .addSize([400, 0], ['fluid', [320, 50], [300, 50], [320, 100], [300, 100]])
-            .addSize([300, 0], ['fluid', [320, 50], [300, 50], [320, 100], [300, 100]])
-            .build();
+              .addSize([1400, 0], [[728, 90], 'fluid'])
+              .addSize([1200, 0], [[728, 90], 'fluid'])
+              .addSize([1000, 0], [[728, 90], 'fluid'])
+              .addSize([700, 0], ['fluid', [468, 60], [320, 50], [300, 50], [320, 100], [300, 100]])
+              .addSize([600, 0], ['fluid', [468, 60], [320, 50], [300, 50], [320, 100], [300, 100]])
+              .addSize([400, 0], ['fluid', [320, 50], [300, 50], [320, 100], [300, 100]])
+              .addSize([300, 0], ['fluid', [320, 50], [300, 50], [320, 100], [300, 100]])
+              .build();
 
             googletag.defineSlot('/22047902240/wifinews/landing_interstitial', ['fluid',[320,480],[300,250],[300,600]], 'div-gpt-ad-7092085-1')
               .defineSizeMapping(mapping2)
@@ -192,7 +189,6 @@ const Landing: React.FC = () => {
               .addService(googletag.pubads());
 
             googletag.pubads().enableSingleRequest();
-            googletag.pubads().setTargeting('Medium', [utm_medium]);
             googletag.pubads().collapseEmptyDivs();
             googletag.pubads().setCentering(true);
             googletag.enableServices();
@@ -273,7 +269,7 @@ const Landing: React.FC = () => {
             className='btn cursor-pointer rounded-lg bg-blue-500 px-4 py-2 text-white'
             id='grantCloseBtn'
             value='Close'
-            onClick={() => router.push('/home' + window.location.search)}
+            onClick={() => router.push(appendUtmParams('/home'))}
           />
         </div>
       </div>

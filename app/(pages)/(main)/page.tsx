@@ -1,9 +1,11 @@
+'use client';
 import Script from 'next/script';
 import LearningMaterial from '@/app/_components/LearningMaterial';
 import DiscussionForum from '@/app/_components/DiscussionForum';
 import News from '@/app/(pages)/news/page';
+import { getUtmParams } from '@/app/_utils/utm.util';
 
-function Home() {
+function Main() {
   return (
     <div>
       {/* GPT Configuration and Ad Display */}
@@ -11,18 +13,13 @@ function Home() {
         {`
           window.googletag = window.googletag || { cmd: [] };
 
-          const queryValues = window.location.search;
-          const urlParams = new URLSearchParams(queryValues);
-          let utm_medium = 'NULL';
-
-          if (urlParams.has('utm_medium')) {
-            utm_medium = urlParams.get('utm_medium') || 'NULL';
-            console.log('Utm Medium exists as:', utm_medium);
-          } else {
-            console.log('Utm Medium does not exist, value to be populated:', utm_medium);
-          }
-
           window.googletag.cmd.push(function () {
+            const utmParams = ${JSON.stringify(getUtmParams())};
+            console.log("homepage utm params =>",utmParams);
+            Object.entries(utmParams).forEach(([key, value]) => {
+              googletag.pubads().setTargeting(key, value);
+            });
+
             // Define size mappings
             const mapping1 = googletag.sizeMapping()
               .addSize([1400, 0], [[728, 90], 'fluid'])
@@ -81,7 +78,6 @@ function Home() {
 
             // Enable services and set targeting
             googletag.pubads().enableSingleRequest();
-            googletag.pubads().setTargeting('Medium', [utm_medium]);
             googletag.pubads().collapseEmptyDivs();
             googletag.pubads().setCentering(true);
             googletag.enableServices();
@@ -125,4 +121,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default Main;

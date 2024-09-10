@@ -1,15 +1,17 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import Script from 'next/script';
+import { useRouter } from 'next/navigation';
 import ConnectWiFi from '@/app/_components/ConnectWiFi';
 import LearningMaterial from '@/app/_components/LearningMaterial';
 import DiscussionForum from '@/app/_components/DiscussionForum';
 import News from '@/app/(pages)/news/page';
-import { useRouter } from 'next/navigation';
+import { getUtmParams, appendUtmParams } from '@/app/_utils/utm.util';
 
 function Interstitial() {
   const [isRewardModalVisible, setIsRewardModalVisible] = useState(false);
   const router = useRouter();
+
   useEffect(() => {
     const initializeRewardedAd = () => {
       (window as any).googletag = (window as any).googletag || { cmd: [] };
@@ -74,11 +76,12 @@ function Interstitial() {
             );
             if (!grantedState) {
               console.log('Rewarded Slot was not granted.');
-              router.push('/cancel' + window.location.search);
+              router.push(appendUtmParams('/cancel'));
             } else {
               googletag.destroySlots([rewardedSlot]);
-              window.location.href =
-                'https://bobbies.hotspot.yourspot.co.za/lv/login';
+              window.location.href = appendUtmParams(
+                'https://bobbies.hotspot.yourspot.co.za/lv/login'
+              );
             }
           });
 
@@ -87,10 +90,10 @@ function Interstitial() {
     };
 
     initializeRewardedAd();
-  }, []);
+  }, [router]);
 
   const cancelPage = () => {
-    router.push('/cancel' + window.location.search);
+    router.push(appendUtmParams('/cancel'));
   };
 
   return (
@@ -108,15 +111,11 @@ function Interstitial() {
           window.googletag = window.googletag || {cmd: []};
 
           googletag.cmd.push(function() {
-            const queryValues = window.location.search;
-            const urlParams = new URLSearchParams(queryValues);
-            let utm_medium = "NULL";
-            if (urlParams.has('utm_medium')) {
-              utm_medium = urlParams.get('utm_medium') || "NULL";
-              console.log("Utm Medium exists as:", utm_medium);
-            } else {
-              console.log("Utm Medium does not exist, value to be populated:", utm_medium);
-            }
+            const utmParams = ${JSON.stringify(getUtmParams())};
+            console.log("interstitial utm params =>",utmParams);
+            Object.entries(utmParams).forEach(([key, value]) => {
+              googletag.pubads().setTargeting(key, value);
+            });
 
             const mapping1 = googletag.sizeMapping()
               .addSize([1400, 0], [[728, 90], 'fluid'])
@@ -159,7 +158,6 @@ function Interstitial() {
               .addService(googletag.pubads());
 
             googletag.pubads().enableSingleRequest();
-            googletag.pubads().setTargeting('Medium', [utm_medium]);
             googletag.pubads().collapseEmptyDivs();
             googletag.pubads().setCentering(true);
             googletag.enableServices();
@@ -173,7 +171,9 @@ function Interstitial() {
 
       <ConnectWiFi
         step={3}
-        redirectUrl='https://bobbies.hotspot.yourspot.co.za/lv/login'
+        redirectUrl={appendUtmParams(
+          'https://bobbies.hotspot.yourspot.co.za/lv/login'
+        )}
         timerDuration={20}
         showButtonAt={10}
         showButton={false}
