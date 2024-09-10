@@ -11,43 +11,46 @@ const Landing: React.FC = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (!isRewardModalVisible) {
-      const addSeconds = (
-        numOfSeconds: number,
-        date: Date = new Date()
-      ): Date => {
-        date.setSeconds(date.getSeconds() + numOfSeconds);
-        return date;
-      };
+    const addSeconds = (
+      numOfSeconds: number,
+      date: Date = new Date()
+    ): Date => {
+      date.setSeconds(date.getSeconds() + numOfSeconds);
+      return date;
+    };
 
-      let timerInterval: NodeJS.Timeout;
+    let timerInterval: NodeJS.Timeout;
 
-      const firstTimer = () => {
-        const totalTime = 35;
-        const futureTime = addSeconds(totalTime);
+    const firstTimer = () => {
+      const totalTime = 35;
+      const futureTime = addSeconds(totalTime);
 
-        function updateTimer() {
-          const timeLeft = Math.floor(
-            (futureTime.getTime() - new Date().getTime()) / 1000
-          );
-
-          if (timeLeft <= 0) {
-            clearInterval(timerInterval);
-            setLandingTimer(0);
-            router.push(appendUtmParams('/home'));
-          } else {
-            setLandingTimer(timeLeft);
-          }
+      function updateTimer() {
+        if (isRewardModalVisible) {
+          clearInterval(timerInterval);
+          return;
         }
 
-        updateTimer();
-        timerInterval = setInterval(updateTimer, 1000);
-      };
+        const timeLeft = Math.floor(
+          (futureTime.getTime() - new Date().getTime()) / 1000
+        );
 
-      firstTimer();
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          setLandingTimer(0);
+          router.push(appendUtmParams('/home'));
+        } else {
+          setLandingTimer(timeLeft);
+        }
+      }
 
-      return () => clearInterval(timerInterval);
-    }
+      updateTimer();
+      timerInterval = setInterval(updateTimer, 1000);
+    };
+
+    firstTimer();
+
+    return () => clearInterval(timerInterval);
   }, [isRewardModalVisible, router]);
 
   useEffect(() => {
@@ -70,6 +73,7 @@ const Landing: React.FC = () => {
 
         googletag.pubads().addEventListener('rewardedSlotReady', (evt: any) => {
           rewardedSlotReady = true;
+          setIsRewardModalVisible(true);
           const trigger = document.getElementById('rewardModal');
           if (trigger) {
             trigger.style.display = 'flex';
@@ -85,12 +89,14 @@ const Landing: React.FC = () => {
               noThanksButton?.removeEventListener('click', closeModalFn);
               trigger.style.display = 'none';
               document.body.style.overflow = '';
+              setIsRewardModalVisible(false);
             };
 
             const closeModalFn = () => {
               trigger.style.display = 'none';
               document.body.style.overflow = '';
               googletag.destroySlots([rewardedSlot]);
+              setIsRewardModalVisible(false);
             };
 
             watchAdButton?.addEventListener('click', makeVisibleFn);
