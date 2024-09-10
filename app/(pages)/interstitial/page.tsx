@@ -2,15 +2,50 @@
 import React, { useState, useEffect } from 'react';
 import Script from 'next/script';
 import { useRouter } from 'next/navigation';
-import ConnectWiFi from '@/app/_components/ConnectWiFi';
+import ProgressIndicator from '@/app/_components/ProgressIndicator';
 import LearningMaterial from '@/app/_components/LearningMaterial';
 import DiscussionForum from '@/app/_components/DiscussionForum';
 import News from '@/app/(pages)/news/page';
 import { getUtmParams, appendUtmParams } from '@/app/_utils/utm.util';
+import { FaWifi } from 'react-icons/fa';
 
 function Interstitial() {
   const [isRewardModalVisible, setIsRewardModalVisible] = useState(false);
+  const [interstitialTimer, setInterstitialTimer] = useState(20); // Set initial timer to 20 seconds
+  const [isButtonVisible, setButtonVisible] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    let countdownInterval: NodeJS.Timeout | null = null;
+
+    if (!isRewardModalVisible) {
+      countdownInterval = setInterval(() => {
+        setInterstitialTimer((prevTimer) => {
+          if (prevTimer > 0) {
+            const newTime = prevTimer - 1;
+            if (newTime <= 0) {
+              // Show button when 10 seconds or less remain
+              setButtonVisible(true);
+            }
+            return newTime;
+          }
+          return 0;
+        });
+      }, 1000);
+    }
+
+    if (interstitialTimer === 0) {
+      if (countdownInterval) {
+        clearInterval(countdownInterval);
+      }
+    }
+
+    return () => {
+      if (countdownInterval) {
+        clearInterval(countdownInterval);
+      }
+    };
+  }, [interstitialTimer, router, isRewardModalVisible]);
 
   useEffect(() => {
     const initializeRewardedAd = () => {
@@ -32,6 +67,7 @@ function Interstitial() {
 
         googletag.pubads().addEventListener('rewardedSlotReady', (evt: any) => {
           rewardedSlotReady = true;
+          setIsRewardModalVisible(true);
           const trigger = document.getElementById('rewardModal');
           if (trigger) {
             trigger.style.display = 'flex';
@@ -47,12 +83,14 @@ function Interstitial() {
               noThanksButton?.removeEventListener('click', closeModalFn);
               trigger.style.display = 'none';
               document.body.style.overflow = '';
+              setIsRewardModalVisible(false);
             };
 
             const closeModalFn = () => {
               trigger.style.display = 'none';
               document.body.style.overflow = '';
               googletag.destroySlots([rewardedSlot]);
+              setIsRewardModalVisible(false);
             };
 
             watchAdButton?.addEventListener('click', makeVisibleFn);
@@ -94,6 +132,12 @@ function Interstitial() {
 
   const cancelPage = () => {
     router.push(appendUtmParams('/cancel'));
+  };
+
+  const handleConnect = () => {
+    router.push(
+      appendUtmParams('https://bobbies.hotspot.yourspot.co.za/lv/login')
+    );
   };
 
   return (
@@ -169,31 +213,45 @@ function Interstitial() {
         `}
       </Script>
 
-      <ConnectWiFi
-        step={3}
-        redirectUrl={appendUtmParams(
-          'https://bobbies.hotspot.yourspot.co.za/lv/login'
-        )}
-        timerDuration={20}
-        showButtonAt={10}
-        showButton={false}
-      />
+      <div className='flex min-h-screen flex-col items-center px-4 py-10'>
+        <div className='mb-5 text-center'>
+          <ProgressIndicator step={3} />
+          <p className='mt-2 text-lg font-semibold text-gray-700'>
+            View these ads for
+          </p>
+          <p className='text-xl font-bold text-gray-800'>
+            {interstitialTimer} seconds
+          </p>
+        </div>
 
-      {/* Divs for Ad Slots */}
-      <div className='my-4 flex w-full items-center justify-center'>
-        <div id='div-gpt-ad-6110814-1'></div>
-      </div>
-      <div className='my-4 flex w-full items-center justify-center'>
-        <div id='div-gpt-ad-6110814-2'></div>
-      </div>
-      <div className='my-4 flex w-full items-center justify-center'>
-        <div id='div-gpt-ad-6110814-3'></div>
-      </div>
+        <div className='flex justify-center'>
+          {isButtonVisible && (
+            <button
+              type='button'
+              className='mb-6 mt-2 flex items-center rounded-lg bg-slate-950 px-6 py-3 font-medium text-white focus:outline-none lg:px-10'
+              onClick={handleConnect}
+            >
+              <FaWifi className='mr-2' /> Connect Now
+            </button>
+          )}
+        </div>
 
-      <LearningMaterial />
-      <DiscussionForum />
-      <div className='my-10'>
-        <News />
+        {/* Divs for Ad Slots */}
+        <div className='my-4 flex w-full items-center justify-center'>
+          <div id='div-gpt-ad-6110814-1'></div>
+        </div>
+        <div className='my-4 flex w-full items-center justify-center'>
+          <div id='div-gpt-ad-6110814-2'></div>
+        </div>
+        <div className='my-4 flex w-full items-center justify-center'>
+          <div id='div-gpt-ad-6110814-3'></div>
+        </div>
+
+        <LearningMaterial />
+        <DiscussionForum />
+        <div className='my-10'>
+          <News />
+        </div>
       </div>
 
       {/* Reward Modal */}
