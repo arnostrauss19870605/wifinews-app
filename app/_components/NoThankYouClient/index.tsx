@@ -110,11 +110,11 @@ export default function NoThankYouClient({
       {isFromInterstitial && (
         <>
           <div className='my-4 mt-[20px] flex w-full items-center justify-center'>
-            <div id='div-gpt-ad-6408777-2' className='w-full max-w-lg'></div>
+            <div id='div-gpt-ad-6408777-2'></div>
           </div>
 
           <div className='my-4 flex w-full items-center justify-center'>
-            <div id='div-gpt-ad-6408777-1' className='w-full max-w-lg'></div>
+            <div id='div-gpt-ad-6408777-1'></div>
           </div>
         </>
       )}
@@ -122,11 +122,11 @@ export default function NoThankYouClient({
       {!isFromInterstitial && (
         <>
           <div className='my-4 mt-[20px] flex w-full items-center justify-center'>
-            <div id='div-gpt-ad-7923782-2' className='w-full max-w-lg'></div>
+            <div id='div-gpt-ad-7923782-2'></div>
           </div>
 
           <div className='my-4 flex w-full items-center justify-center'>
-            <div id='div-gpt-ad-7923782-1' className='w-full max-w-lg'></div>
+            <div id='div-gpt-ad-7923782-1'></div>
           </div>
         </>
       )}
