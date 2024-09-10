@@ -100,7 +100,7 @@ export default function NoThankYouClient({
 
         <button
           type='button'
-          className='w-full rounded-lg bg-slate-950 px-6 py-3 text-white transition duration-300 ease-in-out hover:bg-slate-800 focus:outline-none focus:ring-4 focus:ring-slate-400 focus:ring-opacity-50 sm:w-auto'
+          className='w-full rounded-lg bg-black px-6 py-3 text-white transition duration-300 ease-in-out hover:bg-slate-800 focus:outline-none focus:ring-4 focus:ring-slate-400 focus:ring-opacity-50 sm:w-auto'
           onClick={handleRedirect}
         >
           PRESS TO ACCESS FREE Wi-Fi
