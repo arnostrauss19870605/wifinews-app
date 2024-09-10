@@ -109,7 +109,7 @@ export default function NoThankYouClient({
 
       {isFromInterstitial && (
         <>
-          <div className='my-4 mt-[20px] flex w-full items-center justify-center'>
+          <div className='my-4 mt-[30px] flex w-full items-center justify-center'>
             <div id='div-gpt-ad-6408777-2'></div>
           </div>
 
@@ -121,7 +121,7 @@ export default function NoThankYouClient({
 
       {!isFromInterstitial && (
         <>
-          <div className='my-4 mt-[20px] flex w-full items-center justify-center'>
+          <div className='my-4 mt-[30px] flex w-full items-center justify-center'>
             <div id='div-gpt-ad-7923782-2'></div>
           </div>
 
