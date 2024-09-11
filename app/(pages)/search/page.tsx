@@ -1,10 +1,36 @@
 'use client';
+import React, { useState, useEffect } from 'react';
 import Script from 'next/script';
 import { getUtmParams } from '@/app/_utils/utm.util';
+import { FaSearch } from 'react-icons/fa';
 
 function Search() {
+  const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    // Load the Google Custom Search Engine script
+    const script = document.createElement('script');
+    script.src = 'https://cse.google.com/cse.js?cx=207b2db6653094381';
+    script.async = true;
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
+  const handleSearch = (e: any) => {
+    e.preventDefault();
+    if (window.google) {
+      window.google.search.cse.element.go();
+    }
+  };
+
   return (
-    <div>
+    <div
+      className='flex w-full flex-col items-center text-black'
+      style={{ minHeight: 'calc(100vh - 220px)' }}
+    >
       {/* GPT Configuration and Ad Display */}
       <Script id='gpt-search-setup' strategy='afterInteractive'>
         {`
@@ -64,7 +90,26 @@ function Search() {
         <div id='div-gpt-ad-2121612-1'></div>
       </div>
 
-      <div>Search...</div>
+      {/* Enhanced Google Custom Search Box */}
+      <div className='my-8 w-full max-w-2xl px-4'>
+        <form onSubmit={handleSearch} className='relative'>
+          <input
+            type='text'
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className='w-full rounded-full border-2 border-black py-3 pl-6 pr-12 text-lg focus:outline-none focus:ring-2 focus:ring-black'
+            placeholder='Search...'
+          />
+          <button
+            type='submit'
+            className='absolute right-2 top-1/2 -translate-y-1/2 transform rounded-full bg-black p-3 text-white transition-transform hover:scale-105 focus:outline-none'
+          >
+            <FaSearch size={20} />
+          </button>
+        </form>
+        {/* Google Custom Search results */}
+        <div className='gcse-searchresults-only mt-8'></div>
+      </div>
 
       <div className='my-4 flex w-full items-center justify-center'>
         <div id='div-gpt-ad-2121612-2'></div>
