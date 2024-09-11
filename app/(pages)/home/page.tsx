@@ -30,15 +30,11 @@ function Home() {
 
     if (timer === 0) {
       clearInterval(countdownInterval);
-      router.push(appendUtmParams('/forti_2'));
+      router.push(appendUtmParams('/interstitial'));
     }
 
     return () => clearInterval(countdownInterval);
   }, [timer, router]);
-
-  const handleConnect = () => {
-    router.push(appendUtmParams('/forti_2'));
-  };
 
   return (
     <div>

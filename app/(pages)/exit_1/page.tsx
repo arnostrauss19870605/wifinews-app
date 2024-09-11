@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Script from 'next/script';
 import { useRouter } from 'next/navigation';
 import { getUtmParams, appendUtmParams } from '@/app/_utils/utm.util';
-import { FaWifi } from 'react-icons/fa';
+import { FaSearch } from 'react-icons/fa';
 
 function Exit_1() {
   const [isRewardModalVisible, setIsRewardModalVisible] = useState(false);
@@ -91,7 +91,7 @@ function Exit_1() {
   }, [router]);
 
   const cancelPage = () => {
-    router.push(appendUtmParams('/cancel'));
+    router.push(appendUtmParams('/'));
   };
 
   const handleConnect = () => {
@@ -172,13 +172,14 @@ function Exit_1() {
       </Script>
 
       <div className='flex min-h-screen flex-col items-center px-4 py-10'>
+        <p className='mb-4'>You are now connected to the internet</p>
         <div className='flex justify-center'>
           <button
             type='button'
             className='mb-6 mt-2 flex items-center rounded-lg bg-slate-950 px-6 py-3 font-medium text-white focus:outline-none lg:px-10'
             onClick={handleConnect}
           >
-            <FaWifi className='mr-2' /> Connect Now
+            <FaSearch className='mr-2' /> Click Here To Browse
           </button>
         </div>
 
@@ -209,12 +210,12 @@ function Exit_1() {
           className='rounded-lg bg-white p-6 text-center shadow-lg'
           style={{ maxWidth: '500px', maxHeight: '80vh', width: '100%' }}
         >
-          <p className='mb-4'>To get free Wi-Fi, you need to watch these ads</p>
+          <p className='mb-4'>You are now connected to the internet</p>
           <input
             type='button'
             className='lg_btn my-2 mr-2 cursor-pointer rounded-lg bg-black px-4 py-2 text-white'
             id='watchAdBtn'
-            value='Yes, I want free Wi-Fi!'
+            value='Click Here to Browse'
           />
           <input
             type='button'
@@ -223,9 +224,7 @@ function Exit_1() {
             value='No Thanks'
             onClick={cancelPage}
           />
-          <p className='mt-4'>
-            I do not want Free Wi-Fi and will remain on this page.
-          </p>
+          <p className='mt-4'>I would Like to remain on Wifi-News.</p>
         </div>
       </div>
     </>
