@@ -236,15 +236,17 @@ function Interstitial() {
           )}
         </div>
 
+        {/* Sticky Ad */}
+        <div className='fixed bottom-12 left-0 right-0 z-[9999] flex justify-center'>
+          <div id='div-gpt-ad-6110814-3' className='w-full max-w-[768px]'></div>
+        </div>
+
         {/* Divs for Ad Slots */}
         <div className='my-4 flex w-full items-center justify-center'>
           <div id='div-gpt-ad-6110814-1'></div>
         </div>
         <div className='my-4 flex w-full items-center justify-center'>
           <div id='div-gpt-ad-6110814-2'></div>
-        </div>
-        <div className='my-4 flex w-full items-center justify-center'>
-          <div id='div-gpt-ad-6110814-3'></div>
         </div>
 
         <LearningMaterial />
@@ -257,7 +259,7 @@ function Interstitial() {
       {/* Reward Modal */}
       <div
         id='rewardModal'
-        className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4'
+        className='fixed inset-0 z-[9000] flex items-center justify-center bg-black bg-opacity-50 p-4'
         style={{
           display: isRewardModalVisible ? 'flex' : 'none',
           paddingBottom: '60px',
