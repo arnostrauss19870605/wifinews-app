@@ -6,10 +6,12 @@ import { getUtmParams, appendUtmParams } from '@/app/_utils/utm.util';
 
 interface NoThankYouClientProps {
   initialIsFromInterstitial: boolean;
+  isFromForti: boolean;
 }
 
 export default function NoThankYouClient({
   initialIsFromInterstitial,
+  isFromForti,
 }: NoThankYouClientProps) {
   const [isFromInterstitial, setIsFromInterstitial] = useState(
     initialIsFromInterstitial
@@ -23,6 +25,8 @@ export default function NoThankYouClient({
   const handleRedirect = () => {
     if (isFromInterstitial) {
       router.push(appendUtmParams('/interstitial'));
+    } else if (isFromForti) {
+      router.push(appendUtmParams('/forti_2'));
     } else {
       router.push(appendUtmParams('/landing'));
     }
