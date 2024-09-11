@@ -272,13 +272,13 @@ function Interstitial() {
           <p className='mb-4'>To get free Wi-Fi, you need to watch these ads</p>
           <input
             type='button'
-            className='lg_btn mr-2 cursor-pointer rounded-lg bg-black px-4 py-2 text-white'
+            className='lg_btn my-2 mr-2 cursor-pointer rounded-lg bg-black px-4 py-2 text-white'
             id='watchAdBtn'
             value='Yes, I want free Wi-Fi!'
           />
           <input
             type='button'
-            className='btn cursor-pointer rounded-lg bg-gray-500 px-4 py-2 text-white'
+            className='btn my-2 cursor-pointer rounded-lg bg-gray-500 px-4 py-2 text-white'
             id='noThanksBtn'
             value='No Thanks'
             onClick={cancelPage}
