@@ -9,9 +9,72 @@ import News from '@/app/(pages)/news/page';
 import { getUtmParams, appendUtmParams } from '@/app/_utils/utm.util';
 import { FaWifi } from 'react-icons/fa';
 
+type UtmToRedirectMap = {
+  [key: string]: string;
+};
+
+const utmToRedirectMap: UtmToRedirectMap = {
+  NTJ: 'https://cp.fattiengage.com/portal/172.16.255.1',
+  Lynnwoodbridge: 'https://cp.fattiengage.com/portal/172.18.255.1',
+  MallofAfrica: 'https://cp.fattiengage.com/portal/172.19.255.1',
+  DesignQuarter: 'https://cp.fattiengage.com/portal/172.22.255.1',
+  PanAfrica: 'https://cp.fattiengage.com/portal/172.23.255.1',
+  Brooklyn: 'https://cp.fattiengage.com/portal/172.24.255.1',
+  Eikestad: 'https://cp.fattiengage.com/portal/172.25.255.1',
+  Zone: 'https://cp.fattiengage.com/portal/172.30.255.1',
+  Hillfox: 'https://cp.fattiengage.com/portal/172.31.255.1',
+  Pumulani: 'https://cp.fattiengage.com/portal/10.12.255.1',
+  Kagiso: 'https://cp.fattiengage.com/portal/10.13.255.1',
+  Dobsonville: 'https://cp.fattiengage.com/portal/10.14.255.1',
+  Bedford: 'https://cp.fattiengage.com/portal/10.15.255.1',
+  Cavendish: 'https://cp.fattiengage.com/portal/10.16.255.1',
+  Riverdisde: 'https://cp.fattiengage.com/portal/10.17.255.1',
+  Gateway: 'https://cp.fattiengage.com/portal/10.18.255.1',
+  Vincentpark: 'https://cp.fattiengage.com/portal/10.19.255.1',
+  Eastrandmall: 'https://cp.fattiengage.com/portal/10.21.255.1',
+  Soneike: 'https://cp.fattiengage.com/portal/10.22.255.1',
+  Aurora: 'https://cp.fattiengage.com/portal/10.23.255.1',
+  Kendrige: 'https://cp.fattiengage.com/portal/10.24.255.1',
+  Sonstraal: 'https://cp.fattiengage.com/portal/10.25.255.1',
+  Habitat: 'https://cp.fattiengage.com/portal/10.26.255.1',
+  Boord: 'https://cp.fattiengage.com/portal/10.27.255.1',
+  Hermanus: 'https://cp.fattiengage.com/portal/10.28.255.1',
+  Vredenburg: 'https://cp.fattiengage.com/portal/10.29.255.1',
+  Randridge: 'https://cp.fattiengage.com/portal/10.30.255.1',
+  Randburgsquare: 'https://cp.fattiengage.com/portal/10.31.255.1',
+  Durbanworkshop: 'https://cp.fattiengage.com/portal/10.32.255.1',
+  Bloemfontein: 'https://cp.fattiengage.com/portal/10.34.255.1',
+  Atlantis: 'https://cp.fattiengage.com/portal/10.35.255.1',
+  Hammersdale: 'https://cp.fattiengage.com/portal/10.36.255.1',
+  Queenstown: 'https://cp.fattiengage.com/portal/10.37.255.1',
+  Gugulethu: 'https://cp.fattiengage.com/portal/10.38.255.1',
+  Mdatsane: 'https://cp.fattiengage.com/portal/10.39.255.1',
+  Pinecrest: 'https://cp.fattiengage.com/portal/10.40.255.1',
+  Higlandmews: 'https://cp.fattiengage.com/portal/10.41.255.1',
+  Maluticrest: 'https://cp.fattiengage.com/portal/10.42.255.1',
+  Phoenix: 'https://cp.fattiengage.com/portal/10.43.255.1',
+  Moruleng: 'https://cp.fattiengage.com/portal/10.44.255.1',
+  Mooirivier: 'https://cp.fattiengage.com/portal/10.46.255.1',
+  GardenRoute: 'https://cp.fattiengage.com/portal/10.47.255.1',
+  Daveyton: 'https://cp.fattiengage.com/portal/10.48.255.1',
+  Balfour: 'https://cp.fattiengage.com/portal/10.49.255.1',
+  Zeevenwacht: 'https://cp.fattiengage.com/portal/10.50.255.1',
+  'Liberty Park': 'https://cp.fattiengage.com/portal/10.51.255.1',
+  Kolonade: 'https://cp.fattiengage.com/portal/10.33.255.1',
+  Castelgate: 'https://cp.fattiengage.com/portal/10.45.255.1',
+};
+
+function getRedirectUrl(utmMedium: string | undefined): string {
+  const defaultUrl = 'https://bobbies.hotspot.yourspot.co.za/lv/login';
+  if (!utmMedium) {
+    return defaultUrl;
+  }
+  return utmToRedirectMap[utmMedium] || defaultUrl;
+}
+
 function Forti_2() {
   const [isRewardModalVisible, setIsRewardModalVisible] = useState(false);
-  const [interstitialTimer, setInterstitialTimer] = useState(20); // Set initial timer to 20 seconds
+  const [interstitialTimer, setInterstitialTimer] = useState(20);
   const [isButtonVisible, setButtonVisible] = useState(false);
   const router = useRouter();
 
@@ -24,7 +87,6 @@ function Forti_2() {
           if (prevTimer > 0) {
             const newTime = prevTimer - 1;
             if (newTime <= 0) {
-              // Show button when 10 seconds or less remain
               setButtonVisible(true);
             }
             return newTime;
@@ -117,9 +179,9 @@ function Forti_2() {
               router.push(appendUtmParams('/cancel'));
             } else {
               googletag.destroySlots([rewardedSlot]);
-              window.location.href = appendUtmParams(
-                'https://bobbies.hotspot.yourspot.co.za/lv/login'
-              );
+              const utmParams = getUtmParams();
+              const redirectUrl = getRedirectUrl(utmParams.utm_medium);
+              window.location.href = appendUtmParams(redirectUrl);
             }
           });
 
@@ -135,21 +197,19 @@ function Forti_2() {
   };
 
   const handleConnect = () => {
-    router.push(
-      appendUtmParams('https://bobbies.hotspot.yourspot.co.za/lv/login')
-    );
+    const utmParams = getUtmParams();
+    const redirectUrl = getRedirectUrl(utmParams.utm_medium);
+    router.push(appendUtmParams(redirectUrl));
   };
 
   return (
     <>
-      {/* Existing GPT Setup for Rewarded Ads */}
       <Script id='gpt-rewarded-ad-setup' strategy='afterInteractive'>
         {`
           window.googletag = window.googletag || {cmd: []};
         `}
       </Script>
 
-      {/* Updated GPT Tag Script Integration */}
       <Script id='gpt-interstitial-setup' strategy='afterInteractive'>
         {`
           window.googletag = window.googletag || {cmd: []};
@@ -236,12 +296,10 @@ function Forti_2() {
           )}
         </div>
 
-        {/* Sticky Ad */}
         <div className='fixed bottom-12 left-0 right-0 z-[9999] flex justify-center'>
           <div id='div-gpt-ad-7171086-3' className='w-full max-w-[768px]'></div>
         </div>
 
-        {/* Divs for Ad Slots */}
         <div className='my-4 flex w-full items-center justify-center'>
           <div id='div-gpt-ad-7171086-1'></div>
         </div>
@@ -256,7 +314,6 @@ function Forti_2() {
         </div>
       </div>
 
-      {/* Reward Modal */}
       <div
         id='rewardModal'
         className='fixed inset-0 z-[9000] flex items-center justify-center bg-black bg-opacity-50 p-4'
