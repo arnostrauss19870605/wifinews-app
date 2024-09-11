@@ -217,6 +217,11 @@ const Landing: React.FC = () => {
           </p>
         </div>
 
+        {/* Sticky Ad */}
+        <div className='fixed bottom-12 left-0 right-0 z-[9999] flex justify-center'>
+          <div id='div-gpt-ad-7092085-3' className='w-full max-w-[768px]'></div>
+        </div>
+
         {/* Ad Slots Divs */}
         <div className='my-4 flex w-full items-center justify-center'>
           <div id='div-gpt-ad-7092085-1'></div>
@@ -226,15 +231,10 @@ const Landing: React.FC = () => {
         </div>
       </div>
 
-      {/* Sticky Ad */}
-      <div className='z-100 fixed bottom-12 left-0 right-0 flex justify-center'>
-        <div id='div-gpt-ad-7092085-3' className='w-full max-w-[768px]'></div>
-      </div>
-
       {/* Reward Modal */}
       <div
         id='rewardModal'
-        className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4'
+        className='fixed inset-0 z-[9000] flex items-center justify-center bg-black bg-opacity-50 p-4'
         style={{
           display: isRewardModalVisible ? 'flex' : 'none',
           paddingBottom: '60px',
@@ -267,7 +267,7 @@ const Landing: React.FC = () => {
       {/* Grant Modal */}
       <div
         id='grantModal'
-        className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4'
+        className='fixed inset-0 z-[9000] flex items-center justify-center bg-black bg-opacity-50 p-4'
         style={{ display: 'none' }}
       >
         <div
