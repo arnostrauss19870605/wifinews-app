@@ -191,13 +191,13 @@ function Forti_2() {
               .addSize([300, 0], ['fluid', [320, 50], [300, 50], [320, 100], [300, 100]])
               .build();
 
-            googletag.defineSlot('/22047902240/wifinews/interstitial', ['fluid',[320,480],[300,250],[300,600]], 'div-gpt-ad-6110814-1')
+            googletag.defineSlot('/22047902240/wifinews/forti_insterstitial', ['fluid',[320,480],[300,250],[300,600]], 'div-gpt-ad-7171086-1')
               .defineSizeMapping(mapping2)
               .addService(googletag.pubads());
-            googletag.defineSlot('/22047902240/wifinews/interstitial_1_320x50', ['fluid',[320,50],[320,100],[300,250],[468,60],[728,90]], 'div-gpt-ad-6110814-2')
+            googletag.defineSlot('/22047902240/wifinews/forti_top320x50', ['fluid',[320,50],[320,100],[300,250],[468,60],[728,90]], 'div-gpt-ad-7171086-2')
               .defineSizeMapping(mapping1)
               .addService(googletag.pubads());
-            googletag.defineSlot('/22047902240/wifinews/interstitial1_sticky', ['fluid',[320,50],[320,100],[468,60],[728,90]], 'div-gpt-ad-6110814-3')
+            googletag.defineSlot('/22047902240/wifinews/forti_sticky', ['fluid',[320,50],[320,100],[468,60],[728,90]], 'div-gpt-ad-7171086-3')
               .defineSizeMapping(mapping4)
               .addService(googletag.pubads());
 
@@ -206,9 +206,9 @@ function Forti_2() {
             googletag.pubads().setCentering(true);
             googletag.enableServices();
 
-            googletag.display('div-gpt-ad-6110814-1');
-            googletag.display('div-gpt-ad-6110814-2');
-            googletag.display('div-gpt-ad-6110814-3');
+            googletag.display('div-gpt-ad-7171086-1');
+            googletag.display('div-gpt-ad-7171086-2');
+            googletag.display('div-gpt-ad-7171086-3');
           });
         `}
       </Script>
@@ -238,15 +238,15 @@ function Forti_2() {
 
         {/* Sticky Ad */}
         <div className='fixed bottom-12 left-0 right-0 z-[9999] flex justify-center'>
-          <div id='div-gpt-ad-6110814-3' className='w-full max-w-[768px]'></div>
+          <div id='div-gpt-ad-7171086-3' className='w-full max-w-[768px]'></div>
         </div>
 
         {/* Divs for Ad Slots */}
         <div className='my-4 flex w-full items-center justify-center'>
-          <div id='div-gpt-ad-6110814-1'></div>
+          <div id='div-gpt-ad-7171086-1'></div>
         </div>
         <div className='my-4 flex w-full items-center justify-center'>
-          <div id='div-gpt-ad-6110814-2'></div>
+          <div id='div-gpt-ad-7171086-2'></div>
         </div>
 
         <LearningMaterial />
