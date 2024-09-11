@@ -170,13 +170,12 @@ function Home() {
 
         <div className='mb-4 flex justify-center'>
           {isButtonVisible && (
-            <button
-              type='button'
+            <a
+              href={appendUtmParams('/interstitial')}
               className='flex items-center rounded-lg bg-slate-950 px-6 py-3 font-medium text-white focus:outline-none lg:px-10'
-              onClick={handleConnect}
             >
               <FaWifi className='mr-2' /> Connect Now
-            </button>
+            </a>
           )}
         </div>
 
