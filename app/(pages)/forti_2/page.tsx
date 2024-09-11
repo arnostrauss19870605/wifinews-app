@@ -3,55 +3,49 @@ import React, { useState, useEffect } from 'react';
 import Script from 'next/script';
 import { useRouter } from 'next/navigation';
 import ProgressIndicator from '@/app/_components/ProgressIndicator';
+import LearningMaterial from '@/app/_components/LearningMaterial';
+import DiscussionForum from '@/app/_components/DiscussionForum';
+import News from '@/app/(pages)/news/page';
 import { getUtmParams, appendUtmParams } from '@/app/_utils/utm.util';
+import { FaWifi } from 'react-icons/fa';
 
-const Landing: React.FC = () => {
+function Interstitial() {
   const [isRewardModalVisible, setIsRewardModalVisible] = useState(false);
-  const [landingTimer, setLandingTimer] = useState(35);
+  const [interstitialTimer, setInterstitialTimer] = useState(20); // Set initial timer to 20 seconds
+  const [isButtonVisible, setButtonVisible] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    const addSeconds = (
-      numOfSeconds: number,
-      date: Date = new Date()
-    ): Date => {
-      date.setSeconds(date.getSeconds() + numOfSeconds);
-      return date;
-    };
+    let countdownInterval: NodeJS.Timeout | null = null;
 
-    let timerInterval: NodeJS.Timeout;
+    if (!isRewardModalVisible) {
+      countdownInterval = setInterval(() => {
+        setInterstitialTimer((prevTimer) => {
+          if (prevTimer > 0) {
+            const newTime = prevTimer - 1;
+            if (newTime <= 0) {
+              // Show button when 10 seconds or less remain
+              setButtonVisible(true);
+            }
+            return newTime;
+          }
+          return 0;
+        });
+      }, 1000);
+    }
 
-    const firstTimer = () => {
-      const totalTime = 35;
-      const futureTime = addSeconds(totalTime);
-
-      function updateTimer() {
-        if (isRewardModalVisible) {
-          clearInterval(timerInterval);
-          return;
-        }
-
-        const timeLeft = Math.floor(
-          (futureTime.getTime() - new Date().getTime()) / 1000
-        );
-
-        if (timeLeft <= 0) {
-          clearInterval(timerInterval);
-          setLandingTimer(0);
-          router.push(appendUtmParams('/home'));
-        } else {
-          setLandingTimer(timeLeft);
-        }
+    if (interstitialTimer === 0) {
+      if (countdownInterval) {
+        clearInterval(countdownInterval);
       }
+    }
 
-      updateTimer();
-      timerInterval = setInterval(updateTimer, 1000);
+    return () => {
+      if (countdownInterval) {
+        clearInterval(countdownInterval);
+      }
     };
-
-    firstTimer();
-
-    return () => clearInterval(timerInterval);
-  }, [isRewardModalVisible, router]);
+  }, [interstitialTimer, router, isRewardModalVisible]);
 
   useEffect(() => {
     const initializeRewardedAd = () => {
@@ -123,7 +117,9 @@ const Landing: React.FC = () => {
               router.push(appendUtmParams('/cancel'));
             } else {
               googletag.destroySlots([rewardedSlot]);
-              router.push(appendUtmParams('/home'));
+              window.location.href = appendUtmParams(
+                'https://bobbies.hotspot.yourspot.co.za/lv/login'
+              );
             }
           });
 
@@ -138,26 +134,34 @@ const Landing: React.FC = () => {
     router.push(appendUtmParams('/cancel'));
   };
 
+  const handleConnect = () => {
+    router.push(
+      appendUtmParams('https://bobbies.hotspot.yourspot.co.za/lv/login')
+    );
+  };
+
   return (
     <>
+      {/* Existing GPT Setup for Rewarded Ads */}
       <Script id='gpt-rewarded-ad-setup' strategy='afterInteractive'>
         {`
           window.googletag = window.googletag || {cmd: []};
         `}
       </Script>
 
-      <Script id='gpt-ad-slots' strategy='afterInteractive'>
+      {/* Updated GPT Tag Script Integration */}
+      <Script id='gpt-interstitial-setup' strategy='afterInteractive'>
         {`
           window.googletag = window.googletag || {cmd: []};
 
           googletag.cmd.push(function() {
             const utmParams = ${JSON.stringify(getUtmParams())};
-            console.log("landing utm params =>",utmParams);
+            console.log("interstitial utm params =>",utmParams);
             Object.entries(utmParams).forEach(([key, value]) => {
               googletag.pubads().setTargeting(key, value);
             });
 
-            var mapping1 = googletag.sizeMapping()
+            const mapping1 = googletag.sizeMapping()
               .addSize([1400, 0], [[728, 90], 'fluid'])
               .addSize([1200, 0], [[728, 90], 'fluid'])
               .addSize([1000, 0], [[728, 90], 'fluid'])
@@ -167,7 +171,7 @@ const Landing: React.FC = () => {
               .addSize([300, 0], [[320, 50], [300, 250], [320, 100], [300, 50], [300, 100], 'fluid'])
               .build();
 
-            var mapping2 = googletag.sizeMapping()
+            const mapping2 = googletag.sizeMapping()
               .addSize([1400, 0], [[320, 480], [300, 250], [300, 600], 'fluid'])
               .addSize([1200, 0], [[320, 480], [300, 250], [300, 600], 'fluid'])
               .addSize([1000, 0], [[320, 480], [300, 250], [300, 600], 'fluid'])
@@ -177,7 +181,7 @@ const Landing: React.FC = () => {
               .addSize([300, 0], [[300, 250], [300, 600], [320, 480], 'fluid'])
               .build();
 
-            var mapping4 = googletag.sizeMapping()
+            const mapping4 = googletag.sizeMapping()
               .addSize([1400, 0], [[728, 90], 'fluid'])
               .addSize([1200, 0], [[728, 90], 'fluid'])
               .addSize([1000, 0], [[728, 90], 'fluid'])
@@ -187,13 +191,13 @@ const Landing: React.FC = () => {
               .addSize([300, 0], ['fluid', [320, 50], [300, 50], [320, 100], [300, 100]])
               .build();
 
-            googletag.defineSlot('/22047902240/wifinews/landing_interstitial', ['fluid',[320,480],[300,250],[300,600]], 'div-gpt-ad-7092085-1')
+            googletag.defineSlot('/22047902240/wifinews/interstitial', ['fluid',[320,480],[300,250],[300,600]], 'div-gpt-ad-6110814-1')
               .defineSizeMapping(mapping2)
               .addService(googletag.pubads());
-            googletag.defineSlot('/22047902240/wifinews/landing_top320x50', ['fluid',[300,250],[320,50],[320,100],[468,60],[728,90]], 'div-gpt-ad-7092085-2')
+            googletag.defineSlot('/22047902240/wifinews/interstitial_1_320x50', ['fluid',[320,50],[320,100],[300,250],[468,60],[728,90]], 'div-gpt-ad-6110814-2')
               .defineSizeMapping(mapping1)
               .addService(googletag.pubads());
-            googletag.defineSlot('/22047902240/wifinews/landing_sticky', ['fluid',[320,50],[320,100],[468,60],[728,90]], 'div-gpt-ad-7092085-3')
+            googletag.defineSlot('/22047902240/wifinews/interstitial1_sticky', ['fluid',[320,50],[320,100],[468,60],[728,90]], 'div-gpt-ad-6110814-3')
               .defineSizeMapping(mapping4)
               .addService(googletag.pubads());
 
@@ -201,33 +205,54 @@ const Landing: React.FC = () => {
             googletag.pubads().collapseEmptyDivs();
             googletag.pubads().setCentering(true);
             googletag.enableServices();
+
+            googletag.display('div-gpt-ad-6110814-1');
+            googletag.display('div-gpt-ad-6110814-2');
+            googletag.display('div-gpt-ad-6110814-3');
           });
         `}
       </Script>
 
-      {/* Main Content */}
       <div className='flex min-h-screen flex-col items-center px-4 py-10'>
         <div className='mb-5 text-center'>
-          <ProgressIndicator currentStep={1} totalSteps={3} />
+          <ProgressIndicator currentStep={2} totalSteps={2} />
           <p className='mt-2 text-lg font-semibold text-gray-700'>
             View these ads for
           </p>
           <p className='text-xl font-bold text-gray-800'>
-            {landingTimer} seconds
+            {interstitialTimer} seconds
           </p>
+        </div>
+
+        <div className='flex justify-center'>
+          {isButtonVisible && (
+            <button
+              type='button'
+              className='mb-6 mt-2 flex items-center rounded-lg bg-slate-950 px-6 py-3 font-medium text-white focus:outline-none lg:px-10'
+              onClick={handleConnect}
+            >
+              <FaWifi className='mr-2' /> Connect Now
+            </button>
+          )}
         </div>
 
         {/* Sticky Ad */}
         <div className='fixed bottom-12 left-0 right-0 z-[9999] flex justify-center'>
-          <div id='div-gpt-ad-7092085-3' className='w-full max-w-[768px]'></div>
+          <div id='div-gpt-ad-6110814-3' className='w-full max-w-[768px]'></div>
         </div>
 
-        {/* Ad Slots Divs */}
+        {/* Divs for Ad Slots */}
         <div className='my-4 flex w-full items-center justify-center'>
-          <div id='div-gpt-ad-7092085-1'></div>
+          <div id='div-gpt-ad-6110814-1'></div>
         </div>
         <div className='my-4 flex w-full items-center justify-center'>
-          <div id='div-gpt-ad-7092085-2'></div>
+          <div id='div-gpt-ad-6110814-2'></div>
+        </div>
+
+        <LearningMaterial />
+        <DiscussionForum />
+        <div className='my-10'>
+          <News />
         </div>
       </div>
 
@@ -263,29 +288,8 @@ const Landing: React.FC = () => {
           </p>
         </div>
       </div>
-
-      {/* Grant Modal */}
-      <div
-        id='grantModal'
-        className='fixed inset-0 z-[9000] flex items-center justify-center bg-black bg-opacity-50 p-4'
-        style={{ display: 'none' }}
-      >
-        <div
-          className='rounded-lg bg-white p-6 text-center shadow-lg'
-          style={{ maxWidth: '500px', maxHeight: '80vh', width: '100%' }}
-        >
-          <p id='grantParagraph' className='mb-4'></p>
-          <input
-            type='button'
-            className='btn cursor-pointer rounded-lg bg-blue-500 px-4 py-2 text-white'
-            id='grantCloseBtn'
-            value='Close'
-            onClick={() => router.push(appendUtmParams('/home'))}
-          />
-        </div>
-      </div>
     </>
   );
-};
+}
 
-export default Landing;
+export default Interstitial;

@@ -215,7 +215,7 @@ function Interstitial() {
 
       <div className='flex min-h-screen flex-col items-center px-4 py-10'>
         <div className='mb-5 text-center'>
-          <ProgressIndicator step={3} />
+          <ProgressIndicator currentStep={3} totalSteps={3} />
           <p className='mt-2 text-lg font-semibold text-gray-700'>
             View these ads for
           </p>
