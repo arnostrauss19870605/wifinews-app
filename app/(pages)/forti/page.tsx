@@ -9,7 +9,7 @@ import ProgressIndicator from '@/app/_components/ProgressIndicator';
 import { getUtmParams, appendUtmParams } from '@/app/_utils/utm.util';
 import { FaWifi } from 'react-icons/fa';
 
-function Home() {
+function Forti() {
   const [timer, setTimer] = useState(20);
   const [isButtonVisible, setButtonVisible] = useState(false);
   const router = useRouter();
@@ -211,4 +211,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default Forti;

@@ -9,7 +9,7 @@ import News from '@/app/(pages)/news/page';
 import { getUtmParams, appendUtmParams } from '@/app/_utils/utm.util';
 import { FaWifi } from 'react-icons/fa';
 
-function Interstitial() {
+function Forti_2() {
   const [isRewardModalVisible, setIsRewardModalVisible] = useState(false);
   const [interstitialTimer, setInterstitialTimer] = useState(20); // Set initial timer to 20 seconds
   const [isButtonVisible, setButtonVisible] = useState(false);
@@ -292,4 +292,4 @@ function Interstitial() {
   );
 }
 
-export default Interstitial;
+export default Forti_2;
