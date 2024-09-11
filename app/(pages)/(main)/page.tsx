@@ -4,6 +4,7 @@ import LearningMaterial from '@/app/_components/LearningMaterial';
 import DiscussionForum from '@/app/_components/DiscussionForum';
 import News from '@/app/(pages)/news/page';
 import { getUtmParams } from '@/app/_utils/utm.util';
+import React from 'react';
 
 function Main() {
   return (
@@ -98,15 +99,15 @@ function Main() {
       </div>
 
       <LearningMaterial />
-      <DiscussionForum />
-      <div className='my-10'>
-        <News />
-      </div>
       <div className='my-4 flex w-full items-center justify-center'>
         <div id='div-gpt-ad-6641866-2'></div>
       </div>
+      <DiscussionForum />
       <div className='my-4 flex w-full items-center justify-center'>
         <div id='div-gpt-ad-6641866-3'></div>
+      </div>
+      <div className='my-10'>
+        <News />
       </div>
       <div className='my-4 flex w-full items-center justify-center'>
         <div id='div-gpt-ad-6641866-4'></div>
@@ -114,8 +115,10 @@ function Main() {
       <div className='my-4 flex w-full items-center justify-center'>
         <div id='div-gpt-ad-6641866-5'></div>
       </div>
-      <div className='my-4 flex w-full items-center justify-center'>
-        <div id='div-gpt-ad-6641866-6'></div>
+
+      {/* Sticky Ad */}
+      <div className='fixed bottom-12 left-0 right-0 z-[9999] flex justify-center'>
+        <div id='div-gpt-ad-6641866-6' className='w-full max-w-[768px]'></div>
       </div>
     </div>
   );

@@ -180,22 +180,17 @@ function Home() {
         </div>
 
         <LearningMaterial />
+        <div className='my-4 flex w-full items-center justify-center'>
+          <div id='div-gpt-ad-6641866-2'></div>
+        </div>
         <DiscussionForum />
+        <div className='my-4 flex w-full items-center justify-center'>
+          <div id='div-gpt-ad-6641866-3'></div>
+        </div>
         <div className='my-10'>
           <News />
         </div>
 
-        {/* Sticky Ad */}
-        <div className='fixed bottom-12 left-0 right-0 z-[9999] flex justify-center'>
-          <div id='div-gpt-ad-6641866-6' className='w-full max-w-[768px]'></div>
-        </div>
-
-        <div className='my-4 flex w-full items-center justify-center'>
-          <div id='div-gpt-ad-6641866-2'></div>
-        </div>
-        <div className='my-4 flex w-full items-center justify-center'>
-          <div id='div-gpt-ad-6641866-3'></div>
-        </div>
         <div className='my-4 flex w-full items-center justify-center'>
           <div id='div-gpt-ad-6641866-4'></div>
         </div>
