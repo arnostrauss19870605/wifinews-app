@@ -1,14 +1,16 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import Script from 'next/script';
+import { useRouter } from 'next/navigation';
 import ProgressIndicator from '@/app/_components/ProgressIndicator';
+import { getUtmParams, appendUtmParams } from '@/app/_utils/utm.util';
 
 const Landing: React.FC = () => {
   const [isRewardModalVisible, setIsRewardModalVisible] = useState(false);
   const [landingTimer, setLandingTimer] = useState(35);
+  const router = useRouter();
 
   useEffect(() => {
-    // Timer for countdown, similar to Django implementation
     const addSeconds = (
       numOfSeconds: number,
       date: Date = new Date()
@@ -24,13 +26,19 @@ const Landing: React.FC = () => {
       const futureTime = addSeconds(totalTime);
 
       function updateTimer() {
+        if (isRewardModalVisible) {
+          clearInterval(timerInterval);
+          return;
+        }
+
         const timeLeft = Math.floor(
           (futureTime.getTime() - new Date().getTime()) / 1000
         );
 
         if (timeLeft <= 0) {
           clearInterval(timerInterval);
-          nextPage(); // Navigate to the next page
+          setLandingTimer(0);
+          router.push(appendUtmParams('/home'));
         } else {
           setLandingTimer(timeLeft);
         }
@@ -40,102 +48,165 @@ const Landing: React.FC = () => {
       timerInterval = setInterval(updateTimer, 1000);
     };
 
-    if (typeof window !== 'undefined') {
-      document.addEventListener('DOMContentLoaded', () => {
-        firstTimer();
-      });
-    }
+    firstTimer();
 
     return () => clearInterval(timerInterval);
-  }, []);
+  }, [isRewardModalVisible, router]);
 
-  // Helper functions for navigation
-  const nextPage = () => {
-    const queryString = window.location.search;
-    window.location.assign('/home/' + queryString);
-  };
+  useEffect(() => {
+    const initializeRewardedAd = () => {
+      (window as any).googletag = (window as any).googletag || { cmd: [] };
+      (window as any).googletag.cmd.push(() => {
+        const googletag = (window as any).googletag;
+        let rewardedSlot = googletag
+          .defineOutOfPageSlot(
+            '147246189,22047902240/wifinews.co.za_rewarded',
+            googletag.enums.OutOfPageFormat.REWARDED
+          )
+          .addService(googletag.pubads());
+        rewardedSlot.setForceSafeFrame(true);
+        googletag.pubads().enableAsyncRendering();
+        googletag.enableServices();
+
+        let rewardedSlotReady = false;
+        let grantedState = false;
+
+        googletag.pubads().addEventListener('rewardedSlotReady', (evt: any) => {
+          rewardedSlotReady = true;
+          setIsRewardModalVisible(true);
+          const trigger = document.getElementById('rewardModal');
+          if (trigger) {
+            trigger.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+
+            const watchAdButton = document.getElementById('watchAdBtn');
+            const noThanksButton = document.getElementById('noThanksBtn');
+
+            const makeVisibleFn = (e: Event) => {
+              evt.makeRewardedVisible();
+              e.preventDefault();
+              watchAdButton?.removeEventListener('click', makeVisibleFn);
+              noThanksButton?.removeEventListener('click', closeModalFn);
+              trigger.style.display = 'none';
+              document.body.style.overflow = '';
+              setIsRewardModalVisible(false);
+            };
+
+            const closeModalFn = () => {
+              trigger.style.display = 'none';
+              document.body.style.overflow = '';
+              googletag.destroySlots([rewardedSlot]);
+              setIsRewardModalVisible(false);
+            };
+
+            watchAdButton?.addEventListener('click', makeVisibleFn);
+            noThanksButton?.addEventListener('click', closeModalFn);
+          }
+        });
+
+        googletag.pubads().addEventListener('rewardedSlotGranted', function () {
+          grantedState = true;
+          console.log('Rewarded Ad Granted Event');
+        });
+
+        googletag
+          .pubads()
+          .addEventListener('rewardedSlotClosed', (event: any) => {
+            const slot = event.slot;
+            console.log(
+              'Rewarded ad slot',
+              slot.getSlotElementId(),
+              'has been closed.'
+            );
+            if (!grantedState) {
+              console.log('Rewarded Slot was not granted.');
+              router.push(appendUtmParams('/cancel'));
+            } else {
+              googletag.destroySlots([rewardedSlot]);
+              router.push(appendUtmParams('/home'));
+            }
+          });
+
+        googletag.display(rewardedSlot);
+      });
+    };
+
+    initializeRewardedAd();
+  }, [router]);
 
   const cancelPage = () => {
-    const queryString = window.location.search;
-    window.location.assign('/cancel/' + queryString);
+    router.push(appendUtmParams('/cancel'));
   };
 
   return (
     <>
-      {/* Google Publisher Tags script */}
-      <Script
-        src='https://securepubads.g.doubleclick.net/tag/js/gpt.js'
-        strategy='beforeInteractive'
-      />
-
-      {/* Rewarded Ad Script */}
-      <Script id='gpt-rewarded-ad-setup' strategy='beforeInteractive'>
+      <Script id='gpt-rewarded-ad-setup' strategy='afterInteractive'>
         {`
-          googletag = window.googletag || {cmd: []};
-          googletag.cmd.push(() => {
-            let rewardedSlot = googletag.defineOutOfPageSlot('147246189,22047902240/wifinews.co.za_rewarded', googletag.enums.OutOfPageFormat.REWARDED).addService(googletag.pubads());
-            rewardedSlot.setForceSafeFrame(true);
-            googletag.pubads().enableAsyncRendering();
+          window.googletag = window.googletag || {cmd: []};
+        `}
+      </Script>
+
+      <Script id='gpt-ad-slots' strategy='afterInteractive'>
+        {`
+          window.googletag = window.googletag || {cmd: []};
+
+          googletag.cmd.push(function() {
+            const utmParams = ${JSON.stringify(getUtmParams())};
+            console.log("landing utm params =>",utmParams);
+            Object.entries(utmParams).forEach(([key, value]) => {
+              googletag.pubads().setTargeting(key, value);
+            });
+
+            var mapping1 = googletag.sizeMapping()
+              .addSize([1400, 0], [[728, 90], 'fluid'])
+              .addSize([1200, 0], [[728, 90], 'fluid'])
+              .addSize([1000, 0], [[728, 90], 'fluid'])
+              .addSize([700, 0], [[468, 60], [320, 50], [300, 50], 'fluid', [300, 250], [320, 100], [300, 100]])
+              .addSize([600, 0], [[468, 60], [320, 50], [300, 50], 'fluid', [300, 100], [320, 100], [300, 250]])
+              .addSize([400, 0], [[320, 50], [300, 50], 'fluid', [320, 100], [300, 250], [300, 100]])
+              .addSize([300, 0], [[320, 50], [300, 250], [320, 100], [300, 50], [300, 100], 'fluid'])
+              .build();
+
+            var mapping2 = googletag.sizeMapping()
+              .addSize([1400, 0], [[320, 480], [300, 250], [300, 600], 'fluid'])
+              .addSize([1200, 0], [[320, 480], [300, 250], [300, 600], 'fluid'])
+              .addSize([1000, 0], [[320, 480], [300, 250], [300, 600], 'fluid'])
+              .addSize([700, 0], [[320, 480], [300, 250], [300, 600], 'fluid'])
+              .addSize([600, 0], [[320, 480], [300, 250], [300, 600], 'fluid'])
+              .addSize([400, 0], [[300, 250], [300, 600], [320, 480], 'fluid'])
+              .addSize([300, 0], [[300, 250], [300, 600], [320, 480], 'fluid'])
+              .build();
+
+            var mapping4 = googletag.sizeMapping()
+              .addSize([1400, 0], [[728, 90], 'fluid'])
+              .addSize([1200, 0], [[728, 90], 'fluid'])
+              .addSize([1000, 0], [[728, 90], 'fluid'])
+              .addSize([700, 0], ['fluid', [468, 60], [320, 50], [300, 50], [320, 100], [300, 100]])
+              .addSize([600, 0], ['fluid', [468, 60], [320, 50], [300, 50], [320, 100], [300, 100]])
+              .addSize([400, 0], ['fluid', [320, 50], [300, 50], [320, 100], [300, 100]])
+              .addSize([300, 0], ['fluid', [320, 50], [300, 50], [320, 100], [300, 100]])
+              .build();
+
+            googletag.defineSlot('/22047902240/wifinews/landing_interstitial', ['fluid',[320,480],[300,250],[300,600]], 'div-gpt-ad-7092085-1')
+              .defineSizeMapping(mapping2)
+              .addService(googletag.pubads());
+            googletag.defineSlot('/22047902240/wifinews/landing_top320x50', ['fluid',[300,250],[320,50],[320,100],[468,60],[728,90]], 'div-gpt-ad-7092085-2')
+              .defineSizeMapping(mapping1)
+              .addService(googletag.pubads());
+            googletag.defineSlot('/22047902240/wifinews/landing_sticky', ['fluid',[320,50],[320,100],[468,60],[728,90]], 'div-gpt-ad-7092085-3')
+              .defineSizeMapping(mapping4)
+              .addService(googletag.pubads());
+
+            googletag.pubads().enableSingleRequest();
+            googletag.pubads().collapseEmptyDivs();
+            googletag.pubads().setCentering(true);
             googletag.enableServices();
-
-            let rewardedSlotReady = false;
-
-            googletag.pubads().addEventListener('rewardedSlotReady', (evt) => {
-              rewardedSlotReady = true;
-              const trigger = document.getElementById('rewardModal');
-              if (trigger) {
-                trigger.style.display = 'block';
-                document.body.style.overflow = 'hidden'; // Prevent scrolling
-
-                const watchAdButton = document.getElementById('watchAdBtn');
-                const noThanksButton = document.getElementById('noThanksBtn');
-
-                const makeVisibleFn = (e) => {
-                  evt.makeRewardedVisible();
-                  e.preventDefault();
-                  watchAdButton?.removeEventListener('click', makeVisibleFn);
-                  noThanksButton?.removeEventListener('click', closeModalFn);
-                  trigger.style.display = 'none';
-                  document.body.style.overflow = ''; // Restore scrolling
-                };
-
-                const closeModalFn = () => {
-                  trigger.style.display = 'none';
-                  document.body.style.overflow = ''; // Restore scrolling
-                  googletag.destroySlots([rewardedSlot]);
-                };
-
-                watchAdButton?.addEventListener('click', makeVisibleFn);
-                noThanksButton?.addEventListener('click', closeModalFn);
-              }
-            });
-
-            let grantedState = false;
-
-            googletag.pubads().addEventListener('rewardedSlotGranted', function(evt) {
-              grantedState = true;
-              console.log("Rewarded Ad Granted Event");
-            });
-
-            googletag.pubads().addEventListener("rewardedSlotClosed", (event) => {
-              const slot = event.slot;
-              console.log("Rewarded ad slot", slot.getSlotElementId(), "has been closed.");
-              if (!grantedState) {
-                console.log('Rewarded Slot was not granted.');
-                cancelPage();
-              } else {
-                googletag.destroySlots([rewardedSlot]);
-                nextPage();
-              }
-            });
-
-            googletag.display(rewardedSlot);
           });
         `}
       </Script>
 
       {/* Main Content */}
-      <div className='flex min-h-screen flex-col items-center justify-center px-4 py-10'>
+      <div className='flex min-h-screen flex-col items-center px-4 py-10'>
         <div className='mb-5 text-center'>
           <ProgressIndicator step={1} />
           <p className='mt-2 text-lg font-semibold text-gray-700'>
@@ -145,19 +216,36 @@ const Landing: React.FC = () => {
             {landingTimer} seconds
           </p>
         </div>
+
+        {/* Ad Slots Divs */}
+        <div className='my-4 flex w-full items-center justify-center'>
+          <div id='div-gpt-ad-7092085-1'></div>
+        </div>
+        <div className='my-4 flex w-full items-center justify-center'>
+          <div id='div-gpt-ad-7092085-2'></div>
+        </div>
+        <div className='my-4 flex w-full items-center justify-center'>
+          <div id='div-gpt-ad-7092085-3'></div>
+        </div>
       </div>
 
       {/* Reward Modal */}
       <div
         id='rewardModal'
-        className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50'
-        style={{ display: isRewardModalVisible ? 'flex' : 'none' }}
+        className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4'
+        style={{
+          display: isRewardModalVisible ? 'flex' : 'none',
+          paddingBottom: '60px',
+        }}
       >
-        <div className='rounded-lg bg-white p-6 text-center shadow-lg'>
+        <div
+          className='rounded-lg bg-white p-6 text-center shadow-lg'
+          style={{ maxWidth: '500px', maxHeight: '80vh', width: '100%' }}
+        >
           <p className='mb-4'>To get free Wi-Fi, you need to watch these ads</p>
           <input
             type='button'
-            className='lg_btn mr-2 cursor-pointer rounded-lg bg-blue-500 px-4 py-2 text-white'
+            className='lg_btn mr-2 cursor-pointer rounded-lg bg-black px-4 py-2 text-white'
             id='watchAdBtn'
             value='Yes, I want free Wi-Fi!'
           />
@@ -166,6 +254,7 @@ const Landing: React.FC = () => {
             className='btn cursor-pointer rounded-lg bg-gray-500 px-4 py-2 text-white'
             id='noThanksBtn'
             value='No Thanks'
+            onClick={cancelPage}
           />
           <p className='mt-4'>
             I do not want Free Wi-Fi and will remain on this page.
@@ -176,26 +265,23 @@ const Landing: React.FC = () => {
       {/* Grant Modal */}
       <div
         id='grantModal'
-        className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50'
+        className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4'
         style={{ display: 'none' }}
       >
-        <div className='rounded-lg bg-white p-6 text-center shadow-lg'>
+        <div
+          className='rounded-lg bg-white p-6 text-center shadow-lg'
+          style={{ maxWidth: '500px', maxHeight: '80vh', width: '100%' }}
+        >
           <p id='grantParagraph' className='mb-4'></p>
           <input
             type='button'
             className='btn cursor-pointer rounded-lg bg-blue-500 px-4 py-2 text-white'
             id='grantCloseBtn'
             value='Close'
-            onClick={nextPage}
+            onClick={() => router.push(appendUtmParams('/home'))}
           />
         </div>
       </div>
-
-      {/* Directly including ads div as in Django implementation */}
-      <div
-        id='div-gpt-ad-7092085-1'
-        style={{ textAlign: 'center', margin: '20px auto' }}
-      ></div>
     </>
   );
 };
