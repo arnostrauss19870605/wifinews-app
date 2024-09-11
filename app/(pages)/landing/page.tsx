@@ -224,9 +224,11 @@ const Landing: React.FC = () => {
         <div className='my-4 flex w-full items-center justify-center'>
           <div id='div-gpt-ad-7092085-2'></div>
         </div>
-        <div className='my-4 flex w-full items-center justify-center'>
-          <div id='div-gpt-ad-7092085-3'></div>
-        </div>
+      </div>
+
+      {/* Sticky Ad */}
+      <div className='fixed bottom-12 left-0 right-0 z-50 flex justify-center'>
+        <div id='div-gpt-ad-7092085-3' className='w-full max-w-screen-xl'></div>
       </div>
 
       {/* Reward Modal */}
