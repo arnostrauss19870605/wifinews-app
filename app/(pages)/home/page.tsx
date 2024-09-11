@@ -127,6 +127,38 @@ function Home() {
         `}
       </Script>
 
+      {/* Separate Vignette Ad Script */}
+      <Script
+        id='gpt-vignette-setup'
+        strategy='lazyOnload'
+        crossOrigin='anonymous'
+      >
+        {`
+          window.googletag = window.googletag || { cmd: [] };
+
+          googletag.cmd.push(function() {
+            const interstitialSlot = googletag.defineOutOfPageSlot(
+              "/22047902240/wifinews/homepage_vignette",
+              googletag.enums.OutOfPageFormat.INTERSTITIAL
+            );
+
+            if (interstitialSlot) {
+              interstitialSlot.addService(googletag.pubads()).setConfig({
+                interstitial: {
+                  triggers: {
+                    navBar: true,
+                    unhideWindow: true,
+                  },
+                },
+              });
+              
+              // Refresh the interstitial slot to trigger the ad
+              googletag.pubads().refresh([interstitialSlot]);
+            }
+          });
+        `}
+      </Script>
+
       <div className='flex min-h-screen flex-col items-center px-4 py-10'>
         <div className='mb-5 text-center'>
           <ProgressIndicator step={2} />
