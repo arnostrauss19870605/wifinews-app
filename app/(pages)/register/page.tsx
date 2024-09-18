@@ -62,36 +62,34 @@ function Register() {
 
           <div>
             <label
-              htmlFor='country'
+              htmlFor='password'
               className='block text-sm font-medium text-gray-700'
             >
-              Country
+              Password
             </label>
-            <select
-              name='country'
-              id='country'
+            <input
+              id='password'
+              name='password'
+              type='password'
+              placeholder='********'
               className='mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500'
-            >
-              <option value='sa'>South Africa</option>
-              <option value='ger'>Germany</option>
-            </select>
+            />
           </div>
 
           <div>
             <label
-              htmlFor='city'
+              htmlFor='confirmPassword'
               className='block text-sm font-medium text-gray-700'
             >
-              City
+              Confirm Password
             </label>
-            <select
-              name='city'
-              id='city'
+            <input
+              id='confirmPassword'
+              name='confirmPassword'
+              type='password'
+              placeholder='********'
               className='mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500'
-            >
-              <option value='sa'>South Africa</option>
-              <option value='ger'>Germany</option>
-            </select>
+            />
           </div>
 
           <div className='mt-6'>
