@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FiX } from 'react-icons/fi';
+import { FiX, FiLogOut } from 'react-icons/fi';
 import { MdOutlineMenu } from 'react-icons/md';
 import wifinewslogo from '../../_assets/images/logo.png';
 import { useAuth } from '@/app/_context/authContext';
@@ -46,12 +46,12 @@ function Navigation() {
     { name: 'Home', href: '/' },
     { name: 'News', href: '/news' },
     { name: 'Topics', href: '/topics' },
+    { name: 'Learn', href: '/learn' },
   ];
 
   return (
     <header className='bg-white shadow'>
       <nav className='container mx-auto flex items-center justify-between p-4'>
-        {/* Logo Section */}
         <div className='flex items-center'>
           <div className='relative h-[40px] w-[174px]'>
             <Link href='/'>
@@ -67,7 +67,6 @@ function Navigation() {
           </div>
         </div>
 
-        {/* Menu Items */}
         <div className='hidden lg:flex lg:flex-1 lg:justify-center'>
           <ul className='flex space-x-8 text-base text-gray-700'>
             {menuItems.map((item, index) => (
@@ -94,7 +93,6 @@ function Navigation() {
           </ul>
         </div>
 
-        {/* Auth Section (Login/Register or User Info) */}
         <div className='hidden lg:flex lg:items-center'>
           {isAuthenticated ? (
             <div className='flex items-center'>
@@ -112,22 +110,22 @@ function Navigation() {
               </span>
               <button
                 onClick={handleLogout}
-                className='ml-4 text-red-500 hover:text-red-600'
+                className='ml-4 flex items-center rounded-full border border-red-500 px-4 py-2 text-red-500 transition-colors hover:bg-red-500 hover:text-white'
               >
-                Logout
+                <FiLogOut className='mr-1' size={20} /> Logout
               </button>
             </div>
           ) : (
             <div className='flex space-x-4'>
               <Link
                 href='/login'
-                className='uppercase text-gray-700 hover:text-[#FF4644]'
+                className='rounded-full border border-[#FF4644] px-4 py-2 uppercase text-gray-700 transition-colors hover:bg-[#FF4644] hover:text-white'
               >
                 Login
               </Link>
               <Link
                 href='/register'
-                className='uppercase text-[#FF4644] hover:underline'
+                className='rounded-full bg-[#FF4644] px-4 py-2 uppercase text-white transition-colors hover:bg-[#e33a3a]'
               >
                 Register
               </Link>
@@ -135,7 +133,6 @@ function Navigation() {
           )}
         </div>
 
-        {/* Mobile Menu Toggle */}
         <button
           onClick={toggleMenu}
           className='ml-4 block h-[32px] w-[32px] cursor-pointer lg:hidden'
@@ -148,7 +145,6 @@ function Navigation() {
           )}
         </button>
 
-        {/* Mobile Menu */}
         {isMenuOpen && (
           <div className='fixed inset-0 z-50 flex flex-col bg-white'>
             <div className='flex items-center justify-between p-4'>
@@ -171,14 +167,14 @@ function Navigation() {
                 <div className='flex space-x-4'>
                   <Link
                     href='/login'
-                    className='uppercase text-gray-700 hover:text-[#FF4644]'
+                    className='rounded-full border border-[#FF4644] px-4 py-2 uppercase text-gray-700 transition-colors hover:bg-[#FF4644] hover:text-white'
                     onClick={closeMenu}
                   >
                     Login
                   </Link>
                   <Link
                     href='/register'
-                    className='uppercase text-[#FF4644] hover:underline'
+                    className='rounded-full bg-[#FF4644] px-4 py-2 uppercase text-white transition-colors hover:bg-[#e33a3a]'
                     onClick={closeMenu}
                   >
                     Register
@@ -198,10 +194,8 @@ function Navigation() {
               {menuItems.map((item, index) => (
                 <li
                   key={index}
-                  className={`w-full pt-4 text-center first:border-t-0 ${
-                    pathname === item.href
-                      ? 'font-bold text-[#FF4644]'
-                      : 'border-t border-gray-300'
+                  className={`w-full border-t border-gray-300 pt-4 text-center ${
+                    pathname === item.href ? 'font-bold text-[#FF4644]' : ''
                   }`}
                 >
                   <Link
@@ -215,14 +209,15 @@ function Navigation() {
               ))}
             </ul>
 
-            {/* Logout button for mobile menu */}
             {isAuthenticated && (
-              <button
-                onClick={handleLogout}
-                className='mt-6 w-full uppercase text-red-500 hover:text-red-600'
-              >
-                Logout
-              </button>
+              <div className='flex w-full justify-center px-4'>
+                <button
+                  onClick={handleLogout}
+                  className='mt-6 flex w-full max-w-xs items-center justify-center rounded-full border border-red-500 px-4 py-2 uppercase text-red-500 transition-colors hover:bg-red-500 hover:text-white'
+                >
+                  <FiLogOut className='mr-1' size={20} /> Logout
+                </button>
+              </div>
             )}
           </div>
         )}
