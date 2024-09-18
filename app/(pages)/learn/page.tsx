@@ -1,92 +1,200 @@
-import Image from 'next/image';
-import { FaPhotoVideo } from 'react-icons/fa';
+'use client';
 
-const CategoryTag = ({ name, count }: any) => (
-  <button className='mb-3 mr-3 inline-flex items-center rounded-full bg-gray-700 px-4 py-2 text-sm font-medium text-white hover:bg-gray-600'>
-    {name} ({count})
-  </button>
-);
+import { useState, useEffect } from 'react';
+import { AiOutlineSearch, AiOutlineArrowRight } from 'react-icons/ai';
+import {
+  FaBriefcase,
+  FaLaptopCode,
+  FaHeartbeat,
+  FaLanguage,
+  FaChalkboardTeacher,
+  FaUserAlt,
+  FaSortAlphaDown,
+  FaSortAlphaUp,
+  FaSortAmountUp,
+  FaSortAmountDown,
+} from 'react-icons/fa';
 
-const CourseCard = () => (
-  <div className='rounded-lg border border-gray-600 bg-gray-100 p-4 shadow-sm transition-shadow hover:shadow-lg'>
-    <div className='mb-4 flex h-40 w-full items-center justify-center rounded-lg bg-gray-200'>
-      <FaPhotoVideo size={48} className='text-gray-500' />
-    </div>
-    <div className='mb-2 text-lg font-semibold text-gray-900'>
-      Digital Marketing
-    </div>
-    <div className='mb-4 flex items-center'>
-      <div className='relative mr-3 h-10 w-10'>
-        <Image
-          alt='User avatar'
-          src='https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
-          className='rounded-full'
-          fill
-          sizes='40px'
-        />
-      </div>
-      <div className='text-sm text-gray-700'>Alex</div>
-    </div>
-    <div className='mb-4 text-sm text-gray-600'>1hr 15min · 12 Lessons</div>
-    <button className='w-full rounded-md bg-black px-4 py-2 text-white hover:bg-gray-800'>
-      View Full Course
-    </button>
+interface Translation {
+  name: string;
+  locale: string;
+}
+
+interface Category {
+  id: number;
+  parent_id: number | null;
+  code: string;
+  courses_count: number;
+  translations: Translation[];
+  created_at: string;
+  updated_at: string;
+}
+
+interface CategoriesResponse {
+  data: Category[];
+}
+
+const getCategoryIcon = (categoryName: string) => {
+  switch (categoryName.toLowerCase()) {
+    case 'business':
+      return <FaBriefcase size={30} />;
+    case 'it':
+      return <FaLaptopCode size={30} />;
+    case 'health':
+      return <FaHeartbeat size={30} />;
+    case 'language':
+      return <FaLanguage size={30} />;
+    case 'teaching & academics':
+      return <FaChalkboardTeacher size={30} />;
+    case 'personal development':
+      return <FaUserAlt size={30} />;
+    default:
+      return <FaBriefcase size={30} />;
+  }
+};
+
+const SkeletonCard = () => (
+  <div className='flex h-[180px] w-full animate-pulse flex-col items-center justify-center rounded-lg border border-gray-300 bg-gray-200 p-4'>
+    <div className='mb-4 h-12 w-12 rounded-full bg-gray-300'></div>
+    <div className='mb-2 h-4 w-3/4 rounded bg-gray-300'></div>
+    <div className='h-4 w-1/2 rounded bg-gray-300'></div>
   </div>
 );
 
 function Learn() {
-  const categories = [
-    { name: 'UI/UX', count: 50 },
-    { name: 'HTML,CSS', count: 24 },
-    { name: 'Digital Marketing', count: 15 },
-    { name: 'Front-end', count: 15 },
-    { name: 'Back-End', count: 15 },
-    { name: 'DevOps', count: 15 },
-  ];
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [sortBy, setSortBy] = useState<
+    'name-asc' | 'name-desc' | 'courses-asc' | 'courses-desc'
+  >('name-asc');
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    async function fetchCategories() {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/courses/categories`
+        );
+        const data: CategoriesResponse = await response.json();
+        setCategories(data.data);
+        setLoading(false);
+      } catch (error) {
+        console.error('Failed to fetch categories:', error);
+        setLoading(false);
+      }
+    }
+
+    fetchCategories();
+  }, []);
+
+  const handleSort = (categories: Category[]): Category[] => {
+    return categories.sort((a, b) => {
+      if (sortBy === 'name-asc') {
+        return a.translations[0].name.localeCompare(b.translations[0].name);
+      } else if (sortBy === 'name-desc') {
+        return b.translations[0].name.localeCompare(a.translations[0].name);
+      } else if (sortBy === 'courses-asc') {
+        return a.courses_count - b.courses_count;
+      } else if (sortBy === 'courses-desc') {
+        return b.courses_count - a.courses_count;
+      }
+      return 0;
+    });
+  };
+
+  const filteredCategories = handleSort(
+    categories
+      .filter((category) => category.courses_count > 0)
+      .filter((category) =>
+        category.translations[0].name
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase())
+      )
+  );
 
   return (
-    <div className='container mx-auto px-4 py-8'>
-      <div className='search-bar mb-8 flex flex-col space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0'>
-        <input
-          type='text'
-          name='search'
-          id='search'
-          className='w-full rounded-lg border border-gray-600 bg-transparent px-4 py-2 text-lg text-black placeholder-gray-400 shadow-sm focus:border-gray-500 focus:ring-gray-500'
-          placeholder='Search by name'
-        />
-        <button className='rounded-lg bg-black px-4 py-2 text-white hover:bg-gray-800'>
-          Search
-        </button>
-      </div>
-
-      <div className='categories mb-8 flex flex-wrap'>
-        {categories.map((category, index) => (
-          <CategoryTag
-            key={index}
-            name={category.name}
-            count={category.count}
+    <div
+      className='flex flex-col items-center justify-center p-4'
+      style={{ minHeight: 'calc(100vh - 200px)' }}
+    >
+      <div className='mb-6 flex w-full max-w-2xl items-center'>
+        <div className='relative w-full'>
+          <input
+            type='text'
+            className='w-full rounded-md border border-gray-300 py-2 pl-10 pr-4 text-black focus:outline-none'
+            placeholder='Search categories...'
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
-        ))}
+          <AiOutlineSearch
+            className='absolute left-3 top-2 text-gray-500'
+            size={24}
+          />
+        </div>
+
+        <div className='ml-4 flex space-x-2'>
+          <button
+            className={`rounded border p-2 ${sortBy === 'name-asc' ? 'bg-gray-200' : ''}`}
+            onClick={() => setSortBy('name-asc')}
+          >
+            <FaSortAlphaDown size={20} title='Sort by Name (A-Z)' />
+          </button>
+          <button
+            className={`rounded border p-2 ${sortBy === 'name-desc' ? 'bg-gray-200' : ''}`}
+            onClick={() => setSortBy('name-desc')}
+          >
+            <FaSortAlphaUp size={20} title='Sort by Name (Z-A)' />
+          </button>
+          <button
+            className={`rounded border p-2 ${sortBy === 'courses-asc' ? 'bg-gray-200' : ''}`}
+            onClick={() => setSortBy('courses-asc')}
+          >
+            <FaSortAmountUp size={20} title='Sort by Courses (Low to High)' />
+          </button>
+          <button
+            className={`rounded border p-2 ${sortBy === 'courses-desc' ? 'bg-gray-200' : ''}`}
+            onClick={() => setSortBy('courses-desc')}
+          >
+            <FaSortAmountDown size={20} title='Sort by Courses (High to Low)' />
+          </button>
+        </div>
       </div>
 
-      <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((item) => (
-          <CourseCard key={item} />
-        ))}
-      </div>
-
-      {/* Pagination */}
-      <div className='mt-8 flex justify-center'>
-        <button className='mx-1 rounded-full bg-black px-4 py-2 text-white hover:bg-gray-800'>
-          1
-        </button>
-        <button className='mx-1 rounded-full bg-black px-4 py-2 text-white hover:bg-gray-800'>
-          2
-        </button>
-        <button className='mx-1 rounded-full bg-black px-4 py-2 text-white hover:bg-gray-800'>
-          3
-        </button>
-        {/* Add more pagination buttons as needed */}
+      <div className='grid w-full grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
+        {loading ? (
+          <>
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+          </>
+        ) : filteredCategories.length > 0 ? (
+          filteredCategories.map((category) => (
+            <div
+              key={category.id}
+              className='h-[180px] w-full transform rounded-lg border border-gray-300 bg-white p-4 text-center shadow-sm transition-transform hover:scale-105'
+            >
+              <div className='mb-4 flex items-center justify-center'>
+                {getCategoryIcon(category.translations[0].name)}
+              </div>
+              <h3 className='mb-2 text-base font-semibold text-black'>
+                {category.translations[0].name}
+              </h3>
+              <hr className='my-2 border-t border-gray-300' />
+              <p className='text-sm text-gray-600'>
+                {category.courses_count} Courses{' '}
+                <AiOutlineArrowRight className='ml-1 inline' />
+              </p>
+            </div>
+          ))
+        ) : (
+          <p>No categories found</p>
+        )}
       </div>
     </div>
   );
