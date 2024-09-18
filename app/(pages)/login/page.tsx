@@ -1,14 +1,52 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '../context/authContext';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const { isAuthenticated, login } = useAuth();
+  const router = useRouter();
 
-  const handleSubmit = (e: any) => {
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push('/');
+    }
+  }, [isAuthenticated, router]);
+
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
-    console.log('Login attempt with:', { email, password });
+    setErrorMessage('');
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, password }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok && data.access_token && data.refresh_token) {
+        // Call login method from AuthContext
+        login(data.access_token, data.refresh_token);
+
+        // Redirect to homepage or another protected page
+        router.push('/');
+      } else {
+        setErrorMessage(data.message || 'Login failed');
+      }
+    } catch (error) {
+      setErrorMessage('An error occurred. Please try again.');
+    }
   };
 
   return (
@@ -20,6 +58,11 @@ function Login() {
         <h2 className='text-center text-2xl font-bold uppercase text-gray-900'>
           Login
         </h2>
+
+        {errorMessage && (
+          <div className='mb-4 text-center text-red-500'>{errorMessage}</div>
+        )}
+
         <form onSubmit={handleSubmit} className='space-y-6'>
           <div>
             <label

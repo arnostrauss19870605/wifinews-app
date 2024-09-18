@@ -7,6 +7,7 @@ import Navigation from '@/app/_components/Navigation';
 import Footer from '@/app/_components/Footer';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import Script from 'next/script';
+import { AuthProvider } from '@/app/(pages)/context/authContext';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -30,12 +31,14 @@ export default function RootLayout({
         />
       </head>
       <body className={inter.className}>
-        <Navigation />
-        <Container>{children}</Container>
-        <Footer />
-        <GoogleAnalytics
-          gaId={`${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}`}
-        />
+        <AuthProvider>
+          <Navigation />
+          <Container>{children}</Container>
+          <Footer />
+          <GoogleAnalytics
+            gaId={`${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}`}
+          />
+        </AuthProvider>
       </body>
     </html>
   );
