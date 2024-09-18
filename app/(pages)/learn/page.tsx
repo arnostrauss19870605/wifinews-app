@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { AiOutlineSearch, AiOutlineArrowRight } from 'react-icons/ai';
 import {
   FaBriefcase,
@@ -68,6 +69,7 @@ function Learn() {
     'name-asc' | 'name-desc' | 'courses-asc' | 'courses-desc'
   >('name-asc');
   const [loading, setLoading] = useState<boolean>(true);
+  const router = useRouter();
 
   useEffect(() => {
     async function fetchCategories() {
@@ -111,6 +113,10 @@ function Learn() {
           .includes(searchQuery.toLowerCase())
       )
   );
+
+  const handleCardClick = (code: string) => {
+    router.push(`/courses/${code}`);
+  };
 
   return (
     <div
@@ -177,7 +183,8 @@ function Learn() {
           filteredCategories.map((category) => (
             <div
               key={category.id}
-              className='h-[180px] w-full transform rounded-lg border border-gray-300 bg-white p-4 text-center shadow-sm transition-transform hover:scale-105'
+              onClick={() => handleCardClick(category.code)}
+              className='h-[180px] w-full transform cursor-pointer rounded-lg border border-gray-300 bg-white p-4 text-center shadow-sm transition-transform hover:scale-105'
             >
               <div className='mb-4 flex items-center justify-center'>
                 {getCategoryIcon(category.translations[0].name)}
