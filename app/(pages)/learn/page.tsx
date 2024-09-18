@@ -34,7 +34,7 @@ const CourseCard = () => (
   </div>
 );
 
-function Dashboard() {
+function Learn() {
   const categories = [
     { name: 'UI/UX', count: 50 },
     { name: 'HTML,CSS', count: 24 },
@@ -92,4 +92,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default Learn;
