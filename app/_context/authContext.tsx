@@ -6,10 +6,19 @@ import React, {
   useEffect,
   useCallback,
 } from 'react';
+import { jwtDecode } from 'jwt-decode';
 import { useRouter } from 'next/navigation';
 
+interface User {
+  id: number;
+  email: string;
+  firstname: string;
+  lastname: string;
+  alisonId?: string;
+}
+
 interface AuthContextProps {
-  user: any;
+  user: User | null;
   token: string | null;
   isAuthenticated: boolean;
   login: (token: string, refreshToken: string) => void;
@@ -31,9 +40,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [token, setToken] = useState<string | null>(null);
   const [refreshToken, setRefreshToken] = useState<string | null>(null);
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const router = useRouter();
+
+  const decodeToken = (token: string): string | null => {
+    try {
+      const decoded: any = jwtDecode(token);
+      return decoded.alisonId || null;
+    } catch (error) {
+      console.error('Failed to decode token:', error);
+      return null;
+    }
+  };
 
   const fetchUserInfo = useCallback(
     async (accessToken: string) => {
@@ -49,7 +68,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         const data = await res.json();
 
         if (res.ok) {
-          setUser(data);
+          const alisonId = decodeToken(accessToken);
+          localStorage.setItem('alisonId', alisonId || '');
+          setUser({ ...data, alisonId });
         } else if (res.status === 401) {
           const success = await refreshAccessToken();
           if (!success) {
@@ -105,10 +126,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const login = (accessToken: string, refreshToken: string) => {
+    const alisonId = decodeToken(accessToken);
     setToken(accessToken);
     setRefreshToken(refreshToken);
     localStorage.setItem('token', accessToken);
     localStorage.setItem('refreshToken', refreshToken);
+    localStorage.setItem('alisonId', alisonId || '');
     setIsAuthenticated(true);
     fetchUserInfo(accessToken);
   };
@@ -118,6 +141,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     setRefreshToken(null);
     localStorage.removeItem('token');
     localStorage.removeItem('refreshToken');
+    localStorage.removeItem('alisonId');
     setUser(null);
     setIsAuthenticated(false);
     router.push('/login');

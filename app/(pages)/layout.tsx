@@ -7,7 +7,7 @@ import Navigation from '@/app/_components/Navigation';
 import Footer from '@/app/_components/Footer';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import Script from 'next/script';
-import { AuthProvider } from '@/app/(pages)/context/authContext';
+import { AuthProvider } from '@/app/_context/authContext';
 
 const inter = Inter({ subsets: ['latin'] });
 

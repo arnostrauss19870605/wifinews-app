@@ -5,22 +5,29 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { FiX } from 'react-icons/fi';
 import { MdOutlineMenu } from 'react-icons/md';
-import { FaUserCircle } from 'react-icons/fa';
 import wifinewslogo from '../../_assets/images/logo.png';
+import { useAuth } from '@/app/_context/authContext';
 
 function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
+  const { isAuthenticated, user, logout } = useAuth();
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
 
   useEffect(() => {
     if (isMenuOpen) {
-      // Disable scrolling on the body when the menu is open
       document.body.style.overflow = 'hidden';
     } else {
-      // Re-enable scrolling on the body when the menu is closed
       document.body.style.overflow = '';
     }
   }, [isMenuOpen]);
+
+  useEffect(() => {
+    const alisonId = localStorage.getItem('alisonId');
+    if (alisonId) {
+      setAvatarUrl(`https://alison.com/images/users/default/${alisonId}.jpg`);
+    }
+  }, [user]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -30,19 +37,21 @@ function Navigation() {
     setIsMenuOpen(false);
   };
 
-  // Replace 'User' with the actual user's first name
-  const userFirstName = 'User';
+  const handleLogout = () => {
+    logout();
+    closeMenu();
+  };
 
   const menuItems = [
     { name: 'Home', href: '/' },
     { name: 'News', href: '/news' },
     { name: 'Topics', href: '/topics' },
-    { name: 'Learn', href: '/login' },
   ];
 
   return (
     <header className='bg-white shadow'>
       <nav className='container mx-auto flex items-center justify-between p-4'>
+        {/* Logo Section */}
         <div className='flex items-center'>
           <div className='relative h-[40px] w-[174px]'>
             <Link href='/'>
@@ -58,6 +67,7 @@ function Navigation() {
           </div>
         </div>
 
+        {/* Menu Items */}
         <div className='hidden lg:flex lg:flex-1 lg:justify-center'>
           <ul className='flex space-x-8 text-base text-gray-700'>
             {menuItems.map((item, index) => (
@@ -84,13 +94,48 @@ function Navigation() {
           </ul>
         </div>
 
+        {/* Auth Section (Login/Register or User Info) */}
         <div className='hidden lg:flex lg:items-center'>
-          <FaUserCircle size={36} className='text-gray-700' />
-          <span className='ml-2 text-base text-gray-700'>
-            Hi, {userFirstName}
-          </span>
+          {isAuthenticated ? (
+            <div className='flex items-center'>
+              {avatarUrl ? (
+                <img
+                  src={avatarUrl}
+                  alt='User Avatar'
+                  className='h-10 w-10 rounded-full'
+                />
+              ) : (
+                <div className='h-10 w-10 rounded-full bg-gray-300'></div>
+              )}
+              <span className='ml-2 text-base text-gray-700'>
+                Hi, {user?.firstname}
+              </span>
+              <button
+                onClick={handleLogout}
+                className='ml-4 text-red-500 hover:text-red-600'
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <div className='flex space-x-4'>
+              <Link
+                href='/login'
+                className='uppercase text-gray-700 hover:text-[#FF4644]'
+              >
+                Login
+              </Link>
+              <Link
+                href='/register'
+                className='uppercase text-[#FF4644] hover:underline'
+              >
+                Register
+              </Link>
+            </div>
+          )}
         </div>
 
+        {/* Mobile Menu Toggle */}
         <button
           onClick={toggleMenu}
           className='ml-4 block h-[32px] w-[32px] cursor-pointer lg:hidden'
@@ -103,15 +148,43 @@ function Navigation() {
           )}
         </button>
 
+        {/* Mobile Menu */}
         {isMenuOpen && (
           <div className='fixed inset-0 z-50 flex flex-col bg-white'>
             <div className='flex items-center justify-between p-4'>
-              <div className='flex items-center'>
-                <FaUserCircle size={36} className='text-gray-700' />
-                <span className='ml-2 text-base text-gray-700'>
-                  Hi, {userFirstName}
-                </span>
-              </div>
+              {isAuthenticated ? (
+                <div className='flex items-center'>
+                  {avatarUrl ? (
+                    <img
+                      src={avatarUrl}
+                      alt='User Avatar'
+                      className='h-10 w-10 rounded-full'
+                    />
+                  ) : (
+                    <div className='h-10 w-10 rounded-full bg-gray-300'></div>
+                  )}
+                  <span className='ml-2 text-base text-gray-700'>
+                    Hi, {user?.firstname}
+                  </span>
+                </div>
+              ) : (
+                <div className='flex space-x-4'>
+                  <Link
+                    href='/login'
+                    className='uppercase text-gray-700 hover:text-[#FF4644]'
+                    onClick={closeMenu}
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    href='/register'
+                    className='uppercase text-[#FF4644] hover:underline'
+                    onClick={closeMenu}
+                  >
+                    Register
+                  </Link>
+                </div>
+              )}
               <button
                 onClick={closeMenu}
                 className='block h-[32px] w-[32px] cursor-pointer'
@@ -141,9 +214,20 @@ function Navigation() {
                 </li>
               ))}
             </ul>
+
+            {/* Logout button for mobile menu */}
+            {isAuthenticated && (
+              <button
+                onClick={handleLogout}
+                className='mt-6 w-full uppercase text-red-500 hover:text-red-600'
+              >
+                Logout
+              </button>
+            )}
           </div>
         )}
       </nav>
+
       {isMenuOpen && (
         <div
           className='fixed inset-0 z-40 bg-black opacity-50'
