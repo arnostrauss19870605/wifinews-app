@@ -119,13 +119,13 @@ function Navigation() {
             <div className='flex space-x-4'>
               <Link
                 href='/login'
-                className='rounded-full border border-[#FF4644] px-4 py-2 uppercase text-gray-700 transition-colors hover:bg-[#FF4644] hover:text-white'
+                className='rounded-[2px] border border-[#FF4644] px-4 py-2 uppercase text-[#FF4644] transition-colors hover:bg-[#FF4644] hover:text-white'
               >
                 Login
               </Link>
               <Link
                 href='/register'
-                className='rounded-full bg-[#FF4644] px-4 py-2 uppercase text-white transition-colors hover:bg-[#e33a3a]'
+                className='rounded-[2px] bg-[#FF4644] px-4 py-2 uppercase text-white transition-colors hover:bg-[#e33a3a]'
               >
                 Register
               </Link>
@@ -167,14 +167,14 @@ function Navigation() {
                 <div className='flex space-x-4'>
                   <Link
                     href='/login'
-                    className='rounded-full border border-[#FF4644] px-4 py-2 uppercase text-gray-700 transition-colors hover:bg-[#FF4644] hover:text-white'
+                    className='rounded-[2px] border border-[#FF4644] px-4 py-2 uppercase text-[#FF4644] transition-colors hover:bg-[#FF4644] hover:text-white'
                     onClick={closeMenu}
                   >
                     Login
                   </Link>
                   <Link
                     href='/register'
-                    className='rounded-full bg-[#FF4644] px-4 py-2 uppercase text-white transition-colors hover:bg-[#e33a3a]'
+                    className='rounded-[2px] bg-[#FF4644] px-4 py-2 uppercase text-white transition-colors hover:bg-[#e33a3a]'
                     onClick={closeMenu}
                   >
                     Register
@@ -213,7 +213,7 @@ function Navigation() {
               <div className='flex w-full justify-center px-4'>
                 <button
                   onClick={handleLogout}
-                  className='mt-6 flex w-full max-w-xs items-center justify-center rounded-full border border-red-500 px-4 py-2 uppercase text-red-500 transition-colors hover:bg-red-500 hover:text-white'
+                  className='mt-6 flex w-full max-w-xs items-center justify-center rounded-[2px] border border-red-500 px-4 py-2 uppercase text-red-500 transition-colors hover:bg-red-500 hover:text-white'
                 >
                   <FiLogOut className='mr-1' size={20} /> Logout
                 </button>
