@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/app/_context/authContext';
+import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 
 function Register() {
   const [firstname, setFirstname] = useState('');
@@ -10,11 +11,12 @@ function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const { isAuthenticated, login } = useAuth();
   const router = useRouter();
 
-  // If user is already authenticated, redirect to homepage
   useEffect(() => {
     if (isAuthenticated) {
       router.push('/');
@@ -25,7 +27,6 @@ function Register() {
     e.preventDefault();
     setErrorMessage('');
 
-    // Check if password and confirm password match
     if (password !== confirmPassword) {
       setErrorMessage("Passwords don't match");
       return;
@@ -44,7 +45,7 @@ function Register() {
             lastname,
             email,
             password,
-            confirmPassword, // Backend expects this
+            confirmPassword,
           }),
         }
       );
@@ -52,10 +53,7 @@ function Register() {
       const data = await response.json();
 
       if (response.ok && data.access_token && data.refresh_token) {
-        // Log the user in after successful registration
         login(data.access_token, data.refresh_token);
-
-        // Redirect to homepage
         router.push('/');
       } else {
         setErrorMessage(data.message || 'Registration failed');
@@ -145,16 +143,29 @@ function Register() {
             >
               Password
             </label>
-            <input
-              id='password'
-              name='password'
-              type='password'
-              placeholder='********'
-              className='mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500'
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+            <div className='relative'>
+              <input
+                id='password'
+                name='password'
+                type={showPassword ? 'text' : 'password'}
+                placeholder='********'
+                className='mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500'
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <button
+                type='button'
+                onClick={() => setShowPassword(!showPassword)}
+                className='absolute inset-y-0 right-0 flex items-center px-3 text-gray-600'
+              >
+                {showPassword ? (
+                  <AiFillEyeInvisible size={24} />
+                ) : (
+                  <AiFillEye size={24} />
+                )}
+              </button>
+            </div>
           </div>
 
           <div>
@@ -164,16 +175,29 @@ function Register() {
             >
               Confirm Password
             </label>
-            <input
-              id='confirmPassword'
-              name='confirmPassword'
-              type='password'
-              placeholder='********'
-              className='mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500'
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-            />
+            <div className='relative'>
+              <input
+                id='confirmPassword'
+                name='confirmPassword'
+                type={showConfirmPassword ? 'text' : 'password'}
+                placeholder='********'
+                className='mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500'
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+              />
+              <button
+                type='button'
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className='absolute inset-y-0 right-0 flex items-center px-3 text-gray-600'
+              >
+                {showConfirmPassword ? (
+                  <AiFillEyeInvisible size={24} />
+                ) : (
+                  <AiFillEye size={24} />
+                )}
+              </button>
+            </div>
           </div>
 
           <div className='mt-6'>

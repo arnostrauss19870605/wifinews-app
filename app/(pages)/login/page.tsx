@@ -3,10 +3,12 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/app/_context/authContext';
+import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const { isAuthenticated, login } = useAuth();
   const router = useRouter();
@@ -36,10 +38,7 @@ function Login() {
       const data = await response.json();
 
       if (response.ok && data.access_token && data.refresh_token) {
-        // Call login method from AuthContext
         login(data.access_token, data.refresh_token);
-
-        // Redirect to homepage or another protected page
         router.push('/');
       } else {
         setErrorMessage(data.message || 'Login failed');
@@ -90,16 +89,29 @@ function Login() {
             >
               Password
             </label>
-            <input
-              id='password'
-              name='password'
-              type='password'
-              placeholder='**********'
-              className='w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500'
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+            <div className='relative'>
+              <input
+                id='password'
+                name='password'
+                type={showPassword ? 'text' : 'password'} // Toggle input type
+                placeholder='**********'
+                className='w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500'
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <button
+                type='button'
+                onClick={() => setShowPassword(!showPassword)} // Toggle show/hide password
+                className='absolute inset-y-0 right-0 flex items-center px-3 text-gray-600'
+              >
+                {showPassword ? (
+                  <AiFillEyeInvisible size={24} /> // Eye icon when password is shown
+                ) : (
+                  <AiFillEye size={24} /> // Eye icon when password is hidden
+                )}
+              </button>
+            </div>
           </div>
 
           <div>
