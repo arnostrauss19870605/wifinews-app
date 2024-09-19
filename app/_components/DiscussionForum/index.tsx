@@ -1,5 +1,5 @@
 import { FaCommentDots } from 'react-icons/fa';
-import Image from 'next/image';
+import Image from 'next/legacy/image';
 import chatBg from '../../_assets/images/chat.png';
 
 function DiscussionForum() {
@@ -13,6 +13,7 @@ function DiscussionForum() {
           width={100}
           height={56}
           className='w-full rounded-lg'
+          priority
         />
       </div>
       <h2 className='mb-4 text-2xl font-semibold'>Have Your Say!</h2>
