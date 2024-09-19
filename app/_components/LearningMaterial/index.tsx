@@ -1,4 +1,5 @@
 import { FaBook } from 'react-icons/fa';
+import Link from 'next/link';
 
 function LearningMaterial() {
   return (
@@ -9,12 +10,14 @@ function LearningMaterial() {
         and educated.
       </p>
       <div className='flex justify-center'>
-        <button
-          type='button'
-          className='flex items-center rounded-lg bg-slate-950 px-4 py-3 font-medium text-white focus:outline-none lg:w-auto lg:px-10'
-        >
-          <FaBook className='mr-2' /> Learn Now
-        </button>
+        <Link href='/learn'>
+          <button
+            type='button'
+            className='flex items-center rounded-lg bg-slate-950 px-4 py-3 font-medium text-white focus:outline-none lg:w-auto lg:px-10'
+          >
+            <FaBook className='mr-2' /> Learn Now
+          </button>
+        </Link>
       </div>
     </div>
   );
