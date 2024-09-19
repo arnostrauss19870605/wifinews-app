@@ -80,7 +80,7 @@ function Login() {
               name='email'
               type='email'
               placeholder='you@example.com'
-              className='w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-gray-500'
+              className='w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500'
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -100,7 +100,7 @@ function Login() {
                 name='password'
                 type={showPassword ? 'text' : 'password'}
                 placeholder='**********'
-                className='w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-gray-500'
+                className='w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500'
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
