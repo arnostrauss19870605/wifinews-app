@@ -19,6 +19,11 @@ export function getUtmParams(): Record<string, string> {
     }
   });
 
+  const utmMedium = urlParams.get('utm_medium');
+  if (utmMedium) {
+    utmParams['Medium'] = `Medium: ${utmMedium}`;
+  }
+
   return utmParams;
 }
 
@@ -31,7 +36,9 @@ export function appendUtmParams(url: string): string {
   const urlObj = new URL(url, window.location.origin);
 
   Object.entries(utmParams).forEach(([key, value]) => {
-    urlObj.searchParams.append(key, value);
+    if (!key.startsWith('Medium')) {
+      urlObj.searchParams.append(key, value);
+    }
   });
 
   return urlObj.toString();

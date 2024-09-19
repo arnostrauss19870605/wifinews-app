@@ -46,9 +46,11 @@ function Home() {
           window.googletag.cmd.push(function () {
             const utmParams = ${JSON.stringify(getUtmParams())};
             console.log("home utm params =>",utmParams);
-            Object.entries(utmParams).forEach(([key, value]) => {
-              googletag.pubads().setTargeting(key, value);
-            });
+
+      // Set the targeting key for Medium as requested by the client
+      if (utmParams['Medium']) {
+        googletag.pubads().setTargeting('Medium', utmParams['Medium']);
+      }
 
             // Define size mappings
             const mapping1 = googletag.sizeMapping()
