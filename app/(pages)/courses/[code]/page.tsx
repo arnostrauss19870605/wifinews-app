@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import {
   AiOutlineSearch,
@@ -15,6 +15,7 @@ import {
   FaSortAmountDown,
 } from 'react-icons/fa';
 import { useAuth } from '@/app/_context/authContext';
+import Image from 'next/image';
 
 interface Publisher {
   name: string;
@@ -164,14 +165,17 @@ function CoursesByCategory() {
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
-  const handleMoreInfoClick = (courseUrl: string) => {
-    if (!isAuthenticated) {
-      localStorage.setItem('redirectAfterLogin', courseUrl);
-      router.push('/login');
-    } else {
-      window.location.href = courseUrl;
-    }
-  };
+  const handleMoreInfoClick = useCallback(
+    (courseUrl: string) => {
+      if (!isAuthenticated) {
+        localStorage.setItem('redirectAfterLogin', courseUrl);
+        router.push('/login');
+      } else {
+        window.location.href = courseUrl;
+      }
+    },
+    [isAuthenticated, router]
+  );
 
   return (
     <div
@@ -247,9 +251,11 @@ function CoursesByCategory() {
               key={course.id}
               className='flex h-[400px] w-full flex-col overflow-hidden rounded-lg border border-gray-300 bg-white p-4 text-center shadow-sm transition-transform hover:scale-105'
             >
-              <img
+              <Image
                 src={course.image}
-                alt={course.translations?.[0]?.name}
+                alt={course.translations?.[0]?.name || ''}
+                width={500}
+                height={200}
                 className='mb-4 h-32 w-full rounded object-cover'
               />
               <h3 className='mb-2 text-base font-semibold text-black'>
