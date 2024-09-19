@@ -1,7 +1,28 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['alison.com', 'images.unsplash.com', 'cdn01.alison-static.net', 'cdn02.alison-static.net', 'cdn03.alison-static.net'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'alison.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cdn01.alison-static.net',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cdn02.alison-static.net',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cdn03.alison-static.net',
+      },
+    ],
   },
   async rewrites() {
     return [

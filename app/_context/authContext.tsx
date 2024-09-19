@@ -54,6 +54,45 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  const logout = useCallback(() => {
+    setToken(null);
+    setRefreshToken(null);
+    localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('alisonId');
+    setUser(null);
+    setIsAuthenticated(false);
+    router.push('/login');
+  }, [router]);
+
+  const refreshAccessToken = useCallback(async () => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/refresh`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ refresh_token: refreshToken }),
+        }
+      );
+
+      const data = await res.json();
+      if (res.ok && data.access_token) {
+        setToken(data.access_token);
+        localStorage.setItem('token', data.access_token);
+        return true;
+      } else {
+        console.error('Failed to refresh access token');
+        return false;
+      }
+    } catch (err) {
+      console.error('Error refreshing token:', err);
+      return false;
+    }
+  }, [refreshToken]);
+
   const fetchUserInfo = useCallback(
     async (accessToken: string) => {
       try {
@@ -82,7 +121,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         logout();
       }
     },
-    [refreshToken]
+    [logout, refreshAccessToken]
   );
 
   useEffect(() => {
@@ -97,55 +136,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, [fetchUserInfo]);
 
-  const refreshAccessToken = async () => {
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/refresh`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ refresh_token: refreshToken }),
-        }
-      );
-
-      const data = await res.json();
-      if (res.ok && data.access_token) {
-        setToken(data.access_token);
-        localStorage.setItem('token', data.access_token);
-        return true;
-      } else {
-        console.error('Failed to refresh access token');
-        return false;
-      }
-    } catch (err) {
-      console.error('Error refreshing token:', err);
-      return false;
-    }
-  };
-
-  const login = (accessToken: string, refreshToken: string) => {
-    const alisonId = decodeToken(accessToken);
-    setToken(accessToken);
-    setRefreshToken(refreshToken);
-    localStorage.setItem('token', accessToken);
-    localStorage.setItem('refreshToken', refreshToken);
-    localStorage.setItem('alisonId', alisonId || '');
-    setIsAuthenticated(true);
-    fetchUserInfo(accessToken);
-  };
-
-  const logout = () => {
-    setToken(null);
-    setRefreshToken(null);
-    localStorage.removeItem('token');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('alisonId');
-    setUser(null);
-    setIsAuthenticated(false);
-    router.push('/login');
-  };
+  const login = useCallback(
+    (accessToken: string, refreshToken: string) => {
+      const alisonId = decodeToken(accessToken);
+      setToken(accessToken);
+      setRefreshToken(refreshToken);
+      localStorage.setItem('token', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
+      localStorage.setItem('alisonId', alisonId || '');
+      setIsAuthenticated(true);
+      fetchUserInfo(accessToken);
+    },
+    [fetchUserInfo]
+  );
 
   return (
     <AuthContext.Provider
