@@ -106,7 +106,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ refreshToken }),
+          body: JSON.stringify({ refresh_token: refreshToken }),
         }
       );
 
