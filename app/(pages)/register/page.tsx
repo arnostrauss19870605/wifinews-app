@@ -91,7 +91,7 @@ function Register() {
                 name='firstname'
                 type='text'
                 placeholder='Jane'
-                className='mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500'
+                className='mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-gray-500'
                 value={firstname}
                 onChange={(e) => setFirstname(e.target.value)}
                 required
@@ -109,7 +109,7 @@ function Register() {
                 name='lastname'
                 type='text'
                 placeholder='Doe'
-                className='mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500'
+                className='mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-gray-500'
                 value={lastname}
                 onChange={(e) => setLastname(e.target.value)}
                 required
@@ -129,7 +129,7 @@ function Register() {
               name='email'
               type='email'
               placeholder='jane.doe@example.com'
-              className='mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500'
+              className='mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-gray-500'
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -149,7 +149,7 @@ function Register() {
                 name='password'
                 type={showPassword ? 'text' : 'password'}
                 placeholder='********'
-                className='mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500'
+                className='mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-gray-500'
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -181,7 +181,7 @@ function Register() {
                 name='confirmPassword'
                 type={showConfirmPassword ? 'text' : 'password'}
                 placeholder='********'
-                className='mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500'
+                className='mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-gray-500'
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
