@@ -19,7 +19,13 @@ function Register() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      router.push('/');
+      const redirectUrl = localStorage.getItem('redirectAfterLogin');
+      if (redirectUrl) {
+        localStorage.removeItem('redirectAfterLogin');
+        router.push(redirectUrl);
+      } else {
+        router.push('/');
+      }
     }
   }, [isAuthenticated, router]);
 
@@ -54,7 +60,6 @@ function Register() {
 
       if (response.ok && data.access_token && data.refresh_token) {
         login(data.access_token, data.refresh_token);
-        router.push('/');
       } else {
         setErrorMessage(data.message || 'Registration failed');
       }
