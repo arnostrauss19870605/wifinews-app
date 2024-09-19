@@ -2,7 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
-import { AiOutlineSearch, AiOutlineArrowRight } from 'react-icons/ai';
+import {
+  AiOutlineSearch,
+  AiOutlineClockCircle,
+  AiFillStar,
+  AiOutlineGlobal,
+} from 'react-icons/ai';
 import {
   FaSortAlphaDown,
   FaSortAlphaUp,
@@ -83,6 +88,10 @@ const getCategoryIdByCode = (code: string): number | null => {
   return categoryMapping[code] || null;
 };
 
+const truncateTitle = (title: string) => {
+  return title.length > 50 ? title.substring(0, 47) + '...' : title;
+};
+
 function CoursesByCategory() {
   const { code } = useParams();
   const [courses, setCourses] = useState<Course[]>([]);
@@ -97,21 +106,22 @@ function CoursesByCategory() {
   useEffect(() => {
     async function fetchCourses() {
       if (!categoryId) return;
+      setLoading(true); // Start loading
       try {
         const response = await fetch(
           `http://localhost:8080/courses/category/${categoryId}`
         );
         const data = await response.json();
-        setCourses(data.data);
-        setLoading(false);
+        setCourses(data.data || []);
       } catch (error) {
         console.error('Failed to fetch courses:', error);
-        setLoading(false);
+      } finally {
+        setLoading(false); // End loading
       }
     }
 
     fetchCourses();
-  }, [categoryId]);
+  }, [categoryId, code]);
 
   const handleSort = (courses: Course[]): Course[] => {
     return courses.sort((a, b) => {
@@ -190,12 +200,26 @@ function CoursesByCategory() {
 
       <div className='grid w-full grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
         {loading ? (
-          <p>Loading...</p>
+          Array.from({ length: 6 }).map((_, index) => (
+            <div
+              key={index}
+              className='h-[400px] w-full animate-pulse overflow-hidden rounded-lg border border-gray-300 bg-gray-200 p-4 shadow-sm'
+            >
+              <div className='mb-4 h-32 w-full rounded bg-gray-300'></div>
+              <div className='mb-2 h-6 w-3/4 rounded bg-gray-300'></div>
+              <div className='flex flex-col items-center space-y-2'>
+                <div className='h-4 w-1/2 rounded bg-gray-300'></div>
+                <div className='h-4 w-2/3 rounded bg-gray-300'></div>
+                <div className='h-4 w-1/3 rounded bg-gray-300'></div>
+              </div>
+              <div className='mt-auto h-10 w-full rounded bg-gray-300'></div>
+            </div>
+          ))
         ) : filteredCourses.length > 0 ? (
           filteredCourses.map((course) => (
             <div
               key={course.id}
-              className='h-[300px] w-full transform cursor-pointer rounded-lg border border-gray-300 bg-white p-4 text-center shadow-sm transition-transform hover:scale-105'
+              className='flex h-[400px] w-full flex-col overflow-hidden rounded-lg border border-gray-300 bg-white p-4 text-center shadow-sm transition-transform hover:scale-105'
             >
               <img
                 src={course.image}
@@ -203,19 +227,36 @@ function CoursesByCategory() {
                 className='mb-4 h-32 w-full rounded object-cover'
               />
               <h3 className='mb-2 text-base font-semibold text-black'>
-                {course.translations?.[0]?.name}
+                {truncateTitle(course.translations?.[0]?.name || '')}
               </h3>
-              <p className='text-sm text-gray-600'>
-                Duration: {course.duration_avg} hrs
-              </p>
-              <p className='text-sm text-gray-600'>
-                Rating: {course.rating_avg} ({course.ratings_count} reviews)
-              </p>
-              <p className='mt-2 text-sm text-blue-600'>
-                <a href={course.url} target='_blank' rel='noopener noreferrer'>
-                  Start Learning <AiOutlineArrowRight className='ml-1 inline' />
+
+              <div className='flex flex-col items-center space-y-2'>
+                <div className='flex items-center text-sm text-gray-600'>
+                  <AiOutlineClockCircle className='mr-2' />
+                  <span>Duration: {course.duration_avg} hrs</span>
+                </div>
+                <div className='flex items-center text-sm text-gray-600'>
+                  <AiFillStar className='mr-2 text-yellow-500' />
+                  <span>
+                    Rating: {course.rating_avg} ({course.ratings_count} reviews)
+                  </span>
+                </div>
+                <div className='flex items-center text-sm text-gray-600'>
+                  <AiOutlineGlobal className='mr-2' />
+                  <span>Language: {course.language}</span>
+                </div>
+              </div>
+
+              <div className='mt-auto pt-4'>
+                <a
+                  href={course.url}
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  className='inline-block w-full rounded bg-gray-700 py-2 text-white hover:bg-black'
+                >
+                  More Info
                 </a>
-              </p>
+              </div>
             </div>
           ))
         ) : (
