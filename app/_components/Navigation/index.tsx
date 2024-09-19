@@ -3,24 +3,31 @@ import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FiX } from 'react-icons/fi';
+import { FiX, FiLogOut } from 'react-icons/fi';
 import { MdOutlineMenu } from 'react-icons/md';
-import { FaUserCircle } from 'react-icons/fa';
 import wifinewslogo from '../../_assets/images/logo.png';
+import { useAuth } from '@/app/_context/authContext';
 
 function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
+  const { isAuthenticated, user, logout } = useAuth();
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
 
   useEffect(() => {
     if (isMenuOpen) {
-      // Disable scrolling on the body when the menu is open
       document.body.style.overflow = 'hidden';
     } else {
-      // Re-enable scrolling on the body when the menu is closed
       document.body.style.overflow = '';
     }
   }, [isMenuOpen]);
+
+  useEffect(() => {
+    const alisonId = localStorage.getItem('alisonId');
+    if (alisonId) {
+      setAvatarUrl(`https://alison.com/images/users/default/${alisonId}.jpg`);
+    }
+  }, [user]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -30,14 +37,16 @@ function Navigation() {
     setIsMenuOpen(false);
   };
 
-  // Replace 'User' with the actual user's first name
-  const userFirstName = 'User';
+  const handleLogout = () => {
+    logout();
+    closeMenu();
+  };
 
   const menuItems = [
     { name: 'Home', href: '/' },
     { name: 'News', href: '/news' },
     { name: 'Topics', href: '/topics' },
-    { name: 'Learn', href: '/login' },
+    { name: 'Learn', href: '/learn' },
   ];
 
   return (
@@ -85,10 +94,43 @@ function Navigation() {
         </div>
 
         <div className='hidden lg:flex lg:items-center'>
-          <FaUserCircle size={36} className='text-gray-700' />
-          <span className='ml-2 text-base text-gray-700'>
-            Hi, {userFirstName}
-          </span>
+          {isAuthenticated ? (
+            <div className='flex items-center'>
+              {avatarUrl ? (
+                <img
+                  src={avatarUrl}
+                  alt='User Avatar'
+                  className='h-10 w-10 rounded-full'
+                />
+              ) : (
+                <div className='h-10 w-10 rounded-full bg-gray-300'></div>
+              )}
+              <span className='ml-2 text-base text-gray-700'>
+                Hi, {user?.firstname}
+              </span>
+              <button
+                onClick={handleLogout}
+                className='ml-4 flex items-center rounded-full border border-red-500 px-4 py-2 text-red-500 transition-colors hover:bg-red-500 hover:text-white'
+              >
+                <FiLogOut className='mr-1' size={20} /> Logout
+              </button>
+            </div>
+          ) : (
+            <div className='flex space-x-4'>
+              <Link
+                href='/login'
+                className='rounded-[2px] border border-[#FF4644] px-4 py-2 uppercase text-[#FF4644] transition-colors hover:bg-[#FF4644] hover:text-white'
+              >
+                Login
+              </Link>
+              <Link
+                href='/register'
+                className='rounded-[2px] bg-[#FF4644] px-4 py-2 uppercase text-white transition-colors hover:bg-[#e33a3a]'
+              >
+                Register
+              </Link>
+            </div>
+          )}
         </div>
 
         <button
@@ -106,12 +148,39 @@ function Navigation() {
         {isMenuOpen && (
           <div className='fixed inset-0 z-50 flex flex-col bg-white'>
             <div className='flex items-center justify-between p-4'>
-              <div className='flex items-center'>
-                <FaUserCircle size={36} className='text-gray-700' />
-                <span className='ml-2 text-base text-gray-700'>
-                  Hi, {userFirstName}
-                </span>
-              </div>
+              {isAuthenticated ? (
+                <div className='flex items-center'>
+                  {avatarUrl ? (
+                    <img
+                      src={avatarUrl}
+                      alt='User Avatar'
+                      className='h-10 w-10 rounded-full'
+                    />
+                  ) : (
+                    <div className='h-10 w-10 rounded-full bg-gray-300'></div>
+                  )}
+                  <span className='ml-2 text-base text-gray-700'>
+                    Hi, {user?.firstname}
+                  </span>
+                </div>
+              ) : (
+                <div className='flex space-x-4'>
+                  <Link
+                    href='/login'
+                    className='rounded-[2px] border border-[#FF4644] px-4 py-2 uppercase text-[#FF4644] transition-colors hover:bg-[#FF4644] hover:text-white'
+                    onClick={closeMenu}
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    href='/register'
+                    className='rounded-[2px] bg-[#FF4644] px-4 py-2 uppercase text-white transition-colors hover:bg-[#e33a3a]'
+                    onClick={closeMenu}
+                  >
+                    Register
+                  </Link>
+                </div>
+              )}
               <button
                 onClick={closeMenu}
                 className='block h-[32px] w-[32px] cursor-pointer'
@@ -125,10 +194,8 @@ function Navigation() {
               {menuItems.map((item, index) => (
                 <li
                   key={index}
-                  className={`w-full pt-4 text-center first:border-t-0 ${
-                    pathname === item.href
-                      ? 'font-bold text-[#FF4644]'
-                      : 'border-t border-gray-300'
+                  className={`w-full border-t border-gray-300 pt-4 text-center ${
+                    pathname === item.href ? 'font-bold text-[#FF4644]' : ''
                   }`}
                 >
                   <Link
@@ -141,9 +208,21 @@ function Navigation() {
                 </li>
               ))}
             </ul>
+
+            {isAuthenticated && (
+              <div className='flex w-full justify-center px-4'>
+                <button
+                  onClick={handleLogout}
+                  className='mt-6 flex w-full max-w-xs items-center justify-center rounded-[2px] border border-red-500 px-4 py-2 uppercase text-red-500 transition-colors hover:bg-red-500 hover:text-white'
+                >
+                  <FiLogOut className='mr-1' size={20} /> Logout
+                </button>
+              </div>
+            )}
           </div>
         )}
       </nav>
+
       {isMenuOpen && (
         <div
           className='fixed inset-0 z-40 bg-black opacity-50'

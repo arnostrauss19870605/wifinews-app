@@ -1,14 +1,56 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/app/_context/authContext';
+import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const { isAuthenticated, login } = useAuth();
+  const router = useRouter();
 
-  const handleSubmit = (e: any) => {
+  useEffect(() => {
+    if (isAuthenticated) {
+      const redirectUrl = localStorage.getItem('redirectAfterLogin');
+      if (redirectUrl) {
+        localStorage.removeItem('redirectAfterLogin');
+        router.push(redirectUrl);
+      } else {
+        router.push('/');
+      }
+    }
+  }, [isAuthenticated, router]);
+
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
-    console.log('Login attempt with:', { email, password });
+    setErrorMessage('');
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, password }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok && data.access_token && data.refresh_token) {
+        login(data.access_token, data.refresh_token);
+      } else {
+        setErrorMessage(data.message || 'Login failed');
+      }
+    } catch (error) {
+      setErrorMessage('An error occurred. Please try again.');
+    }
   };
 
   return (
@@ -20,6 +62,11 @@ function Login() {
         <h2 className='text-center text-2xl font-bold uppercase text-gray-900'>
           Login
         </h2>
+
+        {errorMessage && (
+          <div className='mb-4 text-center text-red-500'>{errorMessage}</div>
+        )}
+
         <form onSubmit={handleSubmit} className='space-y-6'>
           <div>
             <label
@@ -33,7 +80,7 @@ function Login() {
               name='email'
               type='email'
               placeholder='you@example.com'
-              className='w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500'
+              className='w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500'
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -47,16 +94,29 @@ function Login() {
             >
               Password
             </label>
-            <input
-              id='password'
-              name='password'
-              type='password'
-              placeholder='**********'
-              className='w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500'
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+            <div className='relative'>
+              <input
+                id='password'
+                name='password'
+                type={showPassword ? 'text' : 'password'}
+                placeholder='**********'
+                className='w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500'
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <button
+                type='button'
+                onClick={() => setShowPassword(!showPassword)}
+                className='absolute inset-y-0 right-0 flex items-center px-3 text-gray-600'
+              >
+                {showPassword ? (
+                  <AiFillEyeInvisible size={24} />
+                ) : (
+                  <AiFillEye size={24} />
+                )}
+              </button>
+            </div>
           </div>
 
           <div>

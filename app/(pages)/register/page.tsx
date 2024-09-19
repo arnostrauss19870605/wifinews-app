@@ -1,6 +1,73 @@
+'use client';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/app/_context/authContext';
+import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 
 function Register() {
+  const [firstname, setFirstname] = useState('');
+  const [lastname, setLastname] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const { isAuthenticated, login } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      const redirectUrl = localStorage.getItem('redirectAfterLogin');
+      if (redirectUrl) {
+        localStorage.removeItem('redirectAfterLogin');
+        router.push(redirectUrl);
+      } else {
+        router.push('/');
+      }
+    }
+  }, [isAuthenticated, router]);
+
+  const handleRegister = async (e: any) => {
+    e.preventDefault();
+    setErrorMessage('');
+
+    if (password !== confirmPassword) {
+      setErrorMessage("Passwords don't match");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/register`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            firstname,
+            lastname,
+            email,
+            password,
+            confirmPassword,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok && data.access_token && data.refresh_token) {
+        login(data.access_token, data.refresh_token);
+      } else {
+        setErrorMessage(data.message || 'Registration failed');
+      }
+    } catch (error) {
+      setErrorMessage('An error occurred. Please try again.');
+    }
+  };
+
   return (
     <div
       className='flex items-center justify-center'
@@ -10,36 +77,47 @@ function Register() {
         <h2 className='text-center text-2xl font-bold uppercase text-gray-900'>
           Register
         </h2>
-        <form className='space-y-6'>
+
+        {errorMessage && (
+          <div className='mb-4 text-center text-red-500'>{errorMessage}</div>
+        )}
+
+        <form onSubmit={handleRegister} className='space-y-6'>
           <div className='grid grid-cols-2 gap-4'>
             <div>
               <label
-                htmlFor='fname'
+                htmlFor='firstname'
                 className='block text-sm font-medium text-gray-700'
               >
                 First Name
               </label>
               <input
-                id='fname'
-                name='fname'
+                id='firstname'
+                name='firstname'
                 type='text'
-                placeholder='Jon'
-                className='mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500'
+                placeholder='Jane'
+                className='mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500'
+                value={firstname}
+                onChange={(e) => setFirstname(e.target.value)}
+                required
               />
             </div>
             <div>
               <label
-                htmlFor='lname'
+                htmlFor='lastname'
                 className='block text-sm font-medium text-gray-700'
               >
                 Last Name
               </label>
               <input
-                id='lname'
-                name='lname'
+                id='lastname'
+                name='lastname'
                 type='text'
                 placeholder='Doe'
-                className='mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500'
+                className='mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500'
+                value={lastname}
+                onChange={(e) => setLastname(e.target.value)}
+                required
               />
             </div>
           </div>
@@ -55,48 +133,81 @@ function Register() {
               id='email'
               name='email'
               type='email'
-              placeholder='you@example.com'
-              className='mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500'
+              placeholder='jane.doe@example.com'
+              className='mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500'
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
             />
           </div>
 
           <div>
             <label
-              htmlFor='country'
+              htmlFor='password'
               className='block text-sm font-medium text-gray-700'
             >
-              Country
+              Password
             </label>
-            <select
-              name='country'
-              id='country'
-              className='mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500'
-            >
-              <option value='sa'>South Africa</option>
-              <option value='ger'>Germany</option>
-            </select>
+            <div className='relative'>
+              <input
+                id='password'
+                name='password'
+                type={showPassword ? 'text' : 'password'}
+                placeholder='********'
+                className='mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500'
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <button
+                type='button'
+                onClick={() => setShowPassword(!showPassword)}
+                className='absolute inset-y-0 right-0 flex items-center px-3 text-gray-600'
+              >
+                {showPassword ? (
+                  <AiFillEyeInvisible size={24} />
+                ) : (
+                  <AiFillEye size={24} />
+                )}
+              </button>
+            </div>
           </div>
 
           <div>
             <label
-              htmlFor='city'
+              htmlFor='confirmPassword'
               className='block text-sm font-medium text-gray-700'
             >
-              City
+              Confirm Password
             </label>
-            <select
-              name='city'
-              id='city'
-              className='mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500'
-            >
-              <option value='sa'>South Africa</option>
-              <option value='ger'>Germany</option>
-            </select>
+            <div className='relative'>
+              <input
+                id='confirmPassword'
+                name='confirmPassword'
+                type={showConfirmPassword ? 'text' : 'password'}
+                placeholder='********'
+                className='mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500'
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+              />
+              <button
+                type='button'
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className='absolute inset-y-0 right-0 flex items-center px-3 text-gray-600'
+              >
+                {showConfirmPassword ? (
+                  <AiFillEyeInvisible size={24} />
+                ) : (
+                  <AiFillEye size={24} />
+                )}
+              </button>
+            </div>
           </div>
 
           <div className='mt-6'>
             <button
-              type='button'
+              type='submit'
               className='w-full rounded-lg bg-slate-950 px-4 py-2 font-medium text-white hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2'
             >
               Register

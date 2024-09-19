@@ -153,9 +153,11 @@ const Landing: React.FC = () => {
           googletag.cmd.push(function() {
             const utmParams = ${JSON.stringify(getUtmParams())};
             console.log("landing utm params =>",utmParams);
-            Object.entries(utmParams).forEach(([key, value]) => {
-              googletag.pubads().setTargeting(key, value);
-            });
+
+      // Set the targeting key for Medium as requested by the client
+      if (utmParams['Medium']) {
+        googletag.pubads().setTargeting('Medium', utmParams['Medium']);
+      }
 
             var mapping1 = googletag.sizeMapping()
               .addSize([1400, 0], [[728, 90], 'fluid'])
