@@ -151,7 +151,10 @@ function CoursesByCategory() {
   );
 
   return (
-    <div className='container mx-auto px-4 py-8'>
+    <div
+      className='container mx-auto px-4 py-8'
+      style={{ minHeight: 'calc(100vh - 200px)' }}
+    >
       <div className='mb-6 flex w-full max-w-2xl items-center'>
         <div className='relative w-full'>
           <input
