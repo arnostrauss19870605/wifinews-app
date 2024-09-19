@@ -97,10 +97,12 @@ function Navigation() {
           {isAuthenticated ? (
             <div className='flex items-center'>
               {avatarUrl ? (
-                <img
+                <Image
                   src={avatarUrl}
                   alt='User Avatar'
-                  className='h-10 w-10 rounded-full'
+                  width={40}
+                  height={40}
+                  className='rounded-full'
                 />
               ) : (
                 <div className='h-10 w-10 rounded-full bg-gray-300'></div>
@@ -151,10 +153,12 @@ function Navigation() {
               {isAuthenticated ? (
                 <div className='flex items-center'>
                   {avatarUrl ? (
-                    <img
+                    <Image
                       src={avatarUrl}
                       alt='User Avatar'
-                      className='h-10 w-10 rounded-full'
+                      width={40}
+                      height={40}
+                      className='rounded-full'
                     />
                   ) : (
                     <div className='h-10 w-10 rounded-full bg-gray-300'></div>
