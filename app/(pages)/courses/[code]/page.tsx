@@ -100,13 +100,15 @@ function CoursesByCategory() {
     'name-asc' | 'name-desc' | 'duration-asc' | 'duration-desc'
   >('name-asc');
   const [loading, setLoading] = useState<boolean>(true);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [itemsPerPage] = useState<number>(9);
 
   const categoryId = getCategoryIdByCode(code as string);
 
   useEffect(() => {
     async function fetchCourses() {
       if (!categoryId) return;
-      setLoading(true); // Start loading
+      setLoading(true);
       try {
         const response = await fetch(
           `http://localhost:8080/courses/category/${categoryId}`
@@ -116,7 +118,7 @@ function CoursesByCategory() {
       } catch (error) {
         console.error('Failed to fetch courses:', error);
       } finally {
-        setLoading(false); // End loading
+        setLoading(false);
       }
     }
 
@@ -149,6 +151,15 @@ function CoursesByCategory() {
         .includes(searchQuery.toLowerCase())
     )
   );
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentCourses = filteredCourses.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   return (
     <div
@@ -218,8 +229,8 @@ function CoursesByCategory() {
               <div className='mt-auto h-10 w-full rounded bg-gray-300'></div>
             </div>
           ))
-        ) : filteredCourses.length > 0 ? (
-          filteredCourses.map((course) => (
+        ) : currentCourses.length > 0 ? (
+          currentCourses.map((course) => (
             <div
               key={course.id}
               className='flex h-[400px] w-full flex-col overflow-hidden rounded-lg border border-gray-300 bg-white p-4 text-center shadow-sm transition-transform hover:scale-105'
@@ -264,6 +275,25 @@ function CoursesByCategory() {
           ))
         ) : (
           <p>No courses found</p>
+        )}
+      </div>
+
+      <div className='mt-[100px] flex justify-center'>
+        {Array.from(
+          { length: Math.ceil(filteredCourses.length / itemsPerPage) },
+          (_, index) => (
+            <button
+              key={index + 1}
+              onClick={() => paginate(index + 1)}
+              className={`mx-1 rounded px-4 py-2 ${
+                currentPage === index + 1
+                  ? 'bg-gray-700 text-white'
+                  : 'bg-gray-200'
+              }`}
+            >
+              {index + 1}
+            </button>
+          )
         )}
       </div>
     </div>
