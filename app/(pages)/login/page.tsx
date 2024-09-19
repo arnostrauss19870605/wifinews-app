@@ -15,7 +15,13 @@ function Login() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      router.push('/');
+      const redirectUrl = localStorage.getItem('redirectAfterLogin');
+      if (redirectUrl) {
+        localStorage.removeItem('redirectAfterLogin');
+        router.push(redirectUrl);
+      } else {
+        router.push('/');
+      }
     }
   }, [isAuthenticated, router]);
 
@@ -39,7 +45,6 @@ function Login() {
 
       if (response.ok && data.access_token && data.refresh_token) {
         login(data.access_token, data.refresh_token);
-        router.push('/');
       } else {
         setErrorMessage(data.message || 'Login failed');
       }
@@ -93,7 +98,7 @@ function Login() {
               <input
                 id='password'
                 name='password'
-                type={showPassword ? 'text' : 'password'} // Toggle input type
+                type={showPassword ? 'text' : 'password'}
                 placeholder='**********'
                 className='w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500'
                 value={password}
@@ -102,13 +107,13 @@ function Login() {
               />
               <button
                 type='button'
-                onClick={() => setShowPassword(!showPassword)} // Toggle show/hide password
+                onClick={() => setShowPassword(!showPassword)}
                 className='absolute inset-y-0 right-0 flex items-center px-3 text-gray-600'
               >
                 {showPassword ? (
-                  <AiFillEyeInvisible size={24} /> // Eye icon when password is shown
+                  <AiFillEyeInvisible size={24} />
                 ) : (
-                  <AiFillEye size={24} /> // Eye icon when password is hidden
+                  <AiFillEye size={24} />
                 )}
               </button>
             </div>

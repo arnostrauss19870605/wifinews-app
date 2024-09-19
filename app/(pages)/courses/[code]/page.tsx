@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import {
   AiOutlineSearch,
   AiOutlineClockCircle,
@@ -14,6 +14,7 @@ import {
   FaSortAmountUp,
   FaSortAmountDown,
 } from 'react-icons/fa';
+import { useAuth } from '@/app/_context/authContext';
 
 interface Publisher {
   name: string;
@@ -94,6 +95,8 @@ const truncateTitle = (title: string) => {
 
 function CoursesByCategory() {
   const { code } = useParams();
+  const router = useRouter();
+  const { isAuthenticated } = useAuth();
   const [courses, setCourses] = useState<Course[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [sortBy, setSortBy] = useState<
@@ -160,6 +163,15 @@ function CoursesByCategory() {
   );
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
+  const handleMoreInfoClick = (courseUrl: string) => {
+    if (!isAuthenticated) {
+      localStorage.setItem('redirectAfterLogin', courseUrl);
+      router.push('/login');
+    } else {
+      window.location.href = courseUrl;
+    }
+  };
 
   return (
     <div
@@ -262,14 +274,12 @@ function CoursesByCategory() {
               </div>
 
               <div className='mt-auto pt-4'>
-                <a
-                  href={course.url}
-                  target='_blank'
-                  rel='noopener noreferrer'
+                <button
+                  onClick={() => handleMoreInfoClick(course.url)}
                   className='inline-block w-full rounded bg-gray-700 py-2 text-white hover:bg-black'
                 >
                   More Info
-                </a>
+                </button>
               </div>
             </div>
           ))
@@ -278,7 +288,7 @@ function CoursesByCategory() {
         )}
       </div>
 
-      <div className='mt-[100px] flex justify-center'>
+      <div className='mt-6 flex justify-center'>
         {Array.from(
           { length: Math.ceil(filteredCourses.length / itemsPerPage) },
           (_, index) => (
