@@ -21,7 +21,7 @@ export function getUtmParams(): Record<string, string> {
 
   const utmMedium = urlParams.get('utm_medium');
   if (utmMedium) {
-    utmParams['Medium'] = `Medium: ${utmMedium}`;
+    utmParams['Medium'] = utmMedium;
   }
 
   return utmParams;
