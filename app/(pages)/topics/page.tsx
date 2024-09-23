@@ -108,7 +108,7 @@ const TopicsMainScreen = () => {
         </div>
       </div>
       <div className='mb-8 flex flex-wrap items-center justify-center gap-4 sm:flex-nowrap'>
-        <div className='relative w-full max-w-xs'>
+        <div className='relative w-full'>
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
@@ -123,7 +123,7 @@ const TopicsMainScreen = () => {
           </select>
           <BiSolidCategory className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 transform text-gray-400' />
         </div>
-        <div className='relative w-full max-w-xs'>
+        <div className='relative w-full'>
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
@@ -135,7 +135,7 @@ const TopicsMainScreen = () => {
           </select>
           <FaSort className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 transform text-gray-400' />
         </div>
-        <div className='relative w-full max-w-xs'>
+        <div className='relative w-full'>
           <select
             value={order}
             onChange={(e) => setOrder(e.target.value)}
