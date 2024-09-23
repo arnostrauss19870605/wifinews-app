@@ -78,9 +78,19 @@ const TopicsMainScreen = () => {
     }
   };
 
+  const handleSearchClick = () => {
+    fetchTopics();
+  };
+
   useEffect(() => {
     fetchTopics();
-  }, [searchTerm, selectedCategory, currentPage, sortBy, order]);
+  }, [selectedCategory, currentPage, sortBy, order]);
+
+  useEffect(() => {
+    if (searchTerm === '') {
+      fetchTopics();
+    }
+  }, [searchTerm]);
 
   useEffect(() => {
     fetchCategories();
@@ -92,19 +102,24 @@ const TopicsMainScreen = () => {
 
   return (
     <div className='min-h-screen px-4 py-8'>
-      <h1 className='mb-4 text-center text-4xl font-bold text-gray-800'>
+      <h1 className='mb-12 mt-2 text-center text-4xl font-bold text-gray-800'>
         Discussion Topics
       </h1>
       <div className='mb-4 w-full'>
-        <div className='relative'>
+        <div className='relative flex items-center'>
           <input
             type='text'
             placeholder='Search topics...'
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className='w-full rounded-full border border-gray-300 py-3 pl-10 pr-4 text-gray-700 shadow-sm focus:border-black focus:outline-none focus:ring-2 focus:ring-black'
+            className='w-full rounded-full border border-gray-300 py-3 pl-4 pr-4 text-gray-700 shadow-sm focus:border-black focus:outline-none focus:ring-2 focus:ring-black'
           />
-          <FaSearch className='absolute left-3 top-1/2 -translate-y-1/2 transform text-gray-400' />
+          <button
+            onClick={handleSearchClick}
+            className='ml-2 flex items-center justify-center rounded-full bg-black p-4 text-white hover:bg-gray-800'
+          >
+            <FaSearch />
+          </button>
         </div>
       </div>
       <div className='mb-8 flex flex-wrap items-center justify-center gap-4 sm:flex-nowrap'>
