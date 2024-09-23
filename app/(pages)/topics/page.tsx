@@ -26,6 +26,7 @@ export interface Topic {
 
 const TopicsMainScreen = () => {
   const [topics, setTopics] = useState<Topic[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -61,9 +62,29 @@ const TopicsMainScreen = () => {
     }
   };
 
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/topics/categories`
+      );
+      const data = await response.json();
+      if (data) {
+        setCategories(data);
+      } else {
+        setCategories([]);
+      }
+    } catch (error) {
+      setCategories([]);
+    }
+  };
+
   useEffect(() => {
     fetchTopics();
   }, [searchTerm, selectedCategory, currentPage, sortBy, order]);
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
   const handleRowClick = (id: number) => {
     router.push(`/topics/${id}`);
@@ -94,9 +115,11 @@ const TopicsMainScreen = () => {
             className='w-full appearance-none rounded-full border border-gray-300 py-3 pl-4 pr-10 text-gray-700 shadow-sm focus:border-black focus:outline-none focus:ring-2 focus:ring-black'
           >
             <option value=''>All Categories</option>
-            <option value='1'>Environment</option>
-            <option value='2'>Technology</option>
-            <option value='3'>Finance</option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))}
           </select>
           <BiSolidCategory className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 transform text-gray-400' />
         </div>
