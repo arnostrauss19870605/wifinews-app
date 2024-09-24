@@ -1,6 +1,7 @@
 import { FaCommentDots } from 'react-icons/fa';
 import Image from 'next/legacy/image';
 import chatBg from '../../_assets/images/chat.png';
+import Link from 'next/link';
 
 function DiscussionForum() {
   return (
@@ -23,12 +24,14 @@ function DiscussionForum() {
         in your community in an open public forum.
       </p>
       <div className='flex justify-center'>
-        <button
-          type='button'
-          className='flex items-center rounded-lg bg-slate-950 px-6 py-3 font-medium text-white focus:outline-none lg:px-10'
-        >
-          <FaCommentDots className='mr-2' /> Join the Discussion
-        </button>
+        <Link href='/topics'>
+          <button
+            type='button'
+            className='flex items-center rounded-lg bg-slate-950 px-6 py-3 font-medium text-white focus:outline-none lg:px-10'
+          >
+            <FaCommentDots className='mr-2' /> Join the Discussion
+          </button>
+        </Link>
       </div>
     </div>
   );
