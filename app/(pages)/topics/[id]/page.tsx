@@ -217,7 +217,7 @@ const TopicDetailPage = () => {
             </div>
             <button
               onClick={() => handleSort(sortBy)}
-              className='flex items-center gap-2 rounded-lg bg-gray-200 px-4 py-2 transition duration-200 hover:bg-gray-300'
+              className='flex min-h-[37px] items-center gap-2 rounded-lg bg-gray-200 px-4 py-2 transition duration-200 hover:bg-gray-300'
             >
               {order === 'asc' ? (
                 <FaSortAmountUp size={16} />

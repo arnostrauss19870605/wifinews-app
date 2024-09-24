@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 function LearningMaterial() {
   return (
-    <div className='my-10 rounded-lg bg-gray-100 p-8 text-center shadow-lg'>
+    <div className='my-10 rounded-lg bg-gray-100 px-4 py-8 text-center shadow-lg'>
       <h2 className='mb-4 text-2xl font-semibold'>Access Learning Material</h2>
       <p className='mb-5 mt-2 text-lg'>
         Discover a wide range of learning resources to help you stay informed

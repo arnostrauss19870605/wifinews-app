@@ -18,7 +18,7 @@ function DiscussionForum() {
         />
       </div>
       <h2 className='mb-4 text-2xl font-semibold'>Have Your Say!</h2>
-      <p className='my-8 px-8 text-base'>
+      <p className='my-8 px-2 text-base'>
         With all the happenings in our country, good and bad, we have created a
         forum where you can have your say and discuss these matters with others
         in your community in an open public forum.
