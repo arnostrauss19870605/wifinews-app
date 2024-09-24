@@ -54,7 +54,7 @@ const TopicsMainScreen = () => {
           setTotalPages(1);
         }
         setIsLoading(false);
-      }, 1000);
+      }, 0); // Simulate network delay
     } catch (error) {
       setTopics([]);
       setTotalPages(1);
