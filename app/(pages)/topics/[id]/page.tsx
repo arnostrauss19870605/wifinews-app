@@ -4,6 +4,7 @@ import {
   FaThumbsUp,
   FaThumbsDown,
   FaUser,
+  FaSort,
   FaSortAmountUp,
   FaSortAmountDown,
 } from 'react-icons/fa';
@@ -54,7 +55,7 @@ const TopicDetailPage = () => {
   const [sortBy, setSortBy] = useState<'date' | 'upvotes' | 'downvotes'>(
     'date'
   );
-  const [order, setOrder] = useState<'asc' | 'desc'>('asc');
+  const [order, setOrder] = useState<'asc' | 'desc'>('desc');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const commentsPerPage = 10;
@@ -196,28 +197,34 @@ const TopicDetailPage = () => {
         </div>
       )}
 
-      {comments.length > 0 && (
+      {Array.isArray(comments) && comments.length > 0 && (
         <>
           <h2 className='mb-4 text-2xl font-semibold'>Comments</h2>
           <div className='mb-4 flex items-center space-x-4'>
+            <div className='relative inline-flex items-center'>
+              <select
+                value={sortBy}
+                onChange={(e) =>
+                  handleSort(e.target.value as 'date' | 'upvotes' | 'downvotes')
+                }
+                className='appearance-none rounded-lg border border-gray-300 p-2 pr-8 text-sm transition duration-200 focus:outline-none focus:ring-2 focus:ring-black'
+              >
+                <option value='date'>Sort by Date</option>
+                <option value='upvotes'>Sort by Upvotes</option>
+                <option value='downvotes'>Sort by Downvotes</option>
+              </select>
+              <FaSort className='pointer-events-none absolute right-2 text-gray-600' />
+            </div>
             <button
               onClick={() => handleSort(sortBy)}
-              className='flex items-center gap-2 rounded-lg bg-gray-200 px-4 py-2 text-sm transition duration-200 hover:bg-gray-300'
+              className='flex min-h-[38px] items-center gap-2 rounded-lg bg-gray-200 px-4 py-2 transition duration-200 hover:bg-gray-300'
             >
-              {order === 'asc' ? <FaSortAmountUp /> : <FaSortAmountDown />} Sort{' '}
-              {order === 'asc' ? 'Ascending' : 'Descending'}
+              {order === 'asc' ? (
+                <FaSortAmountUp size={16} />
+              ) : (
+                <FaSortAmountDown size={16} />
+              )}
             </button>
-            <select
-              value={sortBy}
-              onChange={(e) =>
-                handleSort(e.target.value as 'date' | 'upvotes' | 'downvotes')
-              }
-              className='rounded-lg border border-gray-300 p-2'
-            >
-              <option value='date'>Sort by Date</option>
-              <option value='upvotes'>Sort by Upvotes</option>
-              <option value='downvotes'>Sort by Downvotes</option>
-            </select>
           </div>
 
           {comments.map((comment) => (
@@ -262,7 +269,7 @@ const TopicDetailPage = () => {
         </>
       )}
 
-      {comments.length > 0 && (
+      {Array.isArray(comments) && comments.length > 0 && (
         <div className='mt-8 flex items-center justify-between'>
           <button
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
