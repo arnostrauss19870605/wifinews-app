@@ -200,24 +200,24 @@ const TopicDetailPage = () => {
       {Array.isArray(comments) && comments.length > 0 && (
         <>
           <h2 className='mb-4 text-2xl font-semibold'>Comments</h2>
-          <div className='mb-4 flex items-center space-x-4'>
-            <div className='relative inline-flex items-center'>
+          <div className='mb-4 flex flex-row items-center space-x-4 space-y-0'>
+            <div className='relative inline-flex w-full items-center md:w-auto'>
               <select
                 value={sortBy}
                 onChange={(e) =>
                   handleSort(e.target.value as 'date' | 'upvotes' | 'downvotes')
                 }
-                className='appearance-none rounded-lg border border-gray-300 p-2 pr-8 text-sm transition duration-200 focus:outline-none focus:ring-2 focus:ring-black'
+                className='w-full appearance-none rounded-lg border border-gray-300 p-2 pr-8 text-sm transition duration-200 focus:outline-none focus:ring-2 focus:ring-black md:w-auto'
               >
                 <option value='date'>Sort by Date</option>
                 <option value='upvotes'>Sort by Upvotes</option>
                 <option value='downvotes'>Sort by Downvotes</option>
               </select>
-              <FaSort className='pointer-events-none absolute right-2 text-gray-600' />
+              <FaSort className='pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 transform text-gray-600' />
             </div>
             <button
               onClick={() => handleSort(sortBy)}
-              className='flex min-h-[38px] items-center gap-2 rounded-lg bg-gray-200 px-4 py-2 transition duration-200 hover:bg-gray-300'
+              className='flex items-center gap-2 rounded-lg bg-gray-200 px-4 py-2 transition duration-200 hover:bg-gray-300'
             >
               {order === 'asc' ? (
                 <FaSortAmountUp size={16} />
@@ -230,7 +230,7 @@ const TopicDetailPage = () => {
           {comments.map((comment) => (
             <div
               key={comment.id}
-              className='mb-4 rounded-lg border border-gray-300 p-6'
+              className='mb-4 rounded-lg border border-gray-300 p-4 md:p-6'
             >
               <div className='mb-3 flex items-center'>
                 <FaUser className='mr-2 text-gray-600' />
@@ -244,7 +244,7 @@ const TopicDetailPage = () => {
               <p className='mb-4 leading-relaxed text-gray-700'>
                 {comment.content}
               </p>
-              <div className='flex items-center justify-between'>
+              <div className='flex flex-col items-start space-y-2 md:flex-row md:items-center md:justify-between md:space-y-0'>
                 <div className='flex space-x-3'>
                   <button
                     onClick={() => handleVote(comment.id, 'upvote')}
