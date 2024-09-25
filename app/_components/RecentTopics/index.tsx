@@ -1,6 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { FaCommentDots } from 'react-icons/fa';
+import { useRouter } from 'next/navigation';
 
 export interface Topic {
   id: number;
@@ -18,6 +19,7 @@ const RecentTopics: React.FC<RecentTopicsProps> = ({ howMany = 5 }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [topics, setTopics] = useState<Topic[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   const fetchRecentTopics = async (count: number) => {
     setIsLoading(true);
@@ -43,7 +45,7 @@ const RecentTopics: React.FC<RecentTopicsProps> = ({ howMany = 5 }) => {
   }, [howMany]);
 
   const handleRowClick = (id: number) => {
-    console.log(`Navigated to topic with id: ${id}`);
+    router.push(`/topics/${id}`);
   };
 
   return (
