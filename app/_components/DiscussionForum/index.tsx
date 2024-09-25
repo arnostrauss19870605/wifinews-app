@@ -6,7 +6,7 @@ function DiscussionForum() {
   return (
     <div className='my-10 rounded-lg bg-white shadow-lg'>
       <div className='mb-4 w-full'>
-        <RecentTopics />
+        <RecentTopics howMany={5} />
       </div>
       <h2 className='mb-4 text-center text-2xl font-semibold'>
         Have Your Say!
