@@ -142,7 +142,7 @@ const TopicDetailPage = () => {
 
   const handleSort = (key: 'date' | 'upvotes' | 'downvotes') => {
     setSortBy(key);
-    setOrder(order === 'asc' ? 'desc' : 'asc');
+    setOrder('desc');
   };
 
   return (

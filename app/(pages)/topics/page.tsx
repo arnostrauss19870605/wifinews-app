@@ -33,7 +33,7 @@ const TopicsMainScreen = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [sortBy, setSortBy] = useState('date');
-  const [order, setOrder] = useState('asc');
+  const [order, setOrder] = useState('desc');
   const topicsPerPage = 10;
   const router = useRouter();
 
@@ -54,7 +54,7 @@ const TopicsMainScreen = () => {
           setTotalPages(1);
         }
         setIsLoading(false);
-      }, 0); // Simulate network delay
+      }, 0);
     } catch (error) {
       setTopics([]);
       setTotalPages(1);
