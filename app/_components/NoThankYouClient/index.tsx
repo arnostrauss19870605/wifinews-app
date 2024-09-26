@@ -34,7 +34,7 @@ export default function NoThankYouClient({
 
   return (
     <div className='flex min-h-screen flex-col items-center justify-between px-4 py-10'>
-      <Script id='gpt-setup' strategy='afterInteractive'>
+      <Script id='gpt-setup' strategy='beforeInteractive'>
         {`
           window.googletag = window.googletag || {cmd: []};
 

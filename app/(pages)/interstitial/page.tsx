@@ -143,14 +143,14 @@ function Interstitial() {
   return (
     <>
       {/* Existing GPT Setup for Rewarded Ads */}
-      <Script id='gpt-rewarded-ad-setup' strategy='afterInteractive'>
+      <Script id='gpt-rewarded-ad-setup' strategy='beforeInteractive'>
         {`
           window.googletag = window.googletag || {cmd: []};
         `}
       </Script>
 
       {/* Updated GPT Tag Script Integration */}
-      <Script id='gpt-interstitial-setup' strategy='afterInteractive'>
+      <Script id='gpt-interstitial-setup' strategy='beforeInteractive'>
         {`
           window.googletag = window.googletag || {cmd: []};
 

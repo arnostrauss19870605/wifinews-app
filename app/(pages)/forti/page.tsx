@@ -39,7 +39,7 @@ function Forti() {
   return (
     <div>
       {/* GPT Configuration and Ad Display */}
-      <Script id='gpt-forti-setup' strategy='afterInteractive'>
+      <Script id='gpt-forti-setup' strategy='beforeInteractive'>
         {`
     window.googletag = window.googletag || { cmd: [] };
 

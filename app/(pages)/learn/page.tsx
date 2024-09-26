@@ -123,7 +123,7 @@ function Learn() {
   return (
     <>
       {/* GPT Configuration and Ad Display */}
-      <Script id='gpt-home-setup' strategy='afterInteractive'>
+      <Script id='gpt-home-setup' strategy='beforeInteractive'>
         {`
           window.googletag = window.googletag || { cmd: [] };
 

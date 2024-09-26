@@ -117,7 +117,7 @@ function CoursesByCategory() {
       setLoading(true);
       try {
         const response = await fetch(
-          `http://localhost:8080/courses/category/${categoryId}`
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/courses/category/${categoryId}`
         );
         const data = await response.json();
         setCourses(data.data || []);
@@ -182,7 +182,7 @@ function CoursesByCategory() {
   return (
     <>
       {/* GPT Configuration and Ad Display */}
-      <Script id='gpt-home-setup' strategy='afterInteractive'>
+      <Script id='gpt-home-setup' strategy='beforeInteractive'>
         {`
           window.googletag = window.googletag || { cmd: [] };
 
