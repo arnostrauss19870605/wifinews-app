@@ -168,12 +168,14 @@ function CoursesByCategory() {
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   const handleMoreInfoClick = useCallback(
-    (courseUrl: string) => {
+    (courseSlug: string) => {
+      const courseUrl = `https://alison.com/login/external?token=${localStorage.getItem('alisonToken')}&course=${courseSlug}`;
       if (!isAuthenticated) {
         localStorage.setItem('redirectAfterLogin', courseUrl);
         router.push('/login');
       } else {
-        window.location.href = courseUrl;
+        // window.location.href = courseUrl;
+        window.location.href = `https://alison.com/login/external?token=${localStorage.getItem('alisonToken')}&course=${courseSlug}`;
       }
     },
     [isAuthenticated, router]
@@ -377,7 +379,7 @@ function CoursesByCategory() {
 
                 <div className='mt-auto pt-4'>
                   <button
-                    onClick={() => handleMoreInfoClick(course.url)}
+                    onClick={() => handleMoreInfoClick(course.slug)}
                     className='inline-block w-full rounded bg-gray-700 py-2 text-white hover:bg-black'
                   >
                     More Info
