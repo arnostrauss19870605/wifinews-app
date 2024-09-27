@@ -9,13 +9,22 @@ import React, {
 import { jwtDecode } from 'jwt-decode';
 import { useRouter } from 'next/navigation';
 
-interface User {
+type User = {
   id: number;
   email: string;
   firstname: string;
   lastname: string;
-  alisonId?: string;
-}
+};
+
+type TokenPayload = {
+  userId: number;
+  alisonId: number;
+  alisonToken: string;
+  firstname: string;
+  lastname: string;
+  iat: number;
+  exp: number;
+};
 
 interface AuthContextProps {
   user: User | null;
@@ -44,10 +53,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const router = useRouter();
 
-  const decodeToken = (token: string): string | null => {
+  const decodeToken = (token: string): TokenPayload | null => {
     try {
-      const decoded: any = jwtDecode(token);
-      return decoded.alisonId || null;
+      return jwtDecode(token);
     } catch (error) {
       console.error('Failed to decode token:', error);
       return null;
@@ -60,6 +68,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     localStorage.removeItem('token');
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('alisonId');
+    localStorage.removeItem('alisonToken');
     setUser(null);
     setIsAuthenticated(false);
     router.push('/login');
@@ -107,9 +116,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         const data = await res.json();
 
         if (res.ok) {
-          const alisonId = decodeToken(accessToken);
-          localStorage.setItem('alisonId', alisonId || '');
-          setUser({ ...data, alisonId });
+          setUser({ ...data });
         } else if (res.status === 401) {
           const success = await refreshAccessToken();
           if (!success) {
@@ -138,12 +145,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const login = useCallback(
     (accessToken: string, refreshToken: string) => {
-      const alisonId = decodeToken(accessToken);
+      const tokenPayload = decodeToken(accessToken);
       setToken(accessToken);
       setRefreshToken(refreshToken);
       localStorage.setItem('token', accessToken);
       localStorage.setItem('refreshToken', refreshToken);
-      localStorage.setItem('alisonId', alisonId || '');
+      localStorage.setItem('alisonId', tokenPayload?.alisonId.toString() || '');
+      localStorage.setItem('alisonToken', tokenPayload?.alisonToken || '');
       setIsAuthenticated(true);
       fetchUserInfo(accessToken);
     },
