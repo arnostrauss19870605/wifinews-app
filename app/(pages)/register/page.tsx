@@ -24,7 +24,9 @@ function Register() {
       const redirectUrl = localStorage.getItem('redirectAfterLogin');
       if (redirectUrl) {
         localStorage.removeItem('redirectAfterLogin');
-        router.push(redirectUrl);
+        router.push(
+          `https://alison.com/login/external?token=${localStorage.getItem('alisonToken')}&course=${redirectUrl}`
+        );
       } else {
         router.push('/');
       }

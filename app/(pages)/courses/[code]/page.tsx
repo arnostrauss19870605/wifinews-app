@@ -169,9 +169,8 @@ function CoursesByCategory() {
 
   const handleMoreInfoClick = useCallback(
     (courseSlug: string) => {
-      const courseUrl = `https://alison.com/login/external?token=${localStorage.getItem('alisonToken')}&course=${courseSlug}`;
       if (!isAuthenticated) {
-        localStorage.setItem('redirectAfterLogin', courseUrl);
+        localStorage.setItem('redirectAfterLogin', courseSlug);
         router.push('/login');
       } else {
         // window.location.href = courseUrl;
