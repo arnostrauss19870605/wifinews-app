@@ -10,7 +10,6 @@ import {
   FaSortAmountUp,
 } from 'react-icons/fa';
 import { BiSolidCategory } from 'react-icons/bi';
-import { useRouter } from 'next/navigation';
 import Script from 'next/script';
 import { getUtmParams } from '@/app/_utils/utm.util';
 
@@ -37,7 +36,6 @@ const TopicsMainScreen = () => {
   const [sortBy, setSortBy] = useState('date');
   const [order, setOrder] = useState('desc');
   const topicsPerPage = 10;
-  const router = useRouter();
 
   const fetchTopics = async () => {
     setIsLoading(true);
@@ -97,10 +95,6 @@ const TopicsMainScreen = () => {
   useEffect(() => {
     fetchCategories();
   }, []);
-
-  const handleRowClick = (id: number) => {
-    router.push(`/topics/${id}`);
-  };
 
   return (
     <>
@@ -299,7 +293,9 @@ const TopicsMainScreen = () => {
                       <tr
                         key={topic.id}
                         className='cursor-pointer transition-colors duration-200 hover:bg-gray-100'
-                        onClick={() => handleRowClick(topic.id)}
+                        onClick={() =>
+                          (window.location.href = `/topics/${topic.id}`)
+                        }
                       >
                         <td
                           className={`border-b border-gray-300 px-4 py-4 text-sm text-gray-800 ${topic.title.length > 40 ? 'max-w-[240px] overflow-hidden text-ellipsis whitespace-nowrap' : ''}`}
