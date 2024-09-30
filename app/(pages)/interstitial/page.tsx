@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import Script from 'next/script';
+import { useRouter } from 'next/navigation';
 import ProgressIndicator from '@/app/_components/ProgressIndicator';
 import LearningMaterial from '@/app/_components/LearningMaterial';
 import DiscussionForum from '@/app/_components/DiscussionForum';
@@ -10,8 +11,9 @@ import { FaWifi } from 'react-icons/fa';
 
 function Interstitial() {
   const [isRewardModalVisible, setIsRewardModalVisible] = useState(false);
-  const [interstitialTimer, setInterstitialTimer] = useState(20);
+  const [interstitialTimer, setInterstitialTimer] = useState(20); // Set initial timer to 20 seconds
   const [isButtonVisible, setButtonVisible] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     let countdownInterval: NodeJS.Timeout | null = null;
@@ -22,6 +24,7 @@ function Interstitial() {
           if (prevTimer > 0) {
             const newTime = prevTimer - 1;
             if (newTime <= 0) {
+              // Show button when 10 seconds or less remain
               setButtonVisible(true);
             }
             return newTime;
@@ -42,7 +45,7 @@ function Interstitial() {
         clearInterval(countdownInterval);
       }
     };
-  }, [interstitialTimer]);
+  }, [interstitialTimer, router, isRewardModalVisible]);
 
   useEffect(() => {
     const initializeRewardedAd = () => {
@@ -111,7 +114,7 @@ function Interstitial() {
             );
             if (!grantedState) {
               console.log('Rewarded Slot was not granted.');
-              window.location.href = appendUtmParams('/cancel');
+              router.push(appendUtmParams('/cancel'));
             } else {
               googletag.destroySlots([rewardedSlot]);
               window.location.href = appendUtmParams(
@@ -125,26 +128,28 @@ function Interstitial() {
     };
 
     initializeRewardedAd();
-  }, []);
+  }, [router]);
 
   const cancelPage = () => {
-    window.location.href = appendUtmParams('/cancel');
+    router.push(appendUtmParams('/cancel'));
   };
 
   const handleConnect = () => {
-    window.location.href = appendUtmParams(
-      'https://bobbies.hotspot.yourspot.co.za/lv/login'
+    router.push(
+      appendUtmParams('https://bobbies.hotspot.yourspot.co.za/lv/login')
     );
   };
 
   return (
     <>
+      {/* Existing GPT Setup for Rewarded Ads */}
       <Script id='gpt-rewarded-ad-setup' strategy='beforeInteractive'>
         {`
           window.googletag = window.googletag || {cmd: []};
         `}
       </Script>
 
+      {/* Updated GPT Tag Script Integration */}
       <Script id='gpt-interstitial-setup' strategy='beforeInteractive'>
         {`
           window.googletag = window.googletag || {cmd: []};
@@ -153,6 +158,7 @@ function Interstitial() {
             const utmParams = ${JSON.stringify(getUtmParams())};
             console.log("interstitial utm params =>",utmParams);
 
+      // Set the targeting key for Medium as requested by the client
       if (utmParams['Medium']) {
         googletag.pubads().setTargeting('Medium', utmParams['Medium']);
       }
@@ -232,10 +238,12 @@ function Interstitial() {
           )}
         </div>
 
+        {/* Sticky Ad */}
         <div className='fixed bottom-12 left-0 right-0 z-[9999] flex justify-center'>
           <div id='div-gpt-ad-6110814-3' className='w-full max-w-[768px]'></div>
         </div>
 
+        {/* Divs for Ad Slots */}
         <div className='my-4 flex w-full items-center justify-center'>
           <div id='div-gpt-ad-6110814-1'></div>
         </div>
@@ -250,6 +258,7 @@ function Interstitial() {
         </div>
       </div>
 
+      {/* Reward Modal */}
       <div
         id='rewardModal'
         className='fixed inset-0 z-[9000] flex items-center justify-center bg-black bg-opacity-50 p-4'
