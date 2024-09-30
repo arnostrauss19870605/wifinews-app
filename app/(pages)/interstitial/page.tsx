@@ -250,12 +250,6 @@ function Interstitial() {
         <div className='my-4 flex w-full items-center justify-center'>
           <div id='div-gpt-ad-6110814-2'></div>
         </div>
-
-        <LearningMaterial />
-        <DiscussionForum />
-        <div className='my-10'>
-          <News />
-        </div>
       </div>
 
       {/* Reward Modal */}
