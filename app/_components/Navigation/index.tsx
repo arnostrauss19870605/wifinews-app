@@ -2,7 +2,6 @@
 import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
-import Link from 'next/link';
 import { FiX, FiLogOut } from 'react-icons/fi';
 import { MdOutlineMenu } from 'react-icons/md';
 import wifinewslogo from '../../_assets/images/logo.png';
@@ -54,7 +53,7 @@ function Navigation() {
       <nav className='container mx-auto flex items-center justify-between p-4'>
         <div className='flex items-center'>
           <div className='relative h-[40px] w-[174px]'>
-            <Link href='/'>
+            <a href='/'>
               <Image
                 src={wifinewslogo}
                 alt='wifinews-logo'
@@ -63,7 +62,7 @@ function Navigation() {
                 className='object-contain'
                 priority
               />
-            </Link>
+            </a>
           </div>
         </div>
 
@@ -71,7 +70,7 @@ function Navigation() {
           <ul className='flex space-x-8 text-base text-gray-700'>
             {menuItems.map((item, index) => (
               <li key={index}>
-                <Link
+                <a
                   href={item.href}
                   className={`uppercase hover:text-[#FF4644] ${
                     pathname === item.href ? 'font-semibold text-[#FF4644]' : ''
@@ -87,7 +86,7 @@ function Navigation() {
                     {item.name.charAt(0)}
                   </span>
                   {item.name.slice(1)}
-                </Link>
+                </a>
               </li>
             ))}
           </ul>
@@ -119,18 +118,18 @@ function Navigation() {
             </div>
           ) : (
             <div className='flex space-x-4'>
-              <Link
+              <a
                 href='/login'
                 className='rounded-[2px] border border-[#FF4644] px-4 py-2 uppercase text-[#FF4644] transition-colors hover:bg-[#FF4644] hover:text-white'
               >
                 Login
-              </Link>
-              <Link
+              </a>
+              <a
                 href='/register'
                 className='rounded-[2px] bg-[#FF4644] px-4 py-2 uppercase text-white transition-colors hover:bg-[#e33a3a]'
               >
                 Register
-              </Link>
+              </a>
             </div>
           )}
         </div>
@@ -169,20 +168,20 @@ function Navigation() {
                 </div>
               ) : (
                 <div className='flex space-x-4'>
-                  <Link
+                  <a
                     href='/login'
                     className='rounded-[2px] border border-[#FF4644] px-4 py-2 uppercase text-[#FF4644] transition-colors hover:bg-[#FF4644] hover:text-white'
                     onClick={closeMenu}
                   >
                     Login
-                  </Link>
-                  <Link
+                  </a>
+                  <a
                     href='/register'
                     className='rounded-[2px] bg-[#FF4644] px-4 py-2 uppercase text-white transition-colors hover:bg-[#e33a3a]'
                     onClick={closeMenu}
                   >
                     Register
-                  </Link>
+                  </a>
                 </div>
               )}
               <button
@@ -202,13 +201,13 @@ function Navigation() {
                     pathname === item.href ? 'font-bold text-[#FF4644]' : ''
                   }`}
                 >
-                  <Link
+                  <a
                     href={item.href}
                     onClick={closeMenu}
                     className='block py-2 uppercase hover:text-[#FF4644]'
                   >
                     {item.name}
-                  </Link>
+                  </a>
                 </li>
               ))}
             </ul>
