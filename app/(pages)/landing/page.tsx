@@ -1,14 +1,12 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import Script from 'next/script';
-import { useRouter } from 'next/navigation';
 import ProgressIndicator from '@/app/_components/ProgressIndicator';
 import { getUtmParams, appendUtmParams } from '@/app/_utils/utm.util';
 
 const Landing: React.FC = () => {
   const [isRewardModalVisible, setIsRewardModalVisible] = useState(false);
   const [landingTimer, setLandingTimer] = useState(35);
-  const router = useRouter();
 
   useEffect(() => {
     const addSeconds = (
@@ -38,7 +36,7 @@ const Landing: React.FC = () => {
         if (timeLeft <= 0) {
           clearInterval(timerInterval);
           setLandingTimer(0);
-          router.push(appendUtmParams('/home'));
+          window.location.href = appendUtmParams('/home');
         } else {
           setLandingTimer(timeLeft);
         }
@@ -51,7 +49,7 @@ const Landing: React.FC = () => {
     firstTimer();
 
     return () => clearInterval(timerInterval);
-  }, [isRewardModalVisible, router]);
+  }, [isRewardModalVisible]);
 
   useEffect(() => {
     const initializeRewardedAd = () => {
@@ -120,10 +118,10 @@ const Landing: React.FC = () => {
             );
             if (!grantedState) {
               console.log('Rewarded Slot was not granted.');
-              router.push(appendUtmParams('/cancel'));
+              window.location.href = appendUtmParams('/cancel');
             } else {
               googletag.destroySlots([rewardedSlot]);
-              router.push(appendUtmParams('/home'));
+              window.location.href = appendUtmParams('/home');
             }
           });
 
@@ -132,10 +130,10 @@ const Landing: React.FC = () => {
     };
 
     initializeRewardedAd();
-  }, [router]);
+  }, []);
 
   const cancelPage = () => {
-    router.push(appendUtmParams('/cancel'));
+    window.location.href = appendUtmParams('/cancel');
   };
 
   return (
@@ -282,7 +280,7 @@ const Landing: React.FC = () => {
             className='btn cursor-pointer rounded-lg bg-blue-500 px-4 py-2 text-white'
             id='grantCloseBtn'
             value='Close'
-            onClick={() => router.push(appendUtmParams('/home'))}
+            onClick={() => (window.location.href = appendUtmParams('/home'))}
           />
         </div>
       </div>

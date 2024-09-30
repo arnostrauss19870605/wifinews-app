@@ -1,6 +1,5 @@
 import featuredArticles from '@/app/_data/featured-articles';
 import popularArticles from '@/app/_data/popular-articles';
-import Link from 'next/link';
 import { FiArrowRight, FiBookOpen, FiTrendingUp } from 'react-icons/fi';
 import React from 'react';
 import Script from 'next/script';
@@ -79,13 +78,11 @@ export default function News() {
               .defineSizeMapping(mapping4)
               .addService(googletag.pubads());
 
-            // Enable services and set targeting
             googletag.pubads().enableSingleRequest();
             googletag.pubads().collapseEmptyDivs();
             googletag.pubads().setCentering(true);
             googletag.enableServices();
 
-            // Display the ad slots
             googletag.display('div-gpt-ad-6641866-1');
             googletag.display('div-gpt-ad-6641866-2');
             googletag.display('div-gpt-ad-6641866-3');
@@ -116,11 +113,11 @@ export default function News() {
                 <p className='mt-2 text-gray-600'>{article.summary}</p>
                 <p className='mt-4 text-sm text-blue-500'>{article.source}</p>
               </div>
-              <Link href={article.link}>
+              <a href={article.link}>
                 <button className='mt-4 flex w-full items-center justify-center rounded bg-black px-4 py-2 text-white transition-colors duration-300 hover:bg-gray-800'>
                   Read More <FiArrowRight className='ml-2' />
                 </button>
-              </Link>
+              </a>
             </div>
           ))}
         </div>
@@ -140,12 +137,12 @@ export default function News() {
                   <hr className='my-2 border-gray-300' />
                   <p className='text-sm text-gray-500'>{article.type}</p>
                 </div>
-                <Link href={article.link}>
+                <a href={article.link}>
                   <div className='mt-4 flex items-center text-black hover:text-gray-700 sm:ml-4 sm:mt-0'>
                     <span className='text-sm font-semibold'>Read More</span>
                     <FiTrendingUp className='ml-2 text-lg' />
                   </div>
-                </Link>
+                </a>
               </div>
             ))}
           </div>

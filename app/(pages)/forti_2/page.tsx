@@ -1,7 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import Script from 'next/script';
-import { useRouter } from 'next/navigation';
 import ProgressIndicator from '@/app/_components/ProgressIndicator';
 import LearningMaterial from '@/app/_components/LearningMaterial';
 import DiscussionForum from '@/app/_components/DiscussionForum';
@@ -22,7 +21,6 @@ function Forti_2() {
   const [isRewardModalVisible, setIsRewardModalVisible] = useState(false);
   const [interstitialTimer, setInterstitialTimer] = useState(20);
   const [isButtonVisible, setButtonVisible] = useState(false);
-  const router = useRouter();
 
   useEffect(() => {
     let countdownInterval: NodeJS.Timeout | null = null;
@@ -42,10 +40,8 @@ function Forti_2() {
       }, 1000);
     }
 
-    if (interstitialTimer === 0) {
-      if (countdownInterval) {
-        clearInterval(countdownInterval);
-      }
+    if (interstitialTimer === 0 && countdownInterval) {
+      clearInterval(countdownInterval);
     }
 
     return () => {
@@ -53,7 +49,7 @@ function Forti_2() {
         clearInterval(countdownInterval);
       }
     };
-  }, [interstitialTimer, router, isRewardModalVisible]);
+  }, [interstitialTimer, isRewardModalVisible]);
 
   useEffect(() => {
     const initializeRewardedAd = () => {
@@ -122,7 +118,7 @@ function Forti_2() {
             );
             if (!grantedState) {
               console.log('Rewarded Slot was not granted.');
-              router.push(appendUtmParams('/cancel'));
+              window.location.href = appendUtmParams('/cancel');
             } else {
               googletag.destroySlots([rewardedSlot]);
               const utmParams = getUtmParams();
@@ -136,16 +132,16 @@ function Forti_2() {
     };
 
     initializeRewardedAd();
-  }, [router]);
+  }, []);
 
   const cancelPage = () => {
-    router.push(appendUtmParams('/cancel'));
+    window.location.href = appendUtmParams('/cancel');
   };
 
   const handleConnect = () => {
     const utmParams = getUtmParams();
     const redirectUrl = getRedirectUrl(utmParams.utm_medium);
-    router.push(appendUtmParams(redirectUrl));
+    window.location.href = appendUtmParams(redirectUrl);
   };
 
   return (
@@ -164,10 +160,9 @@ function Forti_2() {
             const utmParams = ${JSON.stringify(getUtmParams())};
             console.log("interstitial utm params =>",utmParams);
 
-      // Set the targeting key for Medium as requested by the client
-      if (utmParams['Medium']) {
-        googletag.pubads().setTargeting('Medium', utmParams['Medium']);
-      }
+            if (utmParams['Medium']) {
+              googletag.pubads().setTargeting('Medium', utmParams['Medium']);
+            }
 
             const mapping1 = googletag.sizeMapping()
               .addSize([1400, 0], [[728, 90], 'fluid'])
@@ -251,7 +246,7 @@ function Forti_2() {
         <div className='my-4 flex w-full items-center justify-center'>
           <div id='div-gpt-ad-7171086-1'></div>
         </div>
-        <div className='my-4 flex w-full items-center justify-center'>
+        <div className='justifycenter my-4 flex w-full items-center'>
           <div id='div-gpt-ad-7171086-2'></div>
         </div>
 

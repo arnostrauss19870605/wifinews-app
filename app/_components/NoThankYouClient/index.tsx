@@ -1,7 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Script from 'next/script';
-import { useRouter } from 'next/navigation';
 import { getUtmParams, appendUtmParams } from '@/app/_utils/utm.util';
 
 interface NoThankYouClientProps {
@@ -16,7 +15,6 @@ export default function NoThankYouClient({
   const [isFromInterstitial, setIsFromInterstitial] = useState(
     initialIsFromInterstitial
   );
-  const router = useRouter();
 
   useEffect(() => {
     console.log('Client-side Is from interstitial:', isFromInterstitial);
@@ -24,11 +22,11 @@ export default function NoThankYouClient({
 
   const handleRedirect = () => {
     if (isFromInterstitial) {
-      router.push(appendUtmParams('/interstitial'));
+      window.location.href = appendUtmParams('/interstitial');
     } else if (isFromForti) {
-      router.push(appendUtmParams('/forti_2'));
+      window.location.href = appendUtmParams('/forti_2');
     } else {
-      router.push(appendUtmParams('/landing'));
+      window.location.href = appendUtmParams('/landing');
     }
   };
 
@@ -42,10 +40,9 @@ export default function NoThankYouClient({
             const utmParams = ${JSON.stringify(getUtmParams())};
             console.log("cancel utm params =>",utmParams);
 
-      // Set the targeting key for Medium as requested by the client
-      if (utmParams['Medium']) {
-        googletag.pubads().setTargeting('Medium', utmParams['Medium']);
-      }
+            if (utmParams['Medium']) {
+              googletag.pubads().setTargeting('Medium', utmParams['Medium']);
+            }
 
             const mapping3 = googletag.sizeMapping()
               .addSize([1400, 0], ['fluid', [728, 90], [300, 250], [300, 600], [468, 60]])

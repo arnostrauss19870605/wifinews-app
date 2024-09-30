@@ -1,7 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import Script from 'next/script';
-import { useRouter } from 'next/navigation';
 import LearningMaterial from '@/app/_components/LearningMaterial';
 import DiscussionForum from '@/app/_components/DiscussionForum';
 import News from '@/app/(pages)/news/page';
@@ -12,7 +11,6 @@ import { FaWifi } from 'react-icons/fa';
 function Forti() {
   const [timer, setTimer] = useState(20);
   const [isButtonVisible, setButtonVisible] = useState(false);
-  const router = useRouter();
 
   useEffect(() => {
     const countdownInterval = setInterval(() => {
@@ -30,11 +28,11 @@ function Forti() {
 
     if (timer === 0) {
       clearInterval(countdownInterval);
-      router.push(appendUtmParams('/forti_2'));
+      window.location.href = appendUtmParams('/forti_2');
     }
 
     return () => clearInterval(countdownInterval);
-  }, [timer, router]);
+  }, [timer]);
 
   return (
     <div>
@@ -47,12 +45,10 @@ function Forti() {
       const utmParams = ${JSON.stringify(getUtmParams())};
       console.log("forti utm params =>", utmParams);
 
-      // Set the targeting key for Medium as requested by the client
       if (utmParams['Medium']) {
         googletag.pubads().setTargeting('Medium', utmParams['Medium']);
       }
 
-      // Define size mappings
       const mapping1 = googletag.sizeMapping()
         .addSize([1400, 0], [[728, 90], 'fluid'])
         .addSize([1200, 0], [[728, 90], 'fluid'])
@@ -83,7 +79,6 @@ function Forti() {
         .addSize([300, 0], ['fluid', [320, 50], [300, 50], [320, 100], [300, 100], [300, 250]])
         .build();
 
-      // Define ad slots and display them
       googletag.defineSlot('/22047902240/wifinews/fortihome_top320x50', ['fluid', [320, 50], [320, 100], [300, 250], [468, 60], [728, 90]], 'div-gpt-ad-8664835-1')
         .defineSizeMapping(mapping1)
         .addService(googletag.pubads());
@@ -108,13 +103,11 @@ function Forti() {
         .defineSizeMapping(mapping4)
         .addService(googletag.pubads());
 
-      // Enable services and set targeting
       googletag.pubads().enableSingleRequest();
       googletag.pubads().collapseEmptyDivs();
       googletag.pubads().setCentering(true);
       googletag.enableServices();
 
-      // Display the ad slots
       googletag.display('div-gpt-ad-8664835-1');
       googletag.display('div-gpt-ad-8664835-2');
       googletag.display('div-gpt-ad-8664835-3');
@@ -149,7 +142,6 @@ function Forti() {
                 },
               });
               
-              // Refresh the interstitial slot to trigger the ad
               googletag.pubads().refresh([interstitialSlot]);
             }
           });

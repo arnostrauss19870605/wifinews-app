@@ -1,7 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import Script from 'next/script';
-import { useRouter } from 'next/navigation';
 import LearningMaterial from '@/app/_components/LearningMaterial';
 import DiscussionForum from '@/app/_components/DiscussionForum';
 import News from '@/app/(pages)/news/page';
@@ -12,7 +11,6 @@ import { FaWifi } from 'react-icons/fa';
 function Home() {
   const [timer, setTimer] = useState(20);
   const [isButtonVisible, setButtonVisible] = useState(false);
-  const router = useRouter();
 
   useEffect(() => {
     const countdownInterval = setInterval(() => {
@@ -30,15 +28,14 @@ function Home() {
 
     if (timer === 0) {
       clearInterval(countdownInterval);
-      router.push(appendUtmParams('/interstitial'));
+      window.location.href = appendUtmParams('/interstitial');
     }
 
     return () => clearInterval(countdownInterval);
-  }, [timer, router]);
+  }, [timer]);
 
   return (
     <div>
-      {/* GPT Configuration and Ad Display */}
       <Script id='gpt-home-setup' strategy='beforeInteractive'>
         {`
           window.googletag = window.googletag || { cmd: [] };
@@ -47,12 +44,10 @@ function Home() {
             const utmParams = ${JSON.stringify(getUtmParams())};
             console.log("home utm params =>",utmParams);
 
-      // Set the targeting key for Medium as requested by the client
-      if (utmParams['Medium']) {
-        googletag.pubads().setTargeting('Medium', utmParams['Medium']);
-      }
+            if (utmParams['Medium']) {
+              googletag.pubads().setTargeting('Medium', utmParams['Medium']);
+            }
 
-            // Define size mappings
             const mapping1 = googletag.sizeMapping()
               .addSize([1400, 0], [[728, 90], 'fluid'])
               .addSize([1200, 0], [[728, 90], 'fluid'])
@@ -83,7 +78,6 @@ function Home() {
               .addSize([300, 0], ['fluid', [320, 50], [300, 50], [320, 100], [300, 100], [300, 250]])
               .build();
 
-            // Define ad slots and display them
             googletag.defineSlot('/22047902240/wifinews/homepage_top_leaderboard', ['fluid', [320, 100], [320, 50], [300, 250], [468, 60], [728, 90]], 'div-gpt-ad-6641866-1')
               .defineSizeMapping(mapping1)
               .addService(googletag.pubads());
@@ -108,13 +102,11 @@ function Home() {
               .defineSizeMapping(mapping4)
               .addService(googletag.pubads());
 
-            // Enable services and set targeting
             googletag.pubads().enableSingleRequest();
             googletag.pubads().collapseEmptyDivs();
             googletag.pubads().setCentering(true);
             googletag.enableServices();
 
-            // Display the ad slots
             googletag.display('div-gpt-ad-6641866-1');
             googletag.display('div-gpt-ad-6641866-2');
             googletag.display('div-gpt-ad-6641866-3');
@@ -125,7 +117,6 @@ function Home() {
         `}
       </Script>
 
-      {/* Separate Vignette Ad Script */}
       <Script
         id='gpt-vignette-setup'
         strategy='lazyOnload'
@@ -150,7 +141,6 @@ function Home() {
                 },
               });
               
-              // Refresh the interstitial slot to trigger the ad
               googletag.pubads().refresh([interstitialSlot]);
             }
           });

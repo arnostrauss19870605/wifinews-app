@@ -1,13 +1,11 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import Script from 'next/script';
-import { useRouter } from 'next/navigation';
 import { getUtmParams, appendUtmParams } from '@/app/_utils/utm.util';
 import { FaSearch } from 'react-icons/fa';
 
 function Exit_1() {
   const [isRewardModalVisible, setIsRewardModalVisible] = useState(false);
-  const router = useRouter();
 
   useEffect(() => {
     const initializeRewardedAd = () => {
@@ -76,7 +74,7 @@ function Exit_1() {
             );
             if (!grantedState) {
               console.log('Rewarded Slot was not granted.');
-              router.push(appendUtmParams('/cancel'));
+              window.location.href = appendUtmParams('/cancel');
             } else {
               googletag.destroySlots([rewardedSlot]);
               window.location.href = appendUtmParams('/search');
@@ -88,26 +86,24 @@ function Exit_1() {
     };
 
     initializeRewardedAd();
-  }, [router]);
+  }, []);
 
   const cancelPage = () => {
-    router.push(appendUtmParams('/'));
+    window.location.href = appendUtmParams('/');
   };
 
   const handleConnect = () => {
-    router.push(appendUtmParams('/search'));
+    window.location.href = appendUtmParams('/search');
   };
 
   return (
     <>
-      {/* Existing GPT Setup for Rewarded Ads */}
       <Script id='gpt-rewarded-ad-setup' strategy='beforeInteractive'>
         {`
           window.googletag = window.googletag || {cmd: []};
         `}
       </Script>
 
-      {/* Updated GPT Tag Script Integration */}
       <Script id='gpt-exit-setup' strategy='beforeInteractive'>
         {`
           window.googletag = window.googletag || {cmd: []};
@@ -116,10 +112,9 @@ function Exit_1() {
             const utmParams = ${JSON.stringify(getUtmParams())};
             console.log("exit utm params =>", utmParams);
 
-      // Set the targeting key for Medium as requested by the client
-      if (utmParams['Medium']) {
-        googletag.pubads().setTargeting('Medium', utmParams['Medium']);
-      }
+            if (utmParams['Medium']) {
+              googletag.pubads().setTargeting('Medium', utmParams['Medium']);
+            }
 
             const mapping = googletag.sizeMapping()
               .addSize([1400, 0], [[728, 90], 'fluid'])
