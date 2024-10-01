@@ -70,7 +70,7 @@ function Search() {
     >
       <Script
         src='https://cse.google.com/cse.js?cx=207b2db6653094381'
-        strategy='beforeInteractive'
+        strategy='afterInteractive'
         onLoad={() => {
           console.log('Google CSE script loaded successfully');
           setIsGoogleCseLoaded(true);
@@ -78,7 +78,7 @@ function Search() {
         onError={(e) => console.error('Error loading Google CSE script:', e)}
       />
 
-      <Script id='gpt-search-setup' strategy='beforeInteractive'>
+      <Script id='gpt-search-setup' strategy='afterInteractive'>
         {`
           window.googletag = window.googletag || { cmd: [] };
 

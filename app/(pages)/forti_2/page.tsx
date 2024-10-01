@@ -146,13 +146,13 @@ function Forti_2() {
 
   return (
     <>
-      <Script id='gpt-rewarded-ad-setup' strategy='beforeInteractive'>
+      <Script id='gpt-rewarded-ad-setup' strategy='afterInteractive'>
         {`
           window.googletag = window.googletag || {cmd: []};
         `}
       </Script>
 
-      <Script id='gpt-interstitial-setup' strategy='beforeInteractive'>
+      <Script id='gpt-interstitial-setup' strategy='afterInteractive'>
         {`
           window.googletag = window.googletag || {cmd: []};
 

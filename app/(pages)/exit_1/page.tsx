@@ -98,13 +98,13 @@ function Exit_1() {
 
   return (
     <>
-      <Script id='gpt-rewarded-ad-setup' strategy='beforeInteractive'>
+      <Script id='gpt-rewarded-ad-setup' strategy='afterInteractive'>
         {`
           window.googletag = window.googletag || {cmd: []};
         `}
       </Script>
 
-      <Script id='gpt-exit-setup' strategy='beforeInteractive'>
+      <Script id='gpt-exit-setup' strategy='afterInteractive'>
         {`
           window.googletag = window.googletag || {cmd: []};
 

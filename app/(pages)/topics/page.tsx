@@ -99,7 +99,7 @@ const TopicsMainScreen = () => {
   return (
     <>
       {/* GPT Configuration and Ad Display */}
-      <Script id='gpt-home-setup' strategy='beforeInteractive'>
+      <Script id='gpt-home-setup' strategy='afterInteractive'>
         {`
           window.googletag = window.googletag || { cmd: [] };
 

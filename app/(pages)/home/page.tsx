@@ -36,7 +36,7 @@ function Home() {
 
   return (
     <div>
-      <Script id='gpt-home-setup' strategy='beforeInteractive'>
+      <Script id='gpt-home-setup' strategy='afterInteractive'>
         {`
           window.googletag = window.googletag || { cmd: [] };
 
