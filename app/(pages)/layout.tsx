@@ -8,6 +8,7 @@ import Footer from '@/app/_components/Footer';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import Script from 'next/script';
 import { AuthProvider } from '@/app/_context/authContext';
+import 'core-js/stable/global-this';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -25,7 +26,6 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <head>
-        <script src='https://polyfill.io/v3/polyfill.min.js?features=globalThis'></script>
         <Script
           src='https://securepubads.g.doubleclick.net/tag/js/gpt.js'
           strategy='beforeInteractive'
