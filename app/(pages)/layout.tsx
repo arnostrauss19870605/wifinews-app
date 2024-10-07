@@ -25,10 +25,7 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <head>
-        <Script
-          src='https://polyfill.io/v3/polyfill.min.js?features=globalThis'
-          strategy='beforeInteractive'
-        ></Script>
+        <script src='https://polyfill.io/v3/polyfill.min.js?features=globalThis'></script>
         <Script
           src='https://securepubads.g.doubleclick.net/tag/js/gpt.js'
           strategy='beforeInteractive'
