@@ -26,13 +26,12 @@ export default function RootLayout({
     <html lang='en'>
       <head>
         <Script
+          src='https://polyfill.io/v3/polyfill.min.js?features=globalThis'
+          strategy='beforeInteractive'
+        ></Script>
+        <Script
           src='https://securepubads.g.doubleclick.net/tag/js/gpt.js'
           strategy='beforeInteractive'
-        />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `!function(t){function e(){var e=this||self;e.globalThis=e,delete t.prototype._T_}"object"!=typeof globalThis&&(this?e():(t.defineProperty(t.prototype,"_T_",{configurable:!0,get:e}),_T_))}(Object);`,
-          }}
         />
       </head>
       <body className={inter.className}>
