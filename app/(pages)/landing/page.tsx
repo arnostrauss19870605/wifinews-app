@@ -138,7 +138,7 @@ const Landing: React.FC = () => {
 
   return (
     <>
-      <Script id='gpt-rewarded-ad-setup' strategy='afterInteractive'>
+      <Script id='gpt-rewarded-ad-setup' strategy='beforeInteractive'>
         {`
           window.googletag = window.googletag || {cmd: []};
         `}
