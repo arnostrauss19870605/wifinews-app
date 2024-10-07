@@ -53,27 +53,39 @@ const Landing: React.FC = () => {
 
   useEffect(() => {
     const initializeRewardedAd = () => {
+      console.log('Initializing Rewarded Ad...');
+
       (window as any).googletag = (window as any).googletag || { cmd: [] };
       (window as any).googletag.cmd.push(() => {
         const googletag = (window as any).googletag;
+
+        // Define the rewarded ad slot
+        console.log('Defining Rewarded Slot...');
         let rewardedSlot = googletag
           .defineOutOfPageSlot(
             '147246189,22047902240/wifinews.co.za_rewarded',
             googletag.enums.OutOfPageFormat.REWARDED
           )
           .addService(googletag.pubads());
+
         rewardedSlot.setForceSafeFrame(true);
+        console.log('Rewarded Slot SetForceSafeFrame(true) called.');
+
         googletag.pubads().enableAsyncRendering();
         googletag.enableServices();
 
         let rewardedSlotReady = false;
         let grantedState = false;
 
+        // Rewarded slot ready event listener
         googletag.pubads().addEventListener('rewardedSlotReady', (evt: any) => {
+          console.log('Rewarded Slot Ready:', evt);
           rewardedSlotReady = true;
           setIsRewardModalVisible(true);
+
           const trigger = document.getElementById('rewardModal');
           if (trigger) {
+            console.log('Displaying reward modal...');
             trigger.style.display = 'flex';
             document.body.style.overflow = 'hidden';
 
@@ -81,8 +93,12 @@ const Landing: React.FC = () => {
             const noThanksButton = document.getElementById('noThanksBtn');
 
             const makeVisibleFn = (e: Event) => {
+              console.log(
+                'Watch Ad Button clicked. Making rewarded ad visible.'
+              );
               evt.makeRewardedVisible();
               e.preventDefault();
+
               watchAdButton?.removeEventListener('click', makeVisibleFn);
               noThanksButton?.removeEventListener('click', closeModalFn);
               trigger.style.display = 'none';
@@ -91,6 +107,7 @@ const Landing: React.FC = () => {
             };
 
             const closeModalFn = () => {
+              console.log('No Thanks Button clicked. Closing reward modal.');
               trigger.style.display = 'none';
               document.body.style.overflow = '';
               googletag.destroySlots([rewardedSlot]);
@@ -99,32 +116,40 @@ const Landing: React.FC = () => {
 
             watchAdButton?.addEventListener('click', makeVisibleFn);
             noThanksButton?.addEventListener('click', closeModalFn);
+          } else {
+            console.error('Reward modal not found.');
           }
         });
 
+        // Rewarded slot granted event listener
         googletag.pubads().addEventListener('rewardedSlotGranted', function () {
           grantedState = true;
-          console.log('Rewarded Ad Granted Event');
+          console.log('Rewarded Slot Granted.');
         });
 
+        // Rewarded slot closed event listener
         googletag
           .pubads()
           .addEventListener('rewardedSlotClosed', (event: any) => {
             const slot = event.slot;
-            console.log(
-              'Rewarded ad slot',
-              slot.getSlotElementId(),
-              'has been closed.'
-            );
+            console.log('Rewarded Slot Closed:', slot.getSlotElementId());
+
             if (!grantedState) {
-              console.log('Rewarded Slot was not granted.');
+              console.log(
+                'Rewarded slot was not granted. Redirecting to cancel page.'
+              );
               window.location.href = appendUtmParams('/cancel');
             } else {
+              console.log(
+                'Rewarded slot was granted. Redirecting to home page.'
+              );
               googletag.destroySlots([rewardedSlot]);
               window.location.href = appendUtmParams('/home');
             }
           });
 
+        // Display the rewarded ad slot
+        console.log('Displaying the rewarded ad slot...');
         googletag.display(rewardedSlot);
       });
     };
