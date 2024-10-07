@@ -29,11 +29,6 @@ export default function RootLayout({
           src='https://securepubads.g.doubleclick.net/tag/js/gpt.js'
           strategy='beforeInteractive'
         />
-        <script
-          src='https://unpkg.com/@ungap/global-this@0.4.4/min.js'
-          noModule
-          async
-        ></script>
       </head>
       <body className={inter.className}>
         <AuthProvider>
