@@ -51,86 +51,82 @@ const Landing: React.FC = () => {
     return () => clearInterval(timerInterval);
   }, [isRewardModalVisible]);
 
-  useEffect(() => {
-    const initializeRewardedAd = () => {
-      (window as any).googletag = (window as any).googletag || { cmd: [] };
-      (window as any).googletag.cmd.push(() => {
-        const googletag = (window as any).googletag;
-        let rewardedSlot = googletag
-          .defineOutOfPageSlot(
-            '147246189,22047902240/wifinews.co.za_rewarded',
-            googletag.enums.OutOfPageFormat.REWARDED
-          )
-          .addService(googletag.pubads());
-        rewardedSlot.setForceSafeFrame(true);
-        googletag.pubads().enableAsyncRendering();
-        googletag.enableServices();
+  const initializeRewardedAd = () => {
+    (window as any).googletag = (window as any).googletag || { cmd: [] };
+    (window as any).googletag.cmd.push(() => {
+      const googletag = (window as any).googletag;
+      let rewardedSlot = googletag
+        .defineOutOfPageSlot(
+          '147246189,22047902240/wifinews.co.za_rewarded',
+          googletag.enums.OutOfPageFormat.REWARDED
+        )
+        .addService(googletag.pubads());
+      rewardedSlot.setForceSafeFrame(true);
+      googletag.pubads().enableAsyncRendering();
+      googletag.enableServices();
 
-        let rewardedSlotReady = false;
-        let grantedState = false;
+      let rewardedSlotReady = false;
+      let grantedState = false;
 
-        googletag.pubads().addEventListener('rewardedSlotReady', (evt: any) => {
-          rewardedSlotReady = true;
-          setIsRewardModalVisible(true);
-          const trigger = document.getElementById('rewardModal');
-          if (trigger) {
-            trigger.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
+      googletag.pubads().addEventListener('rewardedSlotReady', (evt: any) => {
+        rewardedSlotReady = true;
+        setIsRewardModalVisible(true);
+        const trigger = document.getElementById('rewardModal');
+        if (trigger) {
+          trigger.style.display = 'flex';
+          document.body.style.overflow = 'hidden';
 
-            const watchAdButton = document.getElementById('watchAdBtn');
-            const noThanksButton = document.getElementById('noThanksBtn');
+          const watchAdButton = document.getElementById('watchAdBtn');
+          const noThanksButton = document.getElementById('noThanksBtn');
 
-            const makeVisibleFn = (e: Event) => {
-              evt.makeRewardedVisible();
-              e.preventDefault();
-              watchAdButton?.removeEventListener('click', makeVisibleFn);
-              noThanksButton?.removeEventListener('click', closeModalFn);
-              trigger.style.display = 'none';
-              document.body.style.overflow = '';
-              setIsRewardModalVisible(false);
-            };
+          const makeVisibleFn = (e: Event) => {
+            evt.makeRewardedVisible();
+            e.preventDefault();
+            watchAdButton?.removeEventListener('click', makeVisibleFn);
+            noThanksButton?.removeEventListener('click', closeModalFn);
+            trigger.style.display = 'none';
+            document.body.style.overflow = '';
+            setIsRewardModalVisible(false);
+          };
 
-            const closeModalFn = () => {
-              trigger.style.display = 'none';
-              document.body.style.overflow = '';
-              googletag.destroySlots([rewardedSlot]);
-              setIsRewardModalVisible(false);
-            };
+          const closeModalFn = () => {
+            trigger.style.display = 'none';
+            document.body.style.overflow = '';
+            googletag.destroySlots([rewardedSlot]);
+            setIsRewardModalVisible(false);
+          };
 
-            watchAdButton?.addEventListener('click', makeVisibleFn);
-            noThanksButton?.addEventListener('click', closeModalFn);
+          watchAdButton?.addEventListener('click', makeVisibleFn);
+          noThanksButton?.addEventListener('click', closeModalFn);
+        }
+      });
+
+      googletag.pubads().addEventListener('rewardedSlotGranted', function () {
+        grantedState = true;
+        console.log('Rewarded Ad Granted Event');
+      });
+
+      googletag
+        .pubads()
+        .addEventListener('rewardedSlotClosed', (event: any) => {
+          const slot = event.slot;
+          console.log(
+            'Rewarded ad slot',
+            slot.getSlotElementId(),
+            'has been closed.'
+          );
+          if (!grantedState) {
+            console.log('Rewarded Slot was not granted.');
+            window.location.href = appendUtmParams('/cancel');
+          } else {
+            googletag.destroySlots([rewardedSlot]);
+            window.location.href = appendUtmParams('/home');
           }
         });
 
-        googletag.pubads().addEventListener('rewardedSlotGranted', function () {
-          grantedState = true;
-          console.log('Rewarded Ad Granted Event');
-        });
-
-        googletag
-          .pubads()
-          .addEventListener('rewardedSlotClosed', (event: any) => {
-            const slot = event.slot;
-            console.log(
-              'Rewarded ad slot',
-              slot.getSlotElementId(),
-              'has been closed.'
-            );
-            if (!grantedState) {
-              console.log('Rewarded Slot was not granted.');
-              window.location.href = appendUtmParams('/cancel');
-            } else {
-              googletag.destroySlots([rewardedSlot]);
-              window.location.href = appendUtmParams('/home');
-            }
-          });
-
-        googletag.display(rewardedSlot);
-      });
-    };
-
-    initializeRewardedAd();
-  }, []);
+      googletag.display(rewardedSlot);
+    });
+  };
 
   const cancelPage = () => {
     window.location.href = appendUtmParams('/cancel');
@@ -138,7 +134,13 @@ const Landing: React.FC = () => {
 
   return (
     <>
-      <Script id='gpt-rewarded-ad-setup' strategy='beforeInteractive'>
+      <Script
+        id='gpt-rewarded-ad-setup'
+        strategy='afterInteractive'
+        onLoad={() => {
+          initializeRewardedAd();
+        }}
+      >
         {`
           window.googletag = window.googletag || {cmd: []};
         `}
