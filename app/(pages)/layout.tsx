@@ -8,8 +8,6 @@ import Footer from '@/app/_components/Footer';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import Script from 'next/script';
 import { AuthProvider } from '@/app/_context/authContext';
-import 'core-js/stable';
-import 'regenerator-runtime/runtime';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -27,11 +25,11 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <head>
-        {/*<script*/}
-        {/*  dangerouslySetInnerHTML={{*/}
-        {/*    __html: `!function(t){function e(){var e=this||self;e.globalThis=e,delete t.prototype._T_}"object"!=typeof globalThis&&(this?e():(t.defineProperty(t.prototype,"_T_",{configurable:!0,get:e}),_T_))}(Object);`,*/}
-        {/*  }}*/}
-        {/*/>*/}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `!function(t){function e(){var e=this||self;e.globalThis=e,delete t.prototype._T_}"object"!=typeof globalThis&&(this?e():(t.defineProperty(t.prototype,"_T_",{configurable:!0,get:e}),_T_))}(Object);`,
+          }}
+        />
         <Script
           src='https://securepubads.g.doubleclick.net/tag/js/gpt.js'
           strategy='beforeInteractive'
