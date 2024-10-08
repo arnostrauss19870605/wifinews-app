@@ -150,12 +150,7 @@ const Landing: React.FC = () => {
 
         // Display the rewarded ad slot
         console.log('Displaying the rewarded ad slot...');
-        try {
-          googletag.display(rewardedSlot);
-        } catch (e) {
-          console.error('Error displaying rewarded ad:', e);
-          alert('Sorry, your browser does not support this feature.');
-        }
+        googletag.display(rewardedSlot);
       });
     };
 
