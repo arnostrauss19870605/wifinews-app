@@ -99,8 +99,10 @@ const Landing: React.FC = () => {
               evt.makeRewardedVisible();
               e.preventDefault();
 
-              watchAdButton?.removeEventListener('click', makeVisibleFn);
-              noThanksButton?.removeEventListener('click', closeModalFn);
+              // @ts-ignore
+              watchAdButton.removeEventListener('click', makeVisibleFn);
+              // @ts-ignore
+              noThanksButton.removeEventListener('click', closeModalFn);
               trigger.style.display = 'none';
               document.body.style.overflow = '';
               setIsRewardModalVisible(false);
@@ -114,8 +116,10 @@ const Landing: React.FC = () => {
               setIsRewardModalVisible(false);
             };
 
-            watchAdButton?.addEventListener('click', makeVisibleFn);
-            noThanksButton?.addEventListener('click', closeModalFn);
+            // @ts-ignore
+            watchAdButton.addEventListener('click', makeVisibleFn);
+            // @ts-ignore
+            noThanksButton.addEventListener('click', closeModalFn);
           } else {
             console.error('Reward modal not found.');
           }
