@@ -147,7 +147,7 @@ function Navigation() {
         </button>
 
         {isMenuOpen && (
-          <div className='fixed inset-0 z-50 flex flex-col bg-white'>
+          <div className='fixed bottom-0 left-0 right-0 top-0 z-50 flex flex-col bg-white'>
             <div className='flex items-center justify-between p-4'>
               {isAuthenticated ? (
                 <div className='flex items-center'>
@@ -228,7 +228,7 @@ function Navigation() {
 
       {isMenuOpen && (
         <div
-          className='fixed inset-0 z-40 bg-black opacity-50'
+          className='fixed bottom-0 left-0 right-0 top-0 z-40 bg-black opacity-50'
           onClick={closeMenu}
         />
       )}

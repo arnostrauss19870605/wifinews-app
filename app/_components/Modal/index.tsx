@@ -49,7 +49,7 @@ const Modal: React.FC<ModalProps> = ({
 
   return (
     <div
-      className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 pb-[400px]'
+      className='fixed bottom-0 left-0 right-0 top-0 z-50 flex items-center justify-center bg-black bg-opacity-50 pb-[400px]'
       onClick={isClosable ? onClose : undefined}
       aria-modal='true'
       role='dialog'

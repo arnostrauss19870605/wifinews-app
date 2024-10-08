@@ -255,7 +255,7 @@ function Interstitial() {
       {/* Reward Modal */}
       <div
         id='rewardModal'
-        className='fixed inset-0 z-[9000] flex items-center justify-center bg-black bg-opacity-50 p-4'
+        className='fixed bottom-0 left-0 right-0 top-0 z-[9000] flex items-center justify-center bg-black bg-opacity-50 p-4'
         style={{
           display: isRewardModalVisible ? 'flex' : 'none',
           paddingBottom: '60px',
