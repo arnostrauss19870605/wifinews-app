@@ -17,18 +17,11 @@ const Landing: React.FC = () => {
       return date;
     };
 
-    let timerInterval: NodeJS.Timeout;
-
-    const firstTimer = () => {
+    const startTimer = () => {
       const totalTime = 35;
       const futureTime = addSeconds(totalTime);
 
-      function updateTimer() {
-        if (isRewardModalVisible) {
-          clearInterval(timerInterval);
-          return;
-        }
-
+      const timerInterval = setInterval(() => {
         const timeLeft = Math.floor(
           (futureTime.getTime() - new Date().getTime()) / 1000
         );
@@ -40,122 +33,15 @@ const Landing: React.FC = () => {
         } else {
           setLandingTimer(timeLeft);
         }
-      }
+      }, 1000);
 
-      updateTimer();
-      timerInterval = setInterval(updateTimer, 1000);
+      return () => clearInterval(timerInterval);
     };
 
-    firstTimer();
-
-    return () => clearInterval(timerInterval);
+    if (!isRewardModalVisible) {
+      startTimer();
+    }
   }, [isRewardModalVisible]);
-
-  useEffect(() => {
-    const initializeRewardedAd = () => {
-      console.log('Initializing Rewarded Ad...');
-
-      (window as any).googletag = (window as any).googletag || { cmd: [] };
-      (window as any).googletag.cmd.push(() => {
-        const googletag = (window as any).googletag;
-
-        // Define the rewarded ad slot
-        console.log('Defining Rewarded Slot...');
-        let rewardedSlot = googletag
-          .defineOutOfPageSlot(
-            '147246189,22047902240/wifinews.co.za_rewarded',
-            googletag.enums.OutOfPageFormat.REWARDED
-          )
-          .addService(googletag.pubads());
-
-        rewardedSlot.setForceSafeFrame(true);
-        console.log('Rewarded Slot SetForceSafeFrame(true) called.');
-
-        googletag.pubads().enableAsyncRendering();
-        googletag.enableServices();
-
-        let rewardedSlotReady = false;
-        let grantedState = false;
-
-        // Rewarded slot ready event listener
-        googletag.pubads().addEventListener('rewardedSlotReady', (evt: any) => {
-          console.log('Rewarded Slot Ready:', evt);
-          rewardedSlotReady = true;
-          setIsRewardModalVisible(true);
-
-          const trigger = document.getElementById('rewardModal');
-          if (trigger) {
-            console.log('Displaying reward modal...');
-            trigger.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-
-            const watchAdButton = document.getElementById('watchAdBtn');
-            const noThanksButton = document.getElementById('noThanksBtn');
-
-            const makeVisibleFn = (e: Event) => {
-              console.log(
-                'Watch Ad Button clicked. Making rewarded ad visible.'
-              );
-              evt.makeRewardedVisible();
-              e.preventDefault();
-
-              watchAdButton?.removeEventListener('click', makeVisibleFn);
-              noThanksButton?.removeEventListener('click', closeModalFn);
-              trigger.style.display = 'none';
-              document.body.style.overflow = '';
-              setIsRewardModalVisible(false);
-            };
-
-            const closeModalFn = () => {
-              console.log('No Thanks Button clicked. Closing reward modal.');
-              trigger.style.display = 'none';
-              document.body.style.overflow = '';
-              googletag.destroySlots([rewardedSlot]);
-              setIsRewardModalVisible(false);
-            };
-
-            watchAdButton?.addEventListener('click', makeVisibleFn);
-            noThanksButton?.addEventListener('click', closeModalFn);
-          } else {
-            console.error('Reward modal not found.');
-          }
-        });
-
-        // Rewarded slot granted event listener
-        googletag.pubads().addEventListener('rewardedSlotGranted', function () {
-          grantedState = true;
-          console.log('Rewarded Slot Granted.');
-        });
-
-        // Rewarded slot closed event listener
-        googletag
-          .pubads()
-          .addEventListener('rewardedSlotClosed', (event: any) => {
-            const slot = event.slot;
-            console.log('Rewarded Slot Closed:', slot.getSlotElementId());
-
-            if (!grantedState) {
-              console.log(
-                'Rewarded slot was not granted. Redirecting to cancel page.'
-              );
-              window.location.href = appendUtmParams('/cancel');
-            } else {
-              console.log(
-                'Rewarded slot was granted. Redirecting to home page.'
-              );
-              googletag.destroySlots([rewardedSlot]);
-              window.location.href = appendUtmParams('/home');
-            }
-          });
-
-        // Display the rewarded ad slot
-        console.log('Displaying the rewarded ad slot...');
-        googletag.display(rewardedSlot);
-      });
-    };
-
-    initializeRewardedAd();
-  }, []);
 
   const cancelPage = () => {
     window.location.href = appendUtmParams('/cancel');
@@ -163,9 +49,78 @@ const Landing: React.FC = () => {
 
   return (
     <>
-      <Script id='gpt-rewarded-ad-setup' strategy='afterInteractive'>
+      <Script id='gpt-setup' strategy='afterInteractive'>
         {`
-          window.googletag = window.googletag || {cmd: []};
+          googletag = window.googletag || { cmd: [] };
+          const queryValues = window.location.search;
+          const urlParams = new URLSearchParams(queryValues);
+          var utm_medium = "NULL";
+
+          if (urlParams.has('utm_medium')) {
+            utm_medium = urlParams.get('utm_medium');
+            console.log("Utm Medium exists as:", utm_medium);
+          } else {
+            console.log("Utm Medium does not exist, value:", utm_medium);
+          }
+
+          googletag.cmd.push(() => {
+            let rewardedSlot = googletag.defineOutOfPageSlot('147246189,22047902240/wifinews.co.za_rewarded', googletag.enums.OutOfPageFormat.REWARDED).addService(googletag.pubads());
+            rewardedSlot.setForceSafeFrame(true);
+            googletag.pubads().setTargeting("Medium", [utm_medium]);
+            googletag.pubads().enableAsyncRendering();
+            googletag.enableServices();
+
+            let rewardedSlotReady = false;
+
+            googletag.pubads().addEventListener('rewardedSlotReady', (evt) => {
+              rewardedSlotReady = true;
+              const trigger = document.getElementById('rewardModal');
+              trigger.style.display = 'flex';
+              document.body.style.overflow = 'hidden'; // Prevent scrolling
+
+              const watchAdButton = document.getElementById('watchAdBtn');
+              const noThanksButton = document.getElementById('noThanksBtn');
+
+              const makeVisibleFn = (e) => {
+                evt.makeRewardedVisible();
+                e.preventDefault();
+                watchAdButton.removeEventListener('click', makeVisibleFn);
+                noThanksButton.removeEventListener('click', closeModalFn);
+                trigger.style.display = 'none';
+                document.body.style.overflow = ''; // Restore scrolling
+                setIsRewardModalVisible(false);
+              };
+
+              const closeModalFn = () => {
+                trigger.style.display = 'none';
+                document.body.style.overflow = ''; // Restore scrolling
+                googletag.destroySlots([rewardedSlot]);
+                setIsRewardModalVisible(false);
+              };
+
+              watchAdButton.addEventListener('click', makeVisibleFn);
+              noThanksButton.addEventListener('click', closeModalFn);
+            });
+
+            let grantedState = false;
+            googletag.pubads().addEventListener('rewardedSlotGranted', function(evt) {
+              grantedState = true;
+              console.log("Rewarded Ad Granted");
+            });
+
+            googletag.pubads().addEventListener('rewardedSlotClosed', (event) => {
+              const slot = event.slot;
+              console.log("Rewarded ad slot", slot.getSlotElementId(), "has been closed.");
+              if (!grantedState) {
+                window.location.href = appendUtmParams('/cancel');
+              } else {
+                googletag.destroySlots([rewardedSlot]);
+                window.location.href = appendUtmParams('/home');
+              }
+            });
+
+            googletag.display(rewardedSlot);
+          });
         `}
       </Script>
 
