@@ -17,7 +17,7 @@ function Home() {
       setTimer((prevTimer) => {
         if (prevTimer > 0) {
           const newTime = prevTimer - 1;
-          if (newTime <= 10) {
+          if (newTime <= 8) {
             setButtonVisible(true);
           }
           return newTime;
