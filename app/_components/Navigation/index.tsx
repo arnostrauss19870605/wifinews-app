@@ -51,6 +51,16 @@ function Navigation() {
     { name: 'Learn', href: '/learn' },
   ];
 
+  useEffect(() => {
+    console.log('pathname =>', pathname);
+  }, [pathname]);
+
+  const hideNav = pathname === '/landing' || pathname === '/interstitial';
+
+  if (hideNav) {
+    return null;
+  }
+
   return (
     <header className='bg-white shadow'>
       <nav className='container mx-auto flex items-center justify-between p-4'>

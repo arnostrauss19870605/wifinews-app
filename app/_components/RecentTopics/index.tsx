@@ -49,21 +49,21 @@ const RecentTopics: React.FC<RecentTopicsProps> = ({ howMany = 5 }) => {
   };
 
   return (
-    <div className='overflow-hidden rounded-t-lg shadow-md'>
+    <div className='overflow-hidden rounded-md shadow'>
       <div className='overflow-x-auto'>
         <table className='min-w-full table-fixed border-collapse bg-white'>
           <thead>
             <tr className='bg-gray-200'>
-              <th className='min-w-[350px] border-b-2 border-gray-300 px-4 py-3 text-left text-sm font-semibold text-gray-700'>
+              <th className='min-w-[250px] border-b border-gray-300 px-3 py-2 text-left text-xs font-semibold text-gray-700'>
                 Topic Name
               </th>
-              <th className='w-1/4 border-b-2 border-gray-300 px-4 py-3 text-left text-sm font-semibold text-gray-700'>
+              <th className='w-1/4 border-b border-gray-300 px-3 py-2 text-left text-xs font-semibold text-gray-700'>
                 Category
               </th>
-              <th className='w-1/4 border-b-2 border-gray-300 px-4 py-3 text-left text-sm font-semibold text-gray-700'>
+              <th className='w-1/4 border-b border-gray-300 px-3 py-2 text-left text-xs font-semibold text-gray-700'>
                 Date Created
               </th>
-              <th className='sticky right-0 border-b-2 border-gray-300 bg-black px-4 py-3 text-center text-sm font-semibold text-white'>
+              <th className='sticky right-0 border-b border-gray-300 bg-black px-3 py-2 text-center text-xs font-semibold text-white'>
                 Comment
               </th>
             </tr>
@@ -72,23 +72,23 @@ const RecentTopics: React.FC<RecentTopicsProps> = ({ howMany = 5 }) => {
             {isLoading ? (
               Array.from({ length: 5 }, (_, i) => (
                 <tr key={i} className='transition-colors duration-200'>
-                  <td className='border-b border-gray-300 px-4 py-4'>
-                    <div className='h-4 w-full rounded bg-gray-200'></div>
+                  <td className='border-b border-gray-300 px-3 py-3'>
+                    <div className='h-3 w-full rounded bg-gray-200'></div>
                   </td>
-                  <td className='border-b border-gray-300 px-4 py-4'>
-                    <div className='h-4 w-full rounded bg-gray-200'></div>
+                  <td className='border-b border-gray-300 px-3 py-3'>
+                    <div className='h-3 w-full rounded bg-gray-200'></div>
                   </td>
-                  <td className='border-b border-gray-300 px-4 py-4'>
-                    <div className='h-4 w-full rounded bg-gray-200'></div>
+                  <td className='border-b border-gray-300 px-3 py-3'>
+                    <div className='h-3 w-full rounded bg-gray-200'></div>
                   </td>
-                  <td className='sticky right-0 border-b border-gray-300 bg-black px-4 py-4'>
-                    <FaCommentDots className='mx-auto text-lg text-white' />
+                  <td className='sticky right-0 border-b border-gray-300 bg-black px-3 py-3'>
+                    <FaCommentDots className='mx-auto text-sm text-white' />
                   </td>
                 </tr>
               ))
             ) : error ? (
               <tr>
-                <td colSpan={4} className='px-4 py-4 text-center text-red-500'>
+                <td colSpan={4} className='px-3 py-3 text-center text-red-500'>
                   {error}
                 </td>
               </tr>
@@ -100,22 +100,22 @@ const RecentTopics: React.FC<RecentTopicsProps> = ({ howMany = 5 }) => {
                   onClick={() => handleRowClick(topic.id)}
                 >
                   <td
-                    className={`border-b border-gray-300 px-4 py-4 text-sm text-gray-800 ${
+                    className={`border-b border-gray-300 px-3 py-3 text-xs text-gray-800 ${
                       topic.title.length > 40
-                        ? 'max-w-[240px] overflow-hidden text-ellipsis whitespace-nowrap'
+                        ? 'max-w-[200px] overflow-hidden text-ellipsis whitespace-nowrap'
                         : ''
                     }`}
                   >
                     {topic.title}
                   </td>
-                  <td className='border-b border-gray-300 px-4 py-4 text-sm text-gray-800'>
+                  <td className='border-b border-gray-300 px-3 py-3 text-xs text-gray-800'>
                     {topic.category.name}
                   </td>
-                  <td className='border-b border-gray-300 px-4 py-4 text-sm text-gray-800'>
+                  <td className='border-b border-gray-300 px-3 py-3 text-xs text-gray-800'>
                     {new Date(topic.createdAt).toLocaleDateString()}
                   </td>
-                  <td className='sticky right-0 border-b border-gray-300 bg-black px-4 py-4 text-center'>
-                    <FaCommentDots className='mx-auto text-lg text-white' />
+                  <td className='sticky right-0 border-b border-gray-300 bg-black px-3 py-3 text-center'>
+                    <FaCommentDots className='mx-auto text-sm text-white' />
                   </td>
                 </tr>
               ))

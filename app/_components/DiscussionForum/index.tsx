@@ -4,25 +4,22 @@ import RecentTopics from '@/app/_components/RecentTopics';
 
 function DiscussionForum() {
   return (
-    <div className='my-10 rounded-lg bg-white shadow-lg'>
-      <div className='mb-4 w-full'>
+    <div className='container my-4 rounded-md bg-white shadow-md'>
+      <div className='mb-3 w-full'>
         <RecentTopics howMany={5} />
       </div>
-      <h2 className='mb-4 text-center text-2xl font-semibold'>
-        Have Your Say!
-      </h2>
-      <p className='my-4 px-4 text-center text-base'>
+      <h2 className='mb-2 text-center text-xl font-semibold'>Have Your Say!</h2>
+      <p className='my-3 px-3 text-center text-sm'>
         With all the happenings in our country, good and bad, we have created a
-        forum where you can have your say and discuss these matters with others
-        in your community in an open public forum.
+        forum where you can discuss these matters with others in your community.
       </p>
       <div className='flex justify-center'>
         <Link href='/topics'>
           <button
             type='button'
-            className='mb-12 flex items-center rounded-lg bg-slate-950 px-6 py-3 font-medium text-white focus:outline-none lg:px-10'
+            className='mb-8 flex items-center rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white focus:outline-none'
           >
-            <FaCommentDots className='mr-2' /> Join the Discussion
+            <FaCommentDots className='mr-1' /> Join the Discussion
           </button>
         </Link>
       </div>

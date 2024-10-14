@@ -1,7 +1,17 @@
+'use client';
 import Image from 'next/image';
 import logo from '../../_assets/images/logo.png';
+import { usePathname } from 'next/navigation';
 
 const Footer = () => {
+  const pathname = usePathname();
+
+  const hideFooter = pathname === '/landing' || pathname === '/interstitial';
+
+  if (hideFooter) {
+    return null;
+  }
+
   return (
     <footer className='mt-[50px] flex flex-col items-center justify-between border-t border-gray-200 bg-white px-4 py-6 md:flex-row md:px-6'>
       <div className='relative mb-4 h-[18px] w-[82px] md:mb-0'>

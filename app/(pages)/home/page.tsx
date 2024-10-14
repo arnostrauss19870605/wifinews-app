@@ -3,10 +3,10 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Script from 'next/script';
 import LearningMaterial from '@/app/_components/LearningMaterial';
 import DiscussionForum from '@/app/_components/DiscussionForum';
-import News from '@/app/(pages)/news/page';
 import ProgressIndicator from '@/app/_components/ProgressIndicator';
 import { getUtmParams, appendUtmParams } from '@/app/_utils/utm.util';
 import { FaWifi } from 'react-icons/fa';
+import NewsWidget from '@/app/_components/NewsWidget';
 
 function Home() {
   const [timer, setTimer] = useState(16);
@@ -180,7 +180,7 @@ function Home() {
           <div id='div-gpt-ad-6641866-3'></div>
         </div>
         <div className='my-10'>
-          <News />
+          <NewsWidget />
         </div>
 
         <div className='my-4 flex w-full items-center justify-center'>
