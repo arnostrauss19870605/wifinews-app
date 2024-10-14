@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import Script from 'next/script';
 import LearningMaterial from '@/app/_components/LearningMaterial';
 import DiscussionForum from '@/app/_components/DiscussionForum';
@@ -9,30 +9,30 @@ import { FaWifi } from 'react-icons/fa';
 import NewsWidget from '@/app/_components/NewsWidget';
 
 function Home() {
-  const [timer, setTimer] = useState(16);
+  const [timer, setTimer] = useState(20);
   const [isButtonVisible, setButtonVisible] = useState(false);
 
-  const countdown = useCallback(() => {
-    setTimer((prevTimer) => {
-      if (prevTimer > 0) {
-        const newTime = prevTimer - 1;
-        if (newTime <= 10) {
-          setButtonVisible(true);
-        }
-        return newTime;
-      }
-      return 0;
-    });
-  }, []);
-
   useEffect(() => {
-    if (timer > 0) {
-      const timeoutId = setTimeout(countdown, 1000);
-      return () => clearTimeout(timeoutId);
-    } else {
+    const countdownInterval = setInterval(() => {
+      setTimer((prevTimer) => {
+        if (prevTimer > 0) {
+          const newTime = prevTimer - 1;
+          if (newTime <= 10) {
+            setButtonVisible(true);
+          }
+          return newTime;
+        }
+        return 0;
+      });
+    }, 1000);
+
+    if (timer === 0) {
+      clearInterval(countdownInterval);
       window.location.href = appendUtmParams('/interstitial');
     }
-  }, [timer, countdown]);
+
+    return () => clearInterval(countdownInterval);
+  }, [timer]);
 
   return (
     <div>
