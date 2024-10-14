@@ -9,7 +9,7 @@ import { FaWifi } from 'react-icons/fa';
 import NewsWidget from '@/app/_components/NewsWidget';
 
 function Home() {
-  const [timer, setTimer] = useState(20);
+  const [timer, setTimer] = useState(16);
   const [isButtonVisible, setButtonVisible] = useState(false);
 
   useEffect(() => {
