@@ -18,6 +18,7 @@ import { useAuth } from '@/app/_context/authContext';
 import Image from 'next/image';
 import Script from 'next/script';
 import { getUtmParams } from '@/app/_utils/utm.util';
+import isLocalStorageAvailable from '@/app/_utils/local-storage.util';
 
 interface Publisher {
   name: string;
@@ -169,12 +170,13 @@ function CoursesByCategory() {
 
   const handleMoreInfoClick = useCallback(
     (courseSlug: string) => {
-      if (!isAuthenticated) {
-        localStorage.setItem('redirectAfterLogin', courseSlug);
-        router.push('/login');
-      } else {
-        // window.location.href = courseUrl;
-        window.location.href = `https://alison.com/login/external?token=${localStorage.getItem('alisonToken')}&course=${courseSlug}`;
+      if (isLocalStorageAvailable()) {
+        if (!isAuthenticated) {
+          localStorage.setItem('redirectAfterLogin', courseSlug);
+          router.push('/login');
+        } else {
+          window.location.href = `https://alison.com/login/external?token=${localStorage.getItem('alisonToken')}&course=${courseSlug}`;
+        }
       }
     },
     [isAuthenticated, router]

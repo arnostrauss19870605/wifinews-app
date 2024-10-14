@@ -8,6 +8,7 @@ import React, {
 } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import { useRouter } from 'next/navigation';
+import isLocalStorageAvailable from '@/app/_utils/local-storage.util';
 
 type User = {
   id: number;
@@ -63,15 +64,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const logout = useCallback(() => {
-    setToken(null);
-    setRefreshToken(null);
-    localStorage.removeItem('token');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('alisonId');
-    localStorage.removeItem('alisonToken');
-    setUser(null);
-    setIsAuthenticated(false);
-    router.push('/login');
+    if (isLocalStorageAvailable()) {
+      setToken(null);
+      setRefreshToken(null);
+      localStorage.removeItem('token');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('alisonId');
+      localStorage.removeItem('alisonToken');
+      setUser(null);
+      setIsAuthenticated(false);
+      router.push('/login');
+    }
   }, [router]);
 
   const refreshAccessToken = useCallback(async () => {
@@ -88,7 +91,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       );
 
       const data = await res.json();
-      if (res.ok && data.access_token) {
+      if (isLocalStorageAvailable() && res.ok && data.access_token) {
         setToken(data.access_token);
         localStorage.setItem('token', data.access_token);
         return true;
@@ -132,28 +135,35 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 
   useEffect(() => {
-    const storedToken = localStorage.getItem('token');
-    const storedRefreshToken = localStorage.getItem('refreshToken');
+    if (isLocalStorageAvailable()) {
+      const storedToken = localStorage.getItem('token');
+      const storedRefreshToken = localStorage.getItem('refreshToken');
 
-    if (storedToken && storedRefreshToken) {
-      setToken(storedToken);
-      setRefreshToken(storedRefreshToken);
-      setIsAuthenticated(true);
-      fetchUserInfo(storedToken);
+      if (storedToken && storedRefreshToken) {
+        setToken(storedToken);
+        setRefreshToken(storedRefreshToken);
+        setIsAuthenticated(true);
+        fetchUserInfo(storedToken);
+      }
     }
   }, [fetchUserInfo]);
 
   const login = useCallback(
     (accessToken: string, refreshToken: string) => {
-      const tokenPayload = decodeToken(accessToken);
-      setToken(accessToken);
-      setRefreshToken(refreshToken);
-      localStorage.setItem('token', accessToken);
-      localStorage.setItem('refreshToken', refreshToken);
-      localStorage.setItem('alisonId', tokenPayload?.alisonId.toString() || '');
-      localStorage.setItem('alisonToken', tokenPayload?.alisonToken || '');
-      setIsAuthenticated(true);
-      fetchUserInfo(accessToken);
+      if (isLocalStorageAvailable()) {
+        const tokenPayload = decodeToken(accessToken);
+        setToken(accessToken);
+        setRefreshToken(refreshToken);
+        localStorage.setItem('token', accessToken);
+        localStorage.setItem('refreshToken', refreshToken);
+        localStorage.setItem(
+          'alisonId',
+          tokenPayload?.alisonId.toString() || ''
+        );
+        localStorage.setItem('alisonToken', tokenPayload?.alisonToken || '');
+        setIsAuthenticated(true);
+        fetchUserInfo(accessToken);
+      }
     },
     [fetchUserInfo]
   );

@@ -6,6 +6,7 @@ import { useAuth } from '@/app/_context/authContext';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 import Script from 'next/script';
 import { getUtmParams } from '@/app/_utils/utm.util';
+import isLocalStorageAvailable from '@/app/_utils/local-storage.util';
 
 function Register() {
   const [firstname, setFirstname] = useState('');
@@ -21,14 +22,16 @@ function Register() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      const redirectUrl = localStorage.getItem('redirectAfterLogin');
-      if (redirectUrl) {
-        localStorage.removeItem('redirectAfterLogin');
-        router.push(
-          `https://alison.com/login/external?token=${localStorage.getItem('alisonToken')}&course=${redirectUrl}`
-        );
-      } else {
-        router.push('/');
+      if (isLocalStorageAvailable()) {
+        const redirectUrl = localStorage.getItem('redirectAfterLogin');
+        if (redirectUrl) {
+          localStorage.removeItem('redirectAfterLogin');
+          router.push(
+            `https://alison.com/login/external?token=${localStorage.getItem('alisonToken')}&course=${redirectUrl}`
+          );
+        } else {
+          router.push('/');
+        }
       }
     }
   }, [isAuthenticated, router]);

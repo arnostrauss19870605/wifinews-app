@@ -6,6 +6,7 @@ import { FiX, FiLogOut } from 'react-icons/fi';
 import { MdOutlineMenu } from 'react-icons/md';
 import wifinewslogo from '../../_assets/images/logo.png';
 import { useAuth } from '@/app/_context/authContext';
+import isLocalStorageAvailable from '@/app/_utils/local-storage.util';
 
 function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -22,9 +23,11 @@ function Navigation() {
   }, [isMenuOpen]);
 
   useEffect(() => {
-    const alisonId = localStorage.getItem('alisonId');
-    if (alisonId) {
-      setAvatarUrl(`https://alison.com/images/users/default/${alisonId}.jpg`);
+    if (isLocalStorageAvailable()) {
+      const alisonId = localStorage.getItem('alisonId');
+      if (alisonId) {
+        setAvatarUrl(`https://alison.com/images/users/default/${alisonId}.jpg`);
+      }
     }
   }, [user]);
 

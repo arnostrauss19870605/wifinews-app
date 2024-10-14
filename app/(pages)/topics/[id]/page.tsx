@@ -13,6 +13,7 @@ import { useAuth } from '@/app/_context/authContext';
 import Link from 'next/link';
 import Script from 'next/script';
 import { getUtmParams } from '@/app/_utils/utm.util';
+import isLocalStorageAvailable from '@/app/_utils/local-storage.util';
 
 type UserResponseDto = {
   id: number;
@@ -102,44 +103,48 @@ const TopicDetailPage = () => {
   };
 
   const handleAddComment = async () => {
-    if (newComment.trim() && topicId) {
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/comments/${topicId}`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${localStorage.getItem('token')}`,
-            },
-            body: JSON.stringify({ content: newComment }),
+    if (isLocalStorageAvailable()) {
+      if (newComment.trim() && topicId) {
+        try {
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/comments/${topicId}`,
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+              },
+              body: JSON.stringify({ content: newComment }),
+            }
+          );
+          if (response.ok) {
+            setNewComment('');
+            fetchComments();
           }
-        );
-        if (response.ok) {
-          setNewComment('');
-          fetchComments();
+        } catch (error) {
+          console.error('Error adding comment:', error);
         }
-      } catch (error) {
-        console.error('Error adding comment:', error);
       }
     }
   };
 
   const handleVote = async (commentId: number, type: 'upvote' | 'downvote') => {
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/comments/vote/${commentId}`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-          body: JSON.stringify({ type }),
+      if (isLocalStorageAvailable()) {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/comments/vote/${commentId}`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+            body: JSON.stringify({ type }),
+          }
+        );
+        if (response.ok) {
+          fetchComments();
         }
-      );
-      if (response.ok) {
-        fetchComments();
       }
     } catch (error) {
       console.error('Error voting on comment:', error);
