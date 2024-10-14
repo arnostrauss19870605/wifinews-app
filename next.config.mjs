@@ -1,3 +1,16 @@
+const cspHeader = `
+    default-src *;
+    script-src * 'unsafe-eval' 'unsafe-inline';
+    style-src * 'unsafe-inline';
+    img-src * blob: data:;
+    font-src *;
+    connect-src *;
+    object-src *;
+    base-uri *;
+    form-action *;
+    frame-ancestors *;
+`.trim().replace(/\n/g, '');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
@@ -35,6 +48,19 @@ const nextConfig = {
         destination: 'https://cse.google.com/:path*',
       },
     ];
+  },
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: cspHeader.replace(/\n/g, ''),
+          },
+        ],
+      },
+    ]
   },
 };
 
