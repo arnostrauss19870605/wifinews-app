@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { appendUtmParams } from '@/app/_utils/utm.util';
 
 interface TimerProps {
-  totalTime: number;
   isPaused: boolean;
 }
 
-const LandingTimer: React.FC<TimerProps> = ({ totalTime, isPaused }) => {
+const LandingTimer: React.FC<TimerProps> = ({ isPaused }) => {
+  const totalTime = 35;
   const handleTimerComplete = () => {
     window.location.href = appendUtmParams('/home');
   };

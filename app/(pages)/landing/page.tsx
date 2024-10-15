@@ -84,7 +84,7 @@ const Landing: React.FC = () => {
           <p className='mt-2 text-lg font-semibold text-gray-700'>
             View these ads for
           </p>
-          <LandingTimer totalTime={35} isPaused={isPaused} />
+          <LandingTimer isPaused={isPaused} />
         </div>
 
         <div className='fixed bottom-12 left-0 right-0 z-[9999] flex justify-center'>
