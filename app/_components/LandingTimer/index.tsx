@@ -8,17 +8,12 @@ interface TimerProps {
 const LandingTimer: React.FC<TimerProps> = ({ isPaused }) => {
   const totalTime = 35;
   const [timeLeft, setTimeLeft] = useState(totalTime);
-  const futureTimeRef = useRef<Date | null>(null);
+  const startTimeRef = useRef<number | null>(null);
+  const endTimeRef = useRef<number | null>(null);
   const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleTimerComplete = () => {
     window.location.href = appendUtmParams('/home');
-  };
-
-  // Helper function outside useEffect
-  const addSeconds = (numOfSeconds: number, date: Date = new Date()): Date => {
-    date.setSeconds(date.getSeconds() + numOfSeconds);
-    return date;
   };
 
   useEffect(() => {
@@ -29,22 +24,24 @@ const LandingTimer: React.FC<TimerProps> = ({ isPaused }) => {
       return;
     }
 
-    // Set futureTime only if not already set or when unpaused
-    if (!futureTimeRef.current) {
-      futureTimeRef.current = addSeconds(totalTime);
+    if (!startTimeRef.current || !endTimeRef.current) {
+      startTimeRef.current = Date.now();
+      endTimeRef.current = startTimeRef.current + totalTime * 1000;
     }
 
     const updateTimer = () => {
-      const timeDiff = Math.floor(
-        (futureTimeRef.current!.getTime() - new Date().getTime()) / 1000
+      const currentTime = Date.now();
+      const timeRemaining = Math.max(
+        0,
+        Math.floor((endTimeRef.current! - currentTime) / 1000)
       );
 
-      if (timeDiff <= 0) {
+      if (timeRemaining <= 0) {
         clearInterval(timerIntervalRef.current!);
         setTimeLeft(0);
         handleTimerComplete();
       } else {
-        setTimeLeft(timeDiff);
+        setTimeLeft(timeRemaining);
       }
     };
 
