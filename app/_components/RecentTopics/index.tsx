@@ -13,11 +13,15 @@ export interface Topic {
 
 interface RecentTopicsProps {
   howMany?: number;
+  staticTopics?: Topic[];
 }
 
-const RecentTopics: React.FC<RecentTopicsProps> = ({ howMany = 5 }) => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [topics, setTopics] = useState<Topic[]>([]);
+const RecentTopics: React.FC<RecentTopicsProps> = ({
+  howMany = 5,
+  staticTopics,
+}) => {
+  const [isLoading, setIsLoading] = useState(!staticTopics);
+  const [topics, setTopics] = useState<Topic[]>(staticTopics || []);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
@@ -41,8 +45,10 @@ const RecentTopics: React.FC<RecentTopicsProps> = ({ howMany = 5 }) => {
   };
 
   useEffect(() => {
-    fetchRecentTopics(howMany);
-  }, [howMany]);
+    if (!staticTopics) {
+      fetchRecentTopics(howMany);
+    }
+  }, [howMany, staticTopics]);
 
   const handleRowClick = (id: number) => {
     router.push(`/topics/${id}`);
@@ -70,7 +76,7 @@ const RecentTopics: React.FC<RecentTopicsProps> = ({ howMany = 5 }) => {
           </thead>
           <tbody>
             {isLoading ? (
-              Array.from({ length: 5 }, (_, i) => (
+              Array.from({ length: howMany }, (_, i) => (
                 <tr key={i} className='transition-colors duration-200'>
                   <td className='border-b border-gray-300 px-3 py-3'>
                     <div className='h-3 w-full rounded bg-gray-200'></div>
@@ -90,6 +96,12 @@ const RecentTopics: React.FC<RecentTopicsProps> = ({ howMany = 5 }) => {
               <tr>
                 <td colSpan={4} className='px-3 py-3 text-center text-red-500'>
                   {error}
+                </td>
+              </tr>
+            ) : topics.length === 0 ? (
+              <tr>
+                <td colSpan={4} className='px-3 py-3 text-center text-gray-500'>
+                  No recent topics found.
                 </td>
               </tr>
             ) : (

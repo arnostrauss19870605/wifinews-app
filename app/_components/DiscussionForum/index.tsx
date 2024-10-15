@@ -1,12 +1,13 @@
 import { FaCommentDots } from 'react-icons/fa';
 import Link from 'next/link';
 import RecentTopics from '@/app/_components/RecentTopics';
+import staticTopics from '@/app/_data/static-topics';
 
 function DiscussionForum() {
   return (
     <div className='container my-4 rounded-md bg-white shadow-md'>
       <div className='mb-3 w-full'>
-        <RecentTopics howMany={5} />
+        <RecentTopics staticTopics={staticTopics} />
       </div>
       <h2 className='mb-2 text-center text-xl font-semibold'>Have Your Say!</h2>
       <p className='my-3 px-3 text-center text-sm'>
