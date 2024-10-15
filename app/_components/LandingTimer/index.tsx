@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { appendUtmParams } from '@/app/_utils/utm.util';
 
 interface TimerProps {
@@ -7,45 +7,57 @@ interface TimerProps {
 
 const LandingTimer: React.FC<TimerProps> = ({ isPaused }) => {
   const totalTime = 35;
+  const [timeLeft, setTimeLeft] = useState(totalTime);
+  const futureTimeRef = useRef<Date | null>(null);
+  const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
   const handleTimerComplete = () => {
     window.location.href = appendUtmParams('/home');
   };
 
-  const [timeLeft, setTimeLeft] = useState(totalTime);
+  // Helper function outside useEffect
+  const addSeconds = (numOfSeconds: number, date: Date = new Date()): Date => {
+    date.setSeconds(date.getSeconds() + numOfSeconds);
+    return date;
+  };
 
   useEffect(() => {
-    if (isPaused) return;
+    if (isPaused) {
+      if (timerIntervalRef.current) {
+        clearInterval(timerIntervalRef.current);
+      }
+      return;
+    }
 
-    const addSeconds = (
-      numOfSeconds: number,
-      date: Date = new Date()
-    ): Date => {
-      date.setSeconds(date.getSeconds() + numOfSeconds);
-      return date;
-    };
-
-    let timerInterval: NodeJS.Timeout;
-    const futureTime = addSeconds(totalTime);
+    // Set futureTime only if not already set or when unpaused
+    if (!futureTimeRef.current) {
+      futureTimeRef.current = addSeconds(totalTime);
+    }
 
     const updateTimer = () => {
-      const timeLeft = Math.floor(
-        (futureTime.getTime() - new Date().getTime()) / 1000
+      const timeDiff = Math.floor(
+        (futureTimeRef.current!.getTime() - new Date().getTime()) / 1000
       );
 
-      if (timeLeft <= 0) {
-        clearInterval(timerInterval);
+      if (timeDiff <= 0) {
+        clearInterval(timerIntervalRef.current!);
         setTimeLeft(0);
         handleTimerComplete();
       } else {
-        setTimeLeft(timeLeft);
+        setTimeLeft(timeDiff);
       }
     };
 
     updateTimer();
-    timerInterval = setInterval(updateTimer, 1000);
 
-    return () => clearInterval(timerInterval);
-  }, [totalTime, isPaused]);
+    timerIntervalRef.current = setInterval(updateTimer, 1000);
+
+    return () => {
+      if (timerIntervalRef.current) {
+        clearInterval(timerIntervalRef.current);
+      }
+    };
+  }, [isPaused]);
 
   return <p className='text-xl font-bold text-gray-800'>{timeLeft} seconds</p>;
 };
