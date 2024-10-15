@@ -3,52 +3,20 @@ import React, { useState, useEffect } from 'react';
 import Script from 'next/script';
 import ProgressIndicator from '@/app/_components/ProgressIndicator';
 import { getUtmParams, appendUtmParams } from '@/app/_utils/utm.util';
+import Timer from '@/app/_components/Timer';
 
 const Landing: React.FC = () => {
   const [isRewardModalVisible, setIsRewardModalVisible] = useState(false);
-  const [landingTimer, setLandingTimer] = useState(35);
+  const [isPaused, setIsPaused] = useState(false);
+
+  const handleTimerComplete = () => {
+    window.location.href = appendUtmParams('/home');
+  };
 
   useEffect(() => {
-    const addSeconds = (
-      numOfSeconds: number,
-      date: Date = new Date()
-    ): Date => {
-      date.setSeconds(date.getSeconds() + numOfSeconds);
-      return date;
-    };
-
-    let timerInterval: NodeJS.Timeout;
-
-    const firstTimer = () => {
-      const totalTime = 35;
-      const futureTime = addSeconds(totalTime);
-
-      function updateTimer() {
-        if (isRewardModalVisible) {
-          clearInterval(timerInterval);
-          return;
-        }
-
-        const timeLeft = Math.floor(
-          (futureTime.getTime() - new Date().getTime()) / 1000
-        );
-
-        if (timeLeft <= 0) {
-          clearInterval(timerInterval);
-          setLandingTimer(0);
-          window.location.href = appendUtmParams('/home');
-        } else {
-          setLandingTimer(timeLeft);
-        }
-      }
-
-      updateTimer();
-      timerInterval = setInterval(updateTimer, 1000);
-    };
-
-    firstTimer();
-
-    return () => clearInterval(timerInterval);
+    if (isRewardModalVisible) {
+      setIsPaused(true);
+    }
   }, [isRewardModalVisible]);
 
   useEffect(() => {
@@ -177,11 +145,6 @@ const Landing: React.FC = () => {
             const utmParams = ${JSON.stringify(getUtmParams())};
             console.log("landing utm params =>",utmParams);
 
-      // Set the targeting key for Medium as requested by the client
-      if (utmParams['Medium']) {
-        googletag.pubads().setTargeting('Medium', utmParams['Medium']);
-      }
-
             var mapping1 = googletag.sizeMapping()
               .addSize([1400, 0], [[728, 90], 'fluid'])
               .addSize([1200, 0], [[728, 90], 'fluid'])
@@ -237,9 +200,12 @@ const Landing: React.FC = () => {
           <p className='mt-2 text-lg font-semibold text-gray-700'>
             View these ads for
           </p>
-          <p className='text-xl font-bold text-gray-800'>
-            {landingTimer} seconds
-          </p>
+          {/* Timer Component */}
+          <Timer
+            totalTime={35}
+            isPaused={isPaused}
+            onComplete={handleTimerComplete}
+          />
         </div>
 
         {/* Sticky Ad */}
@@ -286,27 +252,6 @@ const Landing: React.FC = () => {
           <p className='mt-4'>
             I do not want Free Wi-Fi and will remain on this page.
           </p>
-        </div>
-      </div>
-
-      {/* Grant Modal */}
-      <div
-        id='grantModal'
-        className='fixed bottom-0 left-0 right-0 top-0 z-[9000] flex items-center justify-center bg-black bg-opacity-50 p-4'
-        style={{ display: 'none' }}
-      >
-        <div
-          className='rounded-lg bg-white p-6 text-center shadow-lg'
-          style={{ maxWidth: '500px', maxHeight: '80vh', width: '100%' }}
-        >
-          <p id='grantParagraph' className='mb-4'></p>
-          <input
-            type='button'
-            className='btn cursor-pointer rounded-lg bg-blue-500 px-4 py-2 text-white'
-            id='grantCloseBtn'
-            value='Close'
-            onClick={() => (window.location.href = appendUtmParams('/home'))}
-          />
         </div>
       </div>
     </>
