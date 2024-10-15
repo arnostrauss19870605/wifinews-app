@@ -43,6 +43,10 @@ const Landing: React.FC = () => {
                 (slot) => slot.getSlotElementId() === 'div-gpt-ad-7092085-1'
               )
           ) {
+            if (utmParams['Medium']) {
+              googletag.pubads().setTargeting('Medium', utmParams['Medium']);
+            }
+
             var mapping1 = googletag
               .sizeMapping()
               .addSize([1400, 0], [[728, 90], 'fluid'])
