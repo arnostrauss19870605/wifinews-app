@@ -1,39 +1,15 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Script from 'next/script';
 import LearningMaterial from '@/app/_components/LearningMaterial';
 import DiscussionForum from '@/app/_components/DiscussionForum';
-import ProgressIndicator from '@/app/_components/ProgressIndicator';
-import { getUtmParams, appendUtmParams } from '@/app/_utils/utm.util';
-import { FaWifi } from 'react-icons/fa';
+import { getUtmParams } from '@/app/_utils/utm.util';
 import NewsWidget from '@/app/_components/NewsWidget';
+import HomeTimer from '@/app/_components/HomeTimer';
+
+const MemoizedHomeTimer = React.memo(HomeTimer);
 
 function Home() {
-  const [timer, setTimer] = useState(16);
-  const [isButtonVisible, setButtonVisible] = useState(false);
-
-  useEffect(() => {
-    const countdownInterval = setInterval(() => {
-      setTimer((prevTimer) => {
-        if (prevTimer > 0) {
-          const newTime = prevTimer - 1;
-          if (newTime <= 8) {
-            setButtonVisible(true);
-          }
-          return newTime;
-        }
-        return 0;
-      });
-    }, 1000);
-
-    if (timer === 0) {
-      clearInterval(countdownInterval);
-      window.location.href = appendUtmParams('/interstitial');
-    }
-
-    return () => clearInterval(countdownInterval);
-  }, [timer]);
-
   return (
     <div>
       <Script id='gpt-home-setup' strategy='afterInteractive'>
@@ -148,25 +124,7 @@ function Home() {
       </Script>
 
       <div className='flex min-h-screen flex-col items-center px-4 py-10'>
-        <div className='mb-5 text-center'>
-          <ProgressIndicator currentStep={2} totalSteps={3} />
-          <p className='mt-2 text-lg font-semibold text-gray-700'>
-            View these ads for
-          </p>
-          <p className='text-xl font-bold text-gray-800'>{timer} seconds</p>
-        </div>
-
-        <div className='mb-4 flex justify-center'>
-          {isButtonVisible && (
-            <a
-              href={appendUtmParams('/interstitial')}
-              className='flex items-center rounded-lg bg-slate-950 px-6 py-3 font-medium text-white focus:outline-none lg:px-10'
-            >
-              <FaWifi className='mr-2' /> Connect Now
-            </a>
-          )}
-        </div>
-
+        <MemoizedHomeTimer />
         <div className='my-4 flex w-full items-center justify-center'>
           <div id='div-gpt-ad-6641866-1'></div>
         </div>
