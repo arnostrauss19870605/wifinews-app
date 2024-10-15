@@ -25,9 +25,7 @@ const Landing: React.FC = () => {
     const setupAds = () => {
       window.googletag = window.googletag || { cmd: [] };
 
-      // Wrap the entire slot definition logic in googletag.cmd.push to ensure it's executed only after googletag is ready
       window.googletag.cmd.push(function () {
-        // Ensure googletag.pubads is available
         if (!window.googletag.pubads) {
           console.error('googletag.pubads is not available yet.');
           return;
@@ -37,7 +35,6 @@ const Landing: React.FC = () => {
         console.log('landing utm params =>', utmParams);
 
         try {
-          // Check if slot is already defined to avoid duplication
           if (
             !googletag
               .pubads()
