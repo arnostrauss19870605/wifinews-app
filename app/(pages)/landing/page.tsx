@@ -224,6 +224,16 @@ const Landing: React.FC = () => {
     };
 
     setupAds();
+
+    return () => {
+      if (window.googletag && googletag.pubads) {
+        const slots = googletag.pubads().getSlots();
+        if (slots.length > 0) {
+          console.log('Cleaning up ad slots...');
+          googletag.destroySlots();
+        }
+      }
+    };
   }, []);
 
   return (
