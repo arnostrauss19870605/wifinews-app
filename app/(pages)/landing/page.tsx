@@ -3,15 +3,11 @@ import React, { useState, useEffect } from 'react';
 import Script from 'next/script';
 import ProgressIndicator from '@/app/_components/ProgressIndicator';
 import { getUtmParams, appendUtmParams } from '@/app/_utils/utm.util';
-import Timer from '@/app/_components/Timer';
+import LandingTimer from '../../_components/LandingTimer';
 
 const Landing: React.FC = () => {
   const [isRewardModalVisible, setIsRewardModalVisible] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
-
-  const handleTimerComplete = () => {
-    window.location.href = appendUtmParams('/home');
-  };
 
   useEffect(() => {
     if (isRewardModalVisible) {
@@ -200,12 +196,8 @@ const Landing: React.FC = () => {
           <p className='mt-2 text-lg font-semibold text-gray-700'>
             View these ads for
           </p>
-          {/* Timer Component */}
-          <Timer
-            totalTime={35}
-            isPaused={isPaused}
-            onComplete={handleTimerComplete}
-          />
+          {/* LandingTimer Component */}
+          <LandingTimer totalTime={35} isPaused={isPaused} />
         </div>
 
         {/* Sticky Ad */}

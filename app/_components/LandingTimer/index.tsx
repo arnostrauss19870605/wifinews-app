@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
+import { appendUtmParams } from '@/app/_utils/utm.util';
 
 interface TimerProps {
   totalTime: number;
   isPaused: boolean;
-  onComplete: () => void;
 }
 
-const Timer: React.FC<TimerProps> = ({ totalTime, isPaused, onComplete }) => {
+const LandingTimer: React.FC<TimerProps> = ({ totalTime, isPaused }) => {
+  const handleTimerComplete = () => {
+    window.location.href = appendUtmParams('/home');
+  };
+
   const [timeLeft, setTimeLeft] = useState(totalTime);
 
   useEffect(() => {
@@ -31,7 +35,7 @@ const Timer: React.FC<TimerProps> = ({ totalTime, isPaused, onComplete }) => {
       if (timeLeft <= 0) {
         clearInterval(timerInterval);
         setTimeLeft(0);
-        onComplete();
+        handleTimerComplete();
       } else {
         setTimeLeft(timeLeft);
       }
@@ -46,4 +50,4 @@ const Timer: React.FC<TimerProps> = ({ totalTime, isPaused, onComplete }) => {
   return <p className='text-xl font-bold text-gray-800'>{timeLeft} seconds</p>;
 };
 
-export default Timer;
+export default LandingTimer;
