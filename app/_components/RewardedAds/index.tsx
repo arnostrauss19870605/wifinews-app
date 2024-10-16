@@ -86,9 +86,11 @@ const RewardedAds: React.FC<RewardedAdsProps> = ({ onPause, onPage }) => {
             } else {
               googletag.destroySlots([rewardedSlot]);
               if (onPage === 'landing') {
+                pauseTriggered.current = false;
                 window.location.href = appendUtmParams('/home');
               }
               if (onPage === 'interstitial') {
+                pauseTriggered.current = false;
                 window.location.href = appendUtmParams(
                   'https://bobbies.hotspot.yourspot.co.za/lv/login'
                 );
