@@ -5,9 +5,10 @@ import { appendUtmParams, getUtmParams } from '@/app/_utils/utm.util';
 
 interface RewardedAdsProps {
   onPause: (pause: boolean) => void;
+  onPage: 'landing' | 'interstitial';
 }
 
-const RewardedAds: React.FC<RewardedAdsProps> = ({ onPause }) => {
+const RewardedAds: React.FC<RewardedAdsProps> = ({ onPause, onPage }) => {
   const [isRewardModalVisible, setIsRewardModalVisible] = useState(false);
 
   useEffect(() => {
@@ -80,7 +81,14 @@ const RewardedAds: React.FC<RewardedAdsProps> = ({ onPause }) => {
               window.location.href = appendUtmParams('/cancel');
             } else {
               googletag.destroySlots([rewardedSlot]);
-              window.location.href = appendUtmParams('/home');
+              if (onPage === 'landing') {
+                window.location.href = appendUtmParams('/home');
+              }
+              if (onPage === 'interstitial') {
+                window.location.href = appendUtmParams(
+                  'https://bobbies.hotspot.yourspot.co.za/lv/login'
+                );
+              }
             }
           });
 
@@ -89,7 +97,7 @@ const RewardedAds: React.FC<RewardedAdsProps> = ({ onPause }) => {
     };
 
     initializeRewardedAd();
-  }, []);
+  }, [onPage]);
 
   const cancelPage = () => {
     window.location.href = appendUtmParams('/cancel');

@@ -262,7 +262,7 @@ const Landing: React.FC = () => {
         </div>
       </div>
 
-      <RewardedAds onPause={handlePause} />
+      <RewardedAds onPause={handlePause} onPage={'landing'} />
     </>
   );
 };
