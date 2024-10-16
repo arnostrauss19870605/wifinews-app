@@ -17,11 +17,6 @@ const RewardedAds: React.FC<RewardedAdsProps> = ({ onPause, onPage }) => {
       onPause(true);
       pauseTriggered.current = true;
     }
-
-    if (!isRewardModalVisible && pauseTriggered.current) {
-      onPause(false);
-      pauseTriggered.current = false;
-    }
   }, [isRewardModalVisible, onPause]);
 
   useEffect(() => {
