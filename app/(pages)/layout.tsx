@@ -36,6 +36,16 @@ export default function RootLayout({
         />
         {/* Optimization link tags */}
         <link
+          rel='preload'
+          href='https://securepubads.g.doubleclick.net/tag/js/gpt.js'
+          as='script'
+        />
+        <link
+          rel='preload'
+          href='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js'
+          as='script'
+        />
+        <link
           rel='preconnect'
           href='https://adservice.google.co.za'
           crossOrigin='anonymous'
