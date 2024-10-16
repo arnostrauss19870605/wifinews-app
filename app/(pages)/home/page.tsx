@@ -95,7 +95,7 @@ function Home() {
 
       <Script
         id='gpt-vignette-setup'
-        strategy='lazyOnload'
+        strategy='afterInteractive'
         crossOrigin='anonymous'
       >
         {`
