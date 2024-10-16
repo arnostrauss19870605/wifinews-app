@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { appendUtmParams, getUtmParams } from '@/app/_utils/utm.util';
 
 interface RewardedAdsProps {
@@ -10,9 +10,18 @@ interface RewardedAdsProps {
 
 const RewardedAds: React.FC<RewardedAdsProps> = ({ onPause, onPage }) => {
   const [isRewardModalVisible, setIsRewardModalVisible] = useState(false);
+  const pauseTriggered = useRef(false);
 
   useEffect(() => {
-    onPause(isRewardModalVisible);
+    if (isRewardModalVisible && !pauseTriggered.current) {
+      onPause(true);
+      pauseTriggered.current = true;
+    }
+
+    if (!isRewardModalVisible && pauseTriggered.current) {
+      onPause(false);
+      pauseTriggered.current = false;
+    }
   }, [isRewardModalVisible, onPause]);
 
   useEffect(() => {
