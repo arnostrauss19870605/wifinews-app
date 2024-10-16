@@ -34,6 +34,77 @@ export default function RootLayout({
           src='https://securepubads.g.doubleclick.net/tag/js/gpt.js'
           strategy='beforeInteractive'
         />
+        {/* Optimization link tags */}
+        <link
+          rel='preconnect'
+          href='https://adservice.google.co.za'
+          crossOrigin='anonymous'
+        />
+        <link
+          rel='preconnect'
+          href='https://securepubads.g.doubleclick.net'
+          crossOrigin='anonymous'
+        />
+        <link
+          rel='preconnect'
+          href='https://tpc.googlesyndication.com'
+          crossOrigin='anonymous'
+        />
+        <link
+          rel='preconnect'
+          href='https://pagead2.googlesyndication.com'
+          crossOrigin='anonymous'
+        />
+        <link
+          rel='preconnect'
+          href='https://www.googletagmanager.com'
+          crossOrigin='anonymous'
+        />
+        <link
+          rel='preconnect'
+          href='https://www.google-analytics.com'
+          crossOrigin='anonymous'
+        />
+        <link
+          rel='preconnect'
+          href='https://csi.gstatic.com'
+          crossOrigin='anonymous'
+        />
+        <link
+          rel='preconnect'
+          href='https://www.googletagservices.com'
+          crossOrigin='anonymous'
+        />
+        <link
+          rel='preconnect'
+          href='https://tags.crwdcntrl.net'
+          crossOrigin='anonymous'
+        />
+        <link
+          rel='preconnect'
+          href='https://bcp.crwdcntrl.net'
+          crossOrigin='anonymous'
+        />
+        <link
+          rel='preconnect'
+          href='https://c.st.ltmsphrcl.net'
+          crossOrigin='anonymous'
+        />
+        <link
+          rel='preconnect'
+          href='https://c.ltmsphrcl.net'
+          crossOrigin='anonymous'
+        />
+        <link
+          rel='preconnect'
+          href='https://bcp.st.crwdcntrl.net'
+          crossOrigin='anonymous'
+        />
+        <link
+          rel='preconnect'
+          href='https://googleads.g.doubleclick.net'
+          crossOrigin='anonymous'
+        />
       </head>
       <body className={inter.className}>
         <AuthProvider>
