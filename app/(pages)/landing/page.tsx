@@ -14,6 +14,166 @@ const RewardedAds = dynamic(() => import('@/app/_components/RewardedAds'), {
   loading: () => <p>Loading ads...</p>,
 });
 
+const setupAds = () => {
+  window.googletag = window.googletag || { cmd: [] };
+
+  window.googletag.cmd.push(function () {
+    if (!window.googletag.pubads) {
+      console.error('googletag.pubads is not available yet.');
+      return;
+    }
+
+    const utmParams = getUtmParams();
+    console.log('landing utm params =>', utmParams);
+
+    if (utmParams['Medium']) {
+      googletag.pubads().setTargeting('Medium', utmParams['Medium']);
+    }
+
+    try {
+      if (
+        !googletag
+          .pubads()
+          .getSlots()
+          .find((slot) => slot.getSlotElementId() === 'div-gpt-ad-7092085-1')
+      ) {
+        var mapping1 = googletag
+          .sizeMapping()
+          .addSize([1400, 0], [[728, 90], 'fluid'])
+          .addSize([1200, 0], [[728, 90], 'fluid'])
+          .addSize([1000, 0], [[728, 90], 'fluid'])
+          .addSize(
+            [700, 0],
+            [
+              [468, 60],
+              [320, 50],
+              [300, 50],
+              'fluid',
+              [300, 250],
+              [320, 100],
+              [300, 100],
+            ]
+          )
+          .addSize(
+            [600, 0],
+            [
+              [468, 60],
+              [320, 50],
+              [300, 50],
+              'fluid',
+              [300, 100],
+              [320, 100],
+              [300, 250],
+            ]
+          )
+          .addSize(
+            [400, 0],
+            [[320, 50], [300, 50], 'fluid', [320, 100], [300, 250], [300, 100]]
+          )
+          .addSize(
+            [300, 0],
+            [[320, 50], [300, 250], [320, 100], [300, 50], [300, 100], 'fluid']
+          )
+          .build();
+
+        // @ts-ignore
+        googletag
+          .defineSlot(
+            '/22047902240/wifinews/landing_interstitial',
+            ['fluid', [320, 480], [300, 250], [300, 600]],
+            'div-gpt-ad-7092085-1'
+          )
+          // @ts-ignore
+          .defineSizeMapping(mapping1)
+          .addService(googletag.pubads());
+      } else {
+        console.warn('Slot div-gpt-ad-7092085-1 already defined.');
+      }
+
+      if (
+        !googletag
+          .pubads()
+          .getSlots()
+          .find((slot) => slot.getSlotElementId() === 'div-gpt-ad-7092085-2')
+      ) {
+        var mapping2 = googletag
+          .sizeMapping()
+          .addSize([1400, 0], [[320, 480], [300, 250], [300, 600], 'fluid'])
+          .addSize([1200, 0], [[320, 480], [300, 250], [300, 600], 'fluid'])
+          .addSize([1000, 0], [[320, 480], [300, 250], [300, 600], 'fluid'])
+          .addSize([700, 0], [[320, 480], [300, 250], [300, 600], 'fluid'])
+          .addSize([600, 0], [[320, 480], [300, 250], [300, 600], 'fluid'])
+          .addSize([400, 0], [[300, 250], [300, 600], [320, 480], 'fluid'])
+          .addSize([300, 0], [[300, 250], [300, 600], [320, 480], 'fluid'])
+          .build();
+
+        // @ts-ignore
+        googletag
+          .defineSlot(
+            '/22047902240/wifinews/landing_top320x50',
+            ['fluid', [300, 250], [320, 50], [320, 100], [468, 60], [728, 90]],
+            'div-gpt-ad-7092085-2'
+          )
+          // @ts-ignore
+          .defineSizeMapping(mapping2)
+          .addService(googletag.pubads());
+      } else {
+        console.warn('Slot div-gpt-ad-7092085-2 already defined.');
+      }
+
+      if (
+        !googletag
+          .pubads()
+          .getSlots()
+          .find((slot) => slot.getSlotElementId() === 'div-gpt-ad-7092085-3')
+      ) {
+        var mapping3 = googletag
+          .sizeMapping()
+          .addSize([1400, 0], [[728, 90], 'fluid'])
+          .addSize([1200, 0], [[728, 90], 'fluid'])
+          .addSize([1000, 0], [[728, 90], 'fluid'])
+          .addSize(
+            [700, 0],
+            ['fluid', [468, 60], [320, 50], [300, 50], [320, 100], [300, 100]]
+          )
+          .addSize(
+            [600, 0],
+            ['fluid', [468, 60], [320, 50], [300, 50], [320, 100], [300, 100]]
+          )
+          .addSize(
+            [400, 0],
+            ['fluid', [320, 50], [300, 50], [320, 100], [300, 100]]
+          )
+          .addSize(
+            [300, 0],
+            ['fluid', [320, 50], [300, 50], [320, 100], [300, 100]]
+          )
+          .build();
+
+        // @ts-ignore
+        googletag
+          .defineSlot(
+            '/22047902240/wifinews/landing_sticky',
+            ['fluid', [320, 50], [320, 100], [468, 60], [728, 90]],
+            'div-gpt-ad-7092085-3'
+          )
+          // @ts-ignore
+          .defineSizeMapping(mapping3)
+          .addService(googletag.pubads());
+      } else {
+        console.warn('Slot div-gpt-ad-7092085-3 already defined.');
+      }
+
+      googletag.pubads().enableSingleRequest();
+      googletag.pubads().collapseEmptyDivs();
+      googletag.pubads().setCentering(true);
+      googletag.enableServices();
+    } catch (error) {
+      console.error('Error in setting up ads:', error);
+    }
+  });
+};
+
 const Landing: React.FC = () => {
   const [isPaused, setIsPaused] = useState(false);
 
@@ -22,207 +182,6 @@ const Landing: React.FC = () => {
   };
 
   useEffect(() => {
-    const setupAds = () => {
-      window.googletag = window.googletag || { cmd: [] };
-
-      window.googletag.cmd.push(function () {
-        if (!window.googletag.pubads) {
-          console.error('googletag.pubads is not available yet.');
-          return;
-        }
-
-        const utmParams = getUtmParams();
-        console.log('landing utm params =>', utmParams);
-
-        if (utmParams['Medium']) {
-          googletag.pubads().setTargeting('Medium', utmParams['Medium']);
-        }
-
-        try {
-          if (
-            !googletag
-              .pubads()
-              .getSlots()
-              .find(
-                (slot) => slot.getSlotElementId() === 'div-gpt-ad-7092085-1'
-              )
-          ) {
-            var mapping1 = googletag
-              .sizeMapping()
-              .addSize([1400, 0], [[728, 90], 'fluid'])
-              .addSize([1200, 0], [[728, 90], 'fluid'])
-              .addSize([1000, 0], [[728, 90], 'fluid'])
-              .addSize(
-                [700, 0],
-                [
-                  [468, 60],
-                  [320, 50],
-                  [300, 50],
-                  'fluid',
-                  [300, 250],
-                  [320, 100],
-                  [300, 100],
-                ]
-              )
-              .addSize(
-                [600, 0],
-                [
-                  [468, 60],
-                  [320, 50],
-                  [300, 50],
-                  'fluid',
-                  [300, 100],
-                  [320, 100],
-                  [300, 250],
-                ]
-              )
-              .addSize(
-                [400, 0],
-                [
-                  [320, 50],
-                  [300, 50],
-                  'fluid',
-                  [320, 100],
-                  [300, 250],
-                  [300, 100],
-                ]
-              )
-              .addSize(
-                [300, 0],
-                [
-                  [320, 50],
-                  [300, 250],
-                  [320, 100],
-                  [300, 50],
-                  [300, 100],
-                  'fluid',
-                ]
-              )
-              .build();
-
-            // @ts-ignore
-            googletag
-              .defineSlot(
-                '/22047902240/wifinews/landing_interstitial',
-                ['fluid', [320, 480], [300, 250], [300, 600]],
-                'div-gpt-ad-7092085-1'
-              )
-              // @ts-ignore
-              .defineSizeMapping(mapping1)
-              .addService(googletag.pubads());
-          } else {
-            console.warn('Slot div-gpt-ad-7092085-1 already defined.');
-          }
-
-          if (
-            !googletag
-              .pubads()
-              .getSlots()
-              .find(
-                (slot) => slot.getSlotElementId() === 'div-gpt-ad-7092085-2'
-              )
-          ) {
-            var mapping2 = googletag
-              .sizeMapping()
-              .addSize([1400, 0], [[320, 480], [300, 250], [300, 600], 'fluid'])
-              .addSize([1200, 0], [[320, 480], [300, 250], [300, 600], 'fluid'])
-              .addSize([1000, 0], [[320, 480], [300, 250], [300, 600], 'fluid'])
-              .addSize([700, 0], [[320, 480], [300, 250], [300, 600], 'fluid'])
-              .addSize([600, 0], [[320, 480], [300, 250], [300, 600], 'fluid'])
-              .addSize([400, 0], [[300, 250], [300, 600], [320, 480], 'fluid'])
-              .addSize([300, 0], [[300, 250], [300, 600], [320, 480], 'fluid'])
-              .build();
-
-            // @ts-ignore
-            googletag
-              .defineSlot(
-                '/22047902240/wifinews/landing_top320x50',
-                [
-                  'fluid',
-                  [300, 250],
-                  [320, 50],
-                  [320, 100],
-                  [468, 60],
-                  [728, 90],
-                ],
-                'div-gpt-ad-7092085-2'
-              )
-              // @ts-ignore
-              .defineSizeMapping(mapping2)
-              .addService(googletag.pubads());
-          } else {
-            console.warn('Slot div-gpt-ad-7092085-2 already defined.');
-          }
-
-          if (
-            !googletag
-              .pubads()
-              .getSlots()
-              .find(
-                (slot) => slot.getSlotElementId() === 'div-gpt-ad-7092085-3'
-              )
-          ) {
-            var mapping3 = googletag
-              .sizeMapping()
-              .addSize([1400, 0], [[728, 90], 'fluid'])
-              .addSize([1200, 0], [[728, 90], 'fluid'])
-              .addSize([1000, 0], [[728, 90], 'fluid'])
-              .addSize(
-                [700, 0],
-                [
-                  'fluid',
-                  [468, 60],
-                  [320, 50],
-                  [300, 50],
-                  [320, 100],
-                  [300, 100],
-                ]
-              )
-              .addSize(
-                [600, 0],
-                [
-                  'fluid',
-                  [468, 60],
-                  [320, 50],
-                  [300, 50],
-                  [320, 100],
-                  [300, 100],
-                ]
-              )
-              .addSize(
-                [400, 0],
-                ['fluid', [320, 50], [300, 50], [320, 100], [300, 100]]
-              )
-              .addSize(
-                [300, 0],
-                ['fluid', [320, 50], [300, 50], [320, 100], [300, 100]]
-              )
-              .build();
-
-            // @ts-ignore
-            googletag
-              .defineSlot(
-                '/22047902240/wifinews/landing_sticky',
-                ['fluid', [320, 50], [320, 100], [468, 60], [728, 90]],
-                'div-gpt-ad-7092085-3'
-              )
-              // @ts-ignore
-              .defineSizeMapping(mapping3)
-              .addService(googletag.pubads());
-          } else {
-            console.warn('Slot div-gpt-ad-7092085-3 already defined.');
-          }
-
-          googletag.pubads().enableSingleRequest();
-          googletag.pubads().collapseEmptyDivs();
-          googletag.pubads().setCentering(true);
-          googletag.enableServices();
-        } catch (error) {
-          console.error('Error in setting up ads:', error);
-        }
-      });
-    };
-
     setupAds();
 
     return () => {
