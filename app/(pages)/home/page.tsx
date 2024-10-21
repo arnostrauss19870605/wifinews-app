@@ -389,6 +389,11 @@ function Home() {
           <div id='div-gpt-ad-6641866-5'></div>
         </div>
       </div>
+
+      {/* Sticky Ad */}
+      <div className='fixed bottom-12 left-0 right-0 z-[9999] flex justify-center'>
+        <div id='div-gpt-ad-6641866-6' className='w-full max-w-[768px]'></div>
+      </div>
     </div>
   );
 }
