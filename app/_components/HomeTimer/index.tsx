@@ -6,7 +6,7 @@ import { FaWifi } from 'react-icons/fa';
 interface TimerProps {}
 
 const HomeTimer: React.FC<TimerProps> = () => {
-  const totalTime = 16;
+  const totalTime = 20;
   const [timeLeft, setTimeLeft] = useState(totalTime);
   const startTimeRef = useRef<number | null>(null);
   const endTimeRef = useRef<number | null>(null);
@@ -30,7 +30,7 @@ const HomeTimer: React.FC<TimerProps> = () => {
         Math.floor((endTimeRef.current! - currentTime) / 1000)
       );
 
-      if (timeRemaining <= 8) {
+      if (timeRemaining <= 12) {
         setButtonVisible(true);
       }
 

@@ -39,6 +39,7 @@ const InterstitialTimer: React.FC<TimerProps> = ({ isPaused }) => {
         clearInterval(timerIntervalRef.current!);
         setTimeLeft(0);
         setButtonVisible(true);
+        handleConnect();
       } else {
         setTimeLeft(timeRemaining);
       }

@@ -6,7 +6,7 @@ interface TimerProps {
 }
 
 const LandingTimer: React.FC<TimerProps> = ({ isPaused }) => {
-  const totalTime = 35;
+  const totalTime = 20;
   const [timeLeft, setTimeLeft] = useState(totalTime);
   const startTimeRef = useRef<number | null>(null);
   const endTimeRef = useRef<number | null>(null);
