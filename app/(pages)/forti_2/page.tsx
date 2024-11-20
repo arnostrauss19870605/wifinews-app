@@ -184,15 +184,9 @@ function Forti_2() {
               .addSize([300, 0], [[300, 250], [300, 600], [320, 480], 'fluid'])
               .build();
 
-            const mapping4 = googletag.sizeMapping()
-              .addSize([1400, 0], [[728, 90], 'fluid'])
-              .addSize([1200, 0], [[728, 90], 'fluid'])
-              .addSize([1000, 0], [[728, 90], 'fluid'])
-              .addSize([700, 0], ['fluid', [468, 60], [320, 50], [300, 50], [320, 100], [300, 100]])
-              .addSize([600, 0], ['fluid', [468, 60], [320, 50], [300, 50], [320, 100], [300, 100]])
-              .addSize([400, 0], ['fluid', [320, 50], [300, 50], [320, 100], [300, 100]])
-              .addSize([300, 0], ['fluid', [320, 50], [300, 50], [320, 100], [300, 100]])
-              .build();
+              const mapping4 = googletag.sizeMapping()
+                  .addSize([320, 0], [[320, 50], [320, 100]])
+                  .build();
 
             googletag.defineSlot('/22047902240/wifinews/forti_insterstitial', ['fluid',[320,480],[300,250],[300,600]], 'div-gpt-ad-7171086-1')
               .defineSizeMapping(mapping2)
@@ -200,7 +194,7 @@ function Forti_2() {
             googletag.defineSlot('/22047902240/wifinews/forti_top320x50', ['fluid',[320,50],[320,100],[300,250],[468,60],[728,90]], 'div-gpt-ad-7171086-2')
               .defineSizeMapping(mapping1)
               .addService(googletag.pubads());
-            googletag.defineSlot('/22047902240/wifinews/forti_sticky', ['fluid',[320,50],[320,100],[468,60],[728,90]], 'div-gpt-ad-7171086-3')
+            googletag.defineSlot('/22047902240/wifinews/forti_sticky', [[320, 50], [320, 100]], 'div-gpt-ad-7171086-3')
               .defineSizeMapping(mapping4)
               .addService(googletag.pubads());
 

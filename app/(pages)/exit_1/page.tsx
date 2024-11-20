@@ -135,6 +135,10 @@ function Exit_1() {
               .addSize([400, 0], [[320, 50], [300, 50], 'fluid', [320, 100], [300, 250], [300, 600], [300, 100]])
               .addSize([300, 0], [[320, 50], [300, 250], [300, 600], [320, 100], [300, 50], [300, 100], 'fluid'])
               .build();
+              
+              const mapping4 = googletag.sizeMapping()
+                  .addSize([320, 0], [[320, 50], [320, 100]])
+                  .build();
 
             googletag.defineSlot('/22047902240/wifinews/exit_top', ['fluid', [300,250], [320,50], [320,100], [468,60], [728,90]], 'div-gpt-ad-5795880-1')
               .defineSizeMapping(mapping)
@@ -151,8 +155,8 @@ function Exit_1() {
             googletag.defineSlot('/22047902240/wifinews/exit_bottom2', ['fluid', [300,250], [320,50], [320,100], [468,60], [728,90]], 'div-gpt-ad-5795880-5')
               .defineSizeMapping(mapping)
               .addService(googletag.pubads());
-            googletag.defineSlot('/22047902240/wifinews/exit_sticky', ['fluid', [320,50], [320,100], [300,250], [468,60], [728,90]], 'div-gpt-ad-5795880-6')
-              .defineSizeMapping(mapping)
+            googletag.defineSlot('/22047902240/wifinews/exit_sticky', [[320, 50], [320, 100]], 'div-gpt-ad-5795880-6')
+              .defineSizeMapping(mapping4)
               .addService(googletag.pubads());
 
             googletag.pubads().enableSingleRequest();

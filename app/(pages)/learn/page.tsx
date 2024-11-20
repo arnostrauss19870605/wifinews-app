@@ -169,15 +169,9 @@ function Learn() {
               .addSize([300, 0], ['fluid', [320, 50], [300, 50], [320, 100], [300, 100], [300, 250], [300, 600]])
               .build();
 
-            const mapping4 = googletag.sizeMapping()
-              .addSize([1400, 0], [[728, 90], 'fluid'])
-              .addSize([1200, 0], [[728, 90], 'fluid'])
-              .addSize([1000, 0], [[728, 90], 'fluid'])
-              .addSize([700, 0], ['fluid', [468, 60], [320, 50], [300, 50], [320, 100], [300, 100], [300, 250]])
-              .addSize([600, 0], ['fluid', [468, 60], [320, 50], [300, 50], [320, 100], [300, 100], [300, 250]])
-              .addSize([400, 0], ['fluid', [320, 50], [300, 50], [320, 100], [300, 100], [300, 250]])
-              .addSize([300, 0], ['fluid', [320, 50], [300, 50], [320, 100], [300, 100], [300, 250]])
-              .build();
+const mapping4 = googletag.sizeMapping()
+    .addSize([320, 0], [[320, 50], [320, 100]])
+    .build();
 
             // Define ad slots and display them
             googletag.defineSlot('/22047902240/wifinews/homepage_top_leaderboard', ['fluid', [320, 100], [320, 50], [300, 250], [468, 60], [728, 90]], 'div-gpt-ad-6641866-1')
@@ -200,9 +194,10 @@ function Learn() {
               .defineSizeMapping(mapping1)
               .addService(googletag.pubads());
 
-            googletag.defineSlot('/22047902240/wifinews/homepage_sticky', ['fluid', [320, 50], [320, 100], [300, 250], [468, 60], [728, 90]], 'div-gpt-ad-6641866-6')
-              .defineSizeMapping(mapping4)
-              .addService(googletag.pubads());
+googletag.defineSlot('/22047902240/wifinews/homepage_sticky', [[320, 50], [320, 100]], 'div-gpt-ad-6641866-6')
+    .defineSizeMapping(mapping4)
+    .addService(googletag.pubads());
+
 
             // Enable services and set targeting
             googletag.pubads().enableSingleRequest();

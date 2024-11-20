@@ -124,24 +124,12 @@ const setupInterstitialAds = () => {
       ) {
         const mapping4 = googletag
           .sizeMapping()
-          .addSize([1400, 0], [[728, 90], 'fluid'])
-          .addSize([1200, 0], [[728, 90], 'fluid'])
-          .addSize([1000, 0], [[728, 90], 'fluid'])
           .addSize(
-            [700, 0],
-            ['fluid', [468, 60], [320, 50], [300, 50], [320, 100], [300, 100]]
-          )
-          .addSize(
-            [600, 0],
-            ['fluid', [468, 60], [320, 50], [300, 50], [320, 100], [300, 100]]
-          )
-          .addSize(
-            [400, 0],
-            ['fluid', [320, 50], [300, 50], [320, 100], [300, 100]]
-          )
-          .addSize(
-            [300, 0],
-            ['fluid', [320, 50], [300, 50], [320, 100], [300, 100]]
+            [320, 0],
+            [
+              [320, 50],
+              [320, 100],
+            ]
           )
           .build();
 
@@ -149,7 +137,10 @@ const setupInterstitialAds = () => {
         googletag
           .defineSlot(
             '/22047902240/wifinews/interstitial1_sticky',
-            ['fluid', [320, 50], [320, 100], [468, 60], [728, 90]],
+            [
+              [320, 50],
+              [320, 100],
+            ],
             'div-gpt-ad-6110814-3'
           )
           // @ts-ignore

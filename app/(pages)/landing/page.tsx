@@ -110,13 +110,13 @@ const setupAds = () => {
 
       const mapping3 = window.googletag
         ?.sizeMapping()
-        .addSize([1400, 0], [[728, 90], 'fluid'])
-        .addSize([1200, 0], [[728, 90], 'fluid'])
-        .addSize([1000, 0], [[728, 90], 'fluid'])
-        .addSize([700, 0], [[320, 50], [300, 250], 'fluid'])
-        .addSize([600, 0], [[320, 50], [300, 250], 'fluid'])
-        .addSize([400, 0], [[320, 50], [300, 250], 'fluid'])
-        .addSize([300, 0], [[320, 50], [300, 250], 'fluid'])
+        .addSize(
+          [320, 0],
+          [
+            [320, 50],
+            [320, 100],
+          ]
+        )
         .build()!;
 
       if (
@@ -128,7 +128,10 @@ const setupAds = () => {
         window.googletag
           ?.defineSlot(
             '/22047902240/wifinews/landing_sticky',
-            ['fluid', [320, 50], [320, 100], [300, 250], [728, 90]],
+            [
+              [320, 50],
+              [320, 100],
+            ],
             'div-gpt-ad-7092085-3'
           )
           ?.defineSizeMapping(mapping3)
