@@ -15,7 +15,6 @@ import {
 } from 'react-icons/fa';
 import Script from 'next/script';
 import { getUtmParams } from '@/app/_utils/utm.util';
-import { devNull } from 'node:os';
 
 interface Translation {
   name: string;
