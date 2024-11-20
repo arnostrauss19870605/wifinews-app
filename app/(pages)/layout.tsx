@@ -34,6 +34,10 @@ export default function RootLayout({
           src='https://securepubads.g.doubleclick.net/tag/js/gpt.js'
           strategy='beforeInteractive'
         />
+        <Script
+          src='https://static.vic-m.co/ads/vicinity-head-tag-v2.js?zoneId=2342'
+          strategy='afterInteractive'
+        />
         {/* Optimization link tags */}
         <link
           rel='preconnect'

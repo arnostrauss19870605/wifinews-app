@@ -15,6 +15,7 @@ import {
 } from 'react-icons/fa';
 import Script from 'next/script';
 import { getUtmParams } from '@/app/_utils/utm.util';
+import { devNull } from 'node:os';
 
 interface Translation {
   name: string;
@@ -77,7 +78,7 @@ function Learn() {
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/courses/categories`
         );
         const data: CategoriesResponse = await response.json();
-        setCategories(data.data);
+        setCategories(data?.data);
         setLoading(false);
       } catch (error) {
         console.error('Failed to fetch categories:', error);
@@ -89,15 +90,17 @@ function Learn() {
   }, []);
 
   const handleSort = (categories: Category[]): Category[] => {
-    return categories.sort((a, b) => {
+    return categories?.sort((a, b) => {
       if (sortBy === 'name-asc') {
-        return a.translations[0].name.localeCompare(b.translations[0].name);
+        return a?.translations[0]?.name.localeCompare(b?.translations[0]?.name);
       } else if (sortBy === 'name-desc') {
-        return b.translations[0].name.localeCompare(a.translations[0].name);
+        return b?.translations[0]?.name?.localeCompare(
+          a?.translations[0]?.name
+        );
       } else if (sortBy === 'courses-asc') {
-        return a.courses_count - b.courses_count;
+        return a?.courses_count - b?.courses_count;
       } else if (sortBy === 'courses-desc') {
-        return b.courses_count - a.courses_count;
+        return b?.courses_count - a?.courses_count;
       }
       return 0;
     });
@@ -105,17 +108,30 @@ function Learn() {
 
   const filteredCategories = handleSort(
     categories
-      .filter((category) => category.courses_count > 0)
-      .filter((category) =>
-        category.translations[0].name
-          .toLowerCase()
-          .includes(searchQuery.toLowerCase())
+      ?.filter((category) => category.courses_count > 0)
+      ?.filter((category) =>
+        category?.translations[0]?.name
+          ?.toLowerCase()
+          ?.includes(searchQuery.toLowerCase())
       )
   );
 
   const handleCardClick = (code: string) => {
     window.location.href = `/courses/${code}`;
   };
+
+  if (categories?.length <= 0) {
+    return (
+      <div
+        className='flex flex-col items-center p-12'
+        style={{ minHeight: 'calc(100vh - 200px)' }}
+      >
+        <div className='text-center font-semibold'>
+          Learning Material Not Available At the Moment. Please Visit Again.
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -212,51 +228,56 @@ function Learn() {
         <div className='my-4 flex w-full items-center justify-center'>
           <div id='div-gpt-ad-6641866-1'></div>
         </div>
-        <div className='mb-6 flex w-full max-w-2xl items-center'>
-          <div className='relative w-full'>
-            <input
-              type='text'
-              className='w-full rounded-md border border-gray-300 py-2 pl-10 pr-4 text-black focus:outline-none'
-              placeholder='Search categories...'
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <AiOutlineSearch
-              className='absolute left-3 top-2 text-gray-500'
-              size={24}
-            />
-          </div>
-
-          <div className='ml-4 flex space-x-2'>
-            <button
-              className={`rounded border p-2 ${sortBy === 'name-asc' ? 'bg-gray-200' : ''}`}
-              onClick={() => setSortBy('name-asc')}
-            >
-              <FaSortAlphaDown size={20} title='Sort by Name (A-Z)' />
-            </button>
-            <button
-              className={`rounded border p-2 ${sortBy === 'name-desc' ? 'bg-gray-200' : ''}`}
-              onClick={() => setSortBy('name-desc')}
-            >
-              <FaSortAlphaUp size={20} title='Sort by Name (Z-A)' />
-            </button>
-            <button
-              className={`rounded border p-2 ${sortBy === 'courses-asc' ? 'bg-gray-200' : ''}`}
-              onClick={() => setSortBy('courses-asc')}
-            >
-              <FaSortAmountUp size={20} title='Sort by Courses (Low to High)' />
-            </button>
-            <button
-              className={`rounded border p-2 ${sortBy === 'courses-desc' ? 'bg-gray-200' : ''}`}
-              onClick={() => setSortBy('courses-desc')}
-            >
-              <FaSortAmountDown
-                size={20}
-                title='Sort by Courses (High to Low)'
+        {categories?.length > 0 && (
+          <div className='mb-6 flex w-full max-w-2xl items-center'>
+            <div className='relative w-full'>
+              <input
+                type='text'
+                className='w-full rounded-md border border-gray-300 py-2 pl-10 pr-4 text-black focus:outline-none'
+                placeholder='Search categories...'
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
-            </button>
+              <AiOutlineSearch
+                className='absolute left-3 top-2 text-gray-500'
+                size={24}
+              />
+            </div>
+
+            <div className='ml-4 flex space-x-2'>
+              <button
+                className={`rounded border p-2 ${sortBy === 'name-asc' ? 'bg-gray-200' : ''}`}
+                onClick={() => setSortBy('name-asc')}
+              >
+                <FaSortAlphaDown size={20} title='Sort by Name (A-Z)' />
+              </button>
+              <button
+                className={`rounded border p-2 ${sortBy === 'name-desc' ? 'bg-gray-200' : ''}`}
+                onClick={() => setSortBy('name-desc')}
+              >
+                <FaSortAlphaUp size={20} title='Sort by Name (Z-A)' />
+              </button>
+              <button
+                className={`rounded border p-2 ${sortBy === 'courses-asc' ? 'bg-gray-200' : ''}`}
+                onClick={() => setSortBy('courses-asc')}
+              >
+                <FaSortAmountUp
+                  size={20}
+                  title='Sort by Courses (Low to High)'
+                />
+              </button>
+              <button
+                className={`rounded border p-2 ${sortBy === 'courses-desc' ? 'bg-gray-200' : ''}`}
+                onClick={() => setSortBy('courses-desc')}
+              >
+                <FaSortAmountDown
+                  size={20}
+                  title='Sort by Courses (High to Low)'
+                />
+              </button>
+            </div>
           </div>
-        </div>
+        )}
 
         <div className='grid w-full grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
           {loading ? (
@@ -271,22 +292,22 @@ function Learn() {
               <SkeletonCard />
               <SkeletonCard />
             </>
-          ) : filteredCategories.length > 0 ? (
-            filteredCategories.map((category) => (
+          ) : filteredCategories?.length > 0 ? (
+            filteredCategories?.map((category) => (
               <div
-                key={category.id}
-                onClick={() => handleCardClick(category.code)}
+                key={category?.id}
+                onClick={() => handleCardClick(category?.code)}
                 className='h-[180px] w-full transform cursor-pointer rounded-lg border border-gray-300 bg-white p-4 text-center shadow-sm transition-transform hover:scale-105'
               >
                 <div className='mb-4 flex items-center justify-center'>
-                  {getCategoryIcon(category.translations[0].name)}
+                  {getCategoryIcon(category?.translations[0]?.name)}
                 </div>
                 <h3 className='mb-2 text-base font-semibold text-black'>
-                  {category.translations[0].name}
+                  {category?.translations[0]?.name}
                 </h3>
                 <hr className='my-2 border-t border-gray-300' />
                 <p className='text-sm text-gray-600'>
-                  {category.courses_count} Courses{' '}
+                  {category?.courses_count} Courses{' '}
                   <AiOutlineArrowRight className='ml-1 inline' />
                 </p>
               </div>
