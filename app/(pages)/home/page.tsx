@@ -364,7 +364,7 @@ function Home() {
         `}
       </Script>
 
-      <div className='flex min-h-screen flex-col items-center px-4 py-10'>
+      <div className='flex min-h-screen flex-col items-center px-4 py-4'>
         <MemoizedHomeTimer />
         <div className='my-2 flex w-full items-center justify-center'>
           <div id='div-gpt-ad-6641866-1'></div>

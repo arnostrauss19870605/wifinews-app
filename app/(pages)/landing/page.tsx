@@ -199,7 +199,7 @@ const Landing: React.FC = () => {
     <>
       <Script id='gpt-rewarded-ad-setup' strategy='lazyOnload' />
 
-      <div className='flex min-h-screen flex-col items-center px-4 py-10'>
+      <div className='flex min-h-screen flex-col items-center px-4 py-4'>
         <div className='mb-5 text-center'>
           <MemoizedProgressIndicator currentStep={1} totalSteps={3} />
           <p className='mt-2 text-lg font-semibold text-gray-700'>

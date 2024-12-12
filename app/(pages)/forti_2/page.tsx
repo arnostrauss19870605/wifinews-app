@@ -216,7 +216,7 @@ function Forti_2() {
         `}
       </Script>
 
-      <div className='flex min-h-screen flex-col items-center px-4 py-10'>
+      <div className='flex min-h-screen flex-col items-center px-4 py-4'>
         <div className='mb-5 text-center'>
           <ProgressIndicator currentStep={2} totalSteps={2} />
           <p className='mt-2 text-lg font-semibold text-gray-700'>

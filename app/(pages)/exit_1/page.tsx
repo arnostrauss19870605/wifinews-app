@@ -174,7 +174,7 @@ function Exit_1() {
         <div id='div-gpt-ad-5795880-1'></div>
       </div>
 
-      <div className='flex min-h-screen flex-col items-center px-4 py-10'>
+      <div className='flex min-h-screen flex-col items-center px-4 py-4'>
         <p className='mb-4'>You are now connected to the internet</p>
         <div className='flex justify-center'>
           {!isRewardModalVisible && (

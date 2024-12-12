@@ -198,7 +198,7 @@ function Interstitial() {
     <>
       <Script id='gpt-rewarded-ad-setup' strategy='lazyOnload' />
 
-      <div className='flex min-h-screen flex-col items-center px-4 py-10'>
+      <div className='flex min-h-screen flex-col items-center px-4 py-4'>
         <MemoizedInterstitialTimer isPaused={isPaused} />
 
         {/* Sticky Ad */}

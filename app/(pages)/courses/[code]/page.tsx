@@ -271,7 +271,7 @@ function CoursesByCategory() {
         `}
       </Script>
       <div
-        className='container mx-auto px-4 py-8'
+        className='container mx-auto px-4 py-4'
         style={{ minHeight: 'calc(100vh - 200px)' }}
       >
         <div className='my-4 flex w-full items-center justify-center'>
