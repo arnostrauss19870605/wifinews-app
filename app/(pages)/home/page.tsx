@@ -366,26 +366,26 @@ function Home() {
 
       <div className='flex min-h-screen flex-col items-center px-4 py-10'>
         <MemoizedHomeTimer />
-        <div className='my-4 flex w-full items-center justify-center'>
+        <div className='my-2 flex w-full items-center justify-center'>
           <div id='div-gpt-ad-6641866-1'></div>
         </div>
 
         <LearningMaterial />
-        <div className='my-4 flex w-full items-center justify-center'>
+        <div className='my-2 flex w-full items-center justify-center'>
           <div id='div-gpt-ad-6641866-2'></div>
         </div>
         <DiscussionForum />
-        <div className='my-4 flex w-full items-center justify-center'>
+        <div className='my-2 flex w-full items-center justify-center'>
           <div id='div-gpt-ad-6641866-3'></div>
         </div>
-        <div className='my-10'>
+        <div className='my-2'>
           <NewsWidget />
         </div>
 
-        <div className='my-4 flex w-full items-center justify-center'>
+        <div className='my-2 flex w-full items-center justify-center'>
           <div id='div-gpt-ad-6641866-4'></div>
         </div>
-        <div className='my-4 flex w-full items-center justify-center'>
+        <div className='my-2 flex w-full items-center justify-center'>
           <div id='div-gpt-ad-6641866-5'></div>
         </div>
       </div>

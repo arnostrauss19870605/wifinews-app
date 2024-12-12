@@ -6,8 +6,8 @@ import React from 'react';
 export default function NewsWidget() {
   return (
     <>
-      <div className='mx-auto max-w-6xl px-3 py-6'>
-        <h1 className='mb-4 text-center text-2xl font-bold'>Featured</h1>
+      <div className='mx-auto max-w-6xl px-2 py-4'>
+        <h1 className='mb-2 text-center text-2xl font-bold'>Featured</h1>
 
         <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
           {featuredArticles.map((article) => (
@@ -22,10 +22,10 @@ export default function NewsWidget() {
                 </div>
                 <h2 className='mt-2 text-lg font-semibold'>{article.title}</h2>
                 <p className='mt-2 text-sm text-gray-600'>{article.summary}</p>
-                <p className='mt-3 text-xs text-blue-500'>{article.source}</p>
+                <p className='mt-2 text-xs text-blue-500'>{article.source}</p>
               </div>
               <a href={article.link}>
-                <button className='mt-3 flex w-full items-center justify-center rounded bg-black px-3 py-2 text-sm text-white transition-colors duration-300 hover:bg-gray-800'>
+                <button className='mt-2 flex w-full items-center justify-center rounded bg-black px-2 py-2 text-sm text-white transition-colors duration-300 hover:bg-gray-800'>
                   Read More <FiArrowRight className='ml-1' />
                 </button>
               </a>
@@ -33,15 +33,15 @@ export default function NewsWidget() {
           ))}
         </div>
 
-        <div className='mt-12'>
-          <h2 className='mb-4 text-center text-lg font-semibold'>
+        <div className='mt-4'>
+          <h2 className='mb-2 text-center text-lg font-semibold'>
             Popular Readings
           </h2>
           <div className='space-y-4'>
             {popularArticles.map((article) => (
               <div
                 key={article.id}
-                className='flex flex-col justify-between rounded-md bg-white p-3 shadow transition-shadow duration-300 hover:shadow-sm sm:flex-row sm:items-center'
+                className='flex flex-col justify-between rounded-md bg-white p-2 shadow transition-shadow duration-300 hover:shadow-sm sm:flex-row sm:items-center'
               >
                 <div className='flex-1'>
                   <h4 className='text-sm font-medium'>{article.title}</h4>
@@ -49,7 +49,7 @@ export default function NewsWidget() {
                   <p className='text-xs text-gray-500'>{article.type}</p>
                 </div>
                 <a href={article.link}>
-                  <div className='mt-3 flex items-center text-black hover:text-gray-700 sm:ml-3 sm:mt-0'>
+                  <div className='mt-2 flex items-center text-black hover:text-gray-700 sm:ml-3 sm:mt-0'>
                     <span className='text-sm font-semibold'>Read More</span>
                     <FiTrendingUp className='text-md ml-1' />
                   </div>

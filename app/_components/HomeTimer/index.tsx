@@ -56,7 +56,7 @@ const HomeTimer: React.FC<TimerProps> = () => {
 
   return (
     <>
-      <div className='mb-5 text-center'>
+      <div className='mb-2 text-center'>
         <ProgressIndicator currentStep={2} totalSteps={3} />
         <p className='mt-2 text-lg font-semibold text-gray-700'>
           View these ads for
@@ -64,7 +64,7 @@ const HomeTimer: React.FC<TimerProps> = () => {
         <p className='text-xl font-bold text-gray-800'>{timeLeft} seconds</p>
       </div>
 
-      <div className='mb-4 flex justify-center'>
+      <div className='mb-2 flex justify-center'>
         {isButtonVisible && (
           <a
             href={appendUtmParams('/interstitial')}
