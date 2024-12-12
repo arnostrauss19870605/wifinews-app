@@ -59,9 +59,11 @@ const HomeTimer: React.FC<TimerProps> = () => {
       <div className='mb-2 text-center'>
         <ProgressIndicator currentStep={2} totalSteps={3} />
         <p className='mt-2 text-lg font-semibold text-gray-700'>
-          View these ads for
+          View these ads for{' '}
+          <span className='text-xl font-bold text-gray-800'>
+            {timeLeft} seconds
+          </span>
         </p>
-        <p className='text-xl font-bold text-gray-800'>{timeLeft} seconds</p>
       </div>
 
       <div className='mb-2 flex justify-center'>

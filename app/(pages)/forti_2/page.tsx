@@ -220,10 +220,10 @@ function Forti_2() {
         <div className='mb-5 text-center'>
           <ProgressIndicator currentStep={2} totalSteps={2} />
           <p className='mt-2 text-lg font-semibold text-gray-700'>
-            View these ads for
-          </p>
-          <p className='text-xl font-bold text-gray-800'>
-            {interstitialTimer} seconds
+            View these ads for{' '}
+            <span className='text-xl font-bold text-gray-800'>
+              {interstitialTimer} seconds
+            </span>
           </p>
         </div>
 
