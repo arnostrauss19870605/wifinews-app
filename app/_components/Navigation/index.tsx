@@ -48,7 +48,6 @@ function Navigation() {
     { name: 'Home', href: '/' },
     { name: 'News', href: '/news' },
     { name: 'Topics', href: '/topics' },
-    { name: 'Learn', href: '/learn' },
   ];
 
   useEffect(() => {

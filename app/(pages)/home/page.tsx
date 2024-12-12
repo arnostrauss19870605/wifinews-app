@@ -1,7 +1,6 @@
 'use client';
 import React, { useLayoutEffect } from 'react';
 import Script from 'next/script';
-import LearningMaterial from '@/app/_components/LearningMaterial';
 import DiscussionForum from '@/app/_components/DiscussionForum';
 import { getUtmParams } from '@/app/_utils/utm.util';
 import NewsWidget from '@/app/_components/NewsWidget';
@@ -370,11 +369,11 @@ function Home() {
           <div id='div-gpt-ad-6641866-1'></div>
         </div>
 
-        <LearningMaterial />
+        <DiscussionForum />
         <div className='my-2 flex w-full items-center justify-center'>
           <div id='div-gpt-ad-6641866-2'></div>
         </div>
-        <DiscussionForum />
+
         <div className='my-2 flex w-full items-center justify-center'>
           <div id='div-gpt-ad-6641866-3'></div>
         </div>

@@ -1,7 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import Script from 'next/script';
-import LearningMaterial from '@/app/_components/LearningMaterial';
 import DiscussionForum from '@/app/_components/DiscussionForum';
 import News from '@/app/(pages)/news/page';
 import ProgressIndicator from '@/app/_components/ProgressIndicator';
@@ -169,8 +168,6 @@ function Forti() {
             </a>
           )}
         </div>
-
-        <LearningMaterial />
         <DiscussionForum />
         <div className='my-10'>
           <News />

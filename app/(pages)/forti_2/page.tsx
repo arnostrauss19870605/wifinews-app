@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import Script from 'next/script';
 import ProgressIndicator from '@/app/_components/ProgressIndicator';
-import LearningMaterial from '@/app/_components/LearningMaterial';
 import DiscussionForum from '@/app/_components/DiscussionForum';
 import News from '@/app/(pages)/news/page';
 import { getUtmParams, appendUtmParams } from '@/app/_utils/utm.util';
@@ -249,8 +248,6 @@ function Forti_2() {
         <div className='justifycenter my-4 flex w-full items-center'>
           <div id='div-gpt-ad-7171086-2'></div>
         </div>
-
-        <LearningMaterial />
         <DiscussionForum />
         <div className='my-10'>
           <News />
