@@ -1,6 +1,5 @@
 'use client';
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useLayoutEffect } from 'react';
 import Script from 'next/script';
 import dynamic from 'next/dynamic';
 import { getUtmParams } from '@/app/_utils/utm.util';
@@ -181,7 +180,7 @@ const Landing: React.FC = () => {
     setIsPaused(pause);
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setupAds();
 
     return () => {

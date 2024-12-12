@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect } from 'react';
+import React, { useLayoutEffect } from 'react';
 import Script from 'next/script';
 import LearningMaterial from '@/app/_components/LearningMaterial';
 import DiscussionForum from '@/app/_components/DiscussionForum';
@@ -318,7 +318,7 @@ const setupGoogleAds = () => {
 const MemoizedHomeTimer = React.memo(HomeTimer);
 
 function Home() {
-  useEffect(() => {
+  useLayoutEffect(() => {
     setupGoogleAds();
 
     return () => {
