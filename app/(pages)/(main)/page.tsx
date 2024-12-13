@@ -4,6 +4,9 @@ import DiscussionForum from '@/app/_components/DiscussionForum';
 import { getUtmParams } from '@/app/_utils/utm.util';
 import React from 'react';
 import NewsWidget from '@/app/_components/NewsWidget';
+import RecentTopics from '@/app/_components/RecentTopics';
+import staticTopics from '@/app/_data/static-topics';
+import RecentTopicsWidget from '@/app/_components/RecentTopicsWidget';
 
 function Main() {
   return (
@@ -102,6 +105,7 @@ function Main() {
       <div className='my-2 flex w-full items-center justify-center'>
         <div id='div-gpt-ad-6641866-2'></div>
       </div>
+      <RecentTopicsWidget />
       <div className='my-2 flex w-full items-center justify-center'>
         <div id='div-gpt-ad-6641866-3'></div>
       </div>

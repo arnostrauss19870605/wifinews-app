@@ -5,6 +5,7 @@ import DiscussionForum from '@/app/_components/DiscussionForum';
 import { getUtmParams } from '@/app/_utils/utm.util';
 import NewsWidget from '@/app/_components/NewsWidget';
 import HomeTimer from '@/app/_components/HomeTimer';
+import RecentTopicsWidget from '@/app/_components/RecentTopicsWidget';
 
 const setupGoogleAds = () => {
   window.googletag = window.googletag || { cmd: [] };
@@ -373,7 +374,7 @@ function Home() {
         <div className='my-2 flex w-full items-center justify-center'>
           <div id='div-gpt-ad-6641866-2'></div>
         </div>
-
+        <RecentTopicsWidget />
         <div className='my-2 flex w-full items-center justify-center'>
           <div id='div-gpt-ad-6641866-3'></div>
         </div>

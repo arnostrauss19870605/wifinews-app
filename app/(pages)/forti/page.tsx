@@ -172,7 +172,6 @@ function Forti() {
         <div className='my-10'>
           <News />
         </div>
-
         <div className='my-4 flex w-full items-center justify-center'>
           <div id='div-gpt-ad-8664835-1'></div>
         </div>
