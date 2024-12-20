@@ -6,13 +6,12 @@ import { FiX, FiLogOut } from 'react-icons/fi';
 import { MdOutlineMenu } from 'react-icons/md';
 import wifinewslogo from '../../_assets/images/logo.png';
 import { useAuth } from '@/app/_context/authContext';
-import isLocalStorageAvailable from '@/app/_utils/local-storage.util';
+import { AiOutlineUser } from 'react-icons/ai';
 
 function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
   const { isAuthenticated, user, logout } = useAuth();
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
 
   useEffect(() => {
     if (isMenuOpen) {
@@ -21,15 +20,6 @@ function Navigation() {
       document.body.style.overflow = '';
     }
   }, [isMenuOpen]);
-
-  useEffect(() => {
-    if (isLocalStorageAvailable()) {
-      const alisonId = localStorage.getItem('alisonId');
-      if (alisonId) {
-        setAvatarUrl(`https://alison.com/images/users/default/${alisonId}.jpg`);
-      }
-    }
-  }, [user]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -107,18 +97,10 @@ function Navigation() {
         <div className='hidden lg:flex lg:items-center'>
           {isAuthenticated ? (
             <div className='flex items-center'>
-              {avatarUrl ? (
-                <Image
-                  src={avatarUrl}
-                  alt='User Avatar'
-                  width={40}
-                  height={40}
-                  className='rounded-full'
-                />
-              ) : (
-                <div className='h-10 w-10 rounded-full bg-gray-300'></div>
-              )}
-              <span className='ml-2 text-base text-gray-700'>
+              <div className='h-10 w-10 rounded-full bg-gray-300'>
+                <AiOutlineUser color='white' size={40} />
+              </div>
+              <span className='ml-2 text-base capitalize text-gray-700'>
                 Hi, {user?.firstname}
               </span>
               <button
@@ -163,18 +145,10 @@ function Navigation() {
             <div className='flex items-center justify-between p-4'>
               {isAuthenticated ? (
                 <div className='flex items-center'>
-                  {avatarUrl ? (
-                    <Image
-                      src={avatarUrl}
-                      alt='User Avatar'
-                      width={40}
-                      height={40}
-                      className='rounded-full'
-                    />
-                  ) : (
-                    <div className='h-10 w-10 rounded-full bg-gray-300'></div>
-                  )}
-                  <span className='ml-2 text-base text-gray-700'>
+                  <div className='h-10 w-10 rounded-full bg-gray-300'>
+                    <AiOutlineUser color='white' size={40} />
+                  </div>
+                  <span className='ml-2 text-base capitalize text-gray-700'>
                     Hi, {user?.firstname}
                   </span>
                 </div>

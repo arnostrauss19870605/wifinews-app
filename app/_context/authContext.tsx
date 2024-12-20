@@ -19,8 +19,6 @@ type User = {
 
 type TokenPayload = {
   userId: number;
-  alisonId: number;
-  alisonToken: string;
   firstname: string;
   lastname: string;
   iat: number;
@@ -69,8 +67,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       setRefreshToken(null);
       localStorage.removeItem('token');
       localStorage.removeItem('refreshToken');
-      localStorage.removeItem('alisonId');
-      localStorage.removeItem('alisonToken');
+      localStorage.removeItem('firstname');
+      localStorage.removeItem('lastname');
       setUser(null);
       setIsAuthenticated(false);
       router.push('/login');
@@ -157,10 +155,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         localStorage.setItem('token', accessToken);
         localStorage.setItem('refreshToken', refreshToken);
         localStorage.setItem(
-          'alisonId',
-          tokenPayload?.alisonId.toString() || ''
+          'firstname',
+          tokenPayload?.firstname.toString() || ''
         );
-        localStorage.setItem('alisonToken', tokenPayload?.alisonToken || '');
+        localStorage.setItem(
+          'lastname',
+          tokenPayload?.lastname.toString() || ''
+        );
         setIsAuthenticated(true);
         fetchUserInfo(accessToken);
       }
