@@ -9,7 +9,7 @@ import { sanityClient, urlFor } from '@/app/cms';
 const query = `*[_type == "news"]{
   _id,
   title,
-  "description": content[0].children[0].text,
+  description,
   date,
   category,
   image,
@@ -32,11 +32,11 @@ export default async function NewsPage() {
           });
         `}
       </Script>
-      <div className='mx-auto max-w-6xl px-4 py-8'>
+      <div className='mx-auto max-w-6xl px-4 py-4'>
         <div className='my-4 flex w-full items-center justify-center'>
           <div id='div-gpt-ad-6641866-1'></div>
         </div>
-        <section className='latest-posts py-8'>
+        <section className='latest-posts'>
           <div className='container mx-auto max-w-4xl px-4'>
             <h2 className='mb-6 flex text-3xl font-bold'>
               <BsFire color={'#FB4543'} className='mr-2' />
@@ -59,7 +59,7 @@ export default async function NewsPage() {
                   </div>
                   <div className='flex flex-col justify-between p-4 md:w-2/3'>
                     <div>
-                      <div className='mb-2 inline-block rounded bg-red-500 px-2 py-1 text-xs font-semibold text-white'>
+                      <div className='mb-2 inline-block rounded bg-red-500 px-2 py-1 text-xs font-semibold uppercase text-white'>
                         {article.category}
                       </div>
                       <h3 className='mb-2 text-xl font-semibold transition-colors hover:text-[#FB4543]'>
