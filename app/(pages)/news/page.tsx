@@ -19,6 +19,10 @@ const query = `*[_type == "news"]{
 export default async function NewsPage() {
   const newsArticles = await sanityClient.fetch(query);
 
+  const sortedArticles = newsArticles.sort(
+    (a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime()
+  );
+
   return (
     <>
       <Script id='gpt-home-setup' strategy='afterInteractive'>
@@ -46,7 +50,7 @@ export default async function NewsPage() {
               <span className='mr-2 text-[#FB4543]'>Latest</span> News
             </h2>
             <div className='grid gap-8 sm:grid-cols-1 lg:grid-cols-2'>
-              {newsArticles.map((article: any) => (
+              {sortedArticles.map((article: any) => (
                 <Link
                   key={article._id}
                   href={`/news/${article?.slug?.current}`}
