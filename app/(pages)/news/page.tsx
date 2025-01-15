@@ -66,7 +66,7 @@ export default async function NewsPage() {
                   {/* Content Section */}
                   <div className='flex flex-col justify-between p-4'>
                     <div>
-                      <div className='mb-2 inline-block rounded bg-red-500 px-3 py-1 text-xs font-bold text-white'>
+                      <div className='mb-2 inline-block rounded bg-red-500 px-3 py-1 text-xs font-bold uppercase text-white'>
                         {article.category}
                       </div>
                       <h3 className='mb-3 text-lg font-semibold text-gray-800 transition-colors group-hover:text-[#FB4543]'>
