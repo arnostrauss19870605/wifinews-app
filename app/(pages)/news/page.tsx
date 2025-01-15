@@ -43,7 +43,7 @@ export default async function NewsPage() {
           <div className='container mx-auto max-w-4xl px-4'>
             <h2 className='mb-8 flex items-center text-3xl font-bold'>
               <BsFire color={'#FB4543'} className='mr-2' />
-              <span className='text-[#FB4543]'>Latest</span> News
+              <span className='mr-2 text-[#FB4543]'>Latest</span> News
             </h2>
             <div className='grid gap-8 sm:grid-cols-1 lg:grid-cols-2'>
               {newsArticles.map((article: any) => (
