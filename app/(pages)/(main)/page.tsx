@@ -4,8 +4,6 @@ import DiscussionForum from '@/app/_components/DiscussionForum';
 import { getUtmParams } from '@/app/_utils/utm.util';
 import React from 'react';
 import NewsWidget from '@/app/_components/NewsWidget';
-import RecentTopics from '@/app/_components/RecentTopics';
-import staticTopics from '@/app/_data/static-topics';
 import RecentTopicsWidget from '@/app/_components/RecentTopicsWidget';
 
 function Main() {
