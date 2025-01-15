@@ -12,7 +12,8 @@ const query = `*[_type == "news"]{
   "description": content[0].children[0].text,
   date,
   category,
-  image
+  image,
+  slug
 }`;
 
 export default async function NewsPage() {
@@ -62,7 +63,7 @@ export default async function NewsPage() {
                         {article.category}
                       </div>
                       <h3 className='mb-2 text-xl font-semibold transition-colors hover:text-[#FB4543]'>
-                        <Link href={`/news/${article._id}`}>
+                        <Link href={`/news/${article?.slug?.current}`}>
                           {article.title}
                         </Link>
                       </h3>

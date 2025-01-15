@@ -1,11 +1,11 @@
 import React from 'react';
 import Image from 'next/image';
-import { PortableText } from '@portabletext/react';
+import { PortableText, PortableTextComponents } from '@portabletext/react';
 import { FaCalendarAlt } from 'react-icons/fa';
 import { notFound } from 'next/navigation';
 import { sanityClient, urlFor } from '@/app/cms';
 
-const query = `*[_type == "news" && _id == $id][0]{
+const query = `*[_type == "news" && slug.current == $slug][0]{
   title,
   content,
   date,
@@ -15,13 +15,35 @@ const query = `*[_type == "news" && _id == $id][0]{
 
 type ArticlePageProps = {
   params: {
-    id: string;
+    slug: string;
   };
 };
 
+const portableTextComponents: PortableTextComponents = {
+  types: {
+    code: ({ value }: any) => (
+      <pre className='overflow-x-auto rounded-md bg-gray-100 p-4'>
+        <code>{value.code}</code>
+      </pre>
+    ),
+  },
+  block: {
+    normal: ({ children }) => <p className='mb-4'>{children}</p>,
+    h1: ({ children }) => (
+      <h1 className='mb-4 text-2xl font-bold'>{children}</h1>
+    ),
+    h2: ({ children }) => (
+      <h2 className='mb-3 text-xl font-bold'>{children}</h2>
+    ),
+    h3: ({ children }) => (
+      <h3 className='mb-2 text-lg font-bold'>{children}</h3>
+    ),
+  },
+};
+
 export default async function ArticlePage({ params }: ArticlePageProps) {
-  const { id } = params;
-  const article = await sanityClient.fetch(query, { id });
+  const { slug } = params;
+  const article = await sanityClient.fetch(query, { slug });
 
   if (!article) {
     notFound();
@@ -52,7 +74,10 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           />
         </div>
         <article className='mt-8 text-gray-800'>
-          <PortableText value={article.content} />
+          <PortableText
+            value={article.content}
+            components={portableTextComponents}
+          />
         </article>
       </main>
     </div>
@@ -60,6 +85,8 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 }
 
 export async function generateStaticParams() {
-  const articles = await sanityClient.fetch(`*[_type == "news"]{_id}`);
-  return articles.map((article: { _id: string }) => ({ id: article._id }));
+  const articles = await sanityClient.fetch(`*[_type == "news"]{slug}`);
+  return articles.map((article: { slug: { current: string } }) => ({
+    slug: article.slug.current,
+  }));
 }
