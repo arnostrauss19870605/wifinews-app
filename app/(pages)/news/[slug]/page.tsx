@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { PortableText, PortableTextComponents } from '@portabletext/react';
 import { FaCalendarAlt } from 'react-icons/fa';
 import { notFound } from 'next/navigation';
-import { sanityClient, urlFor } from '@/app/cms';
+import { sanityClient, urlFor } from '@/app/_cms';
 import Script from 'next/script';
 import { getUtmParams } from '@/app/_utils/utm.util';
 

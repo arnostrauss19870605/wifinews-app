@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { FaCalendarAlt } from 'react-icons/fa';
 import { BsFire } from 'react-icons/bs';
-import { sanityClient, urlFor } from '@/app/cms';
+import { sanityClient, urlFor } from '@/app/_cms';
 import { getUtmParams } from '@/app/_utils/utm.util';
 
 const query = `*[_type == "news"]{
