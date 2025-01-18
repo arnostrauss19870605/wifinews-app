@@ -119,6 +119,11 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       <div>
         {/* Article Header */}
         <header className='py-6'>
+          {/* Top Ad */}
+          <div className='my-6 flex justify-center'>
+            <div id='div-gpt-ad-6641866-1'></div>
+          </div>
+
           <div className='container mx-auto max-w-4xl px-4'>
             <h1 className='text-3xl font-bold'>{article.title}</h1>
             <div className='mt-2 flex items-center text-sm text-gray-600'>
@@ -130,11 +135,6 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             </div>
           </div>
         </header>
-
-        {/* Top Ad */}
-        <div className='my-6 flex justify-center'>
-          <div id='div-gpt-ad-6641866-1'></div>
-        </div>
 
         {/* Article Content */}
         <main className='container mx-auto max-w-4xl px-4 py-8'>
