@@ -60,15 +60,14 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
   return (
     <>
-      <Script id='gpt-home-setup' strategy='afterInteractive'>
+      <Script id='gpt-article-setup' strategy='afterInteractive'>
         {`
           window.googletag = window.googletag || { cmd: [] };
 
           window.googletag.cmd.push(function () {
             const utmParams = ${JSON.stringify(getUtmParams())};
-            console.log("homepage utm params =>", utmParams);
+            console.log("Article Page UTM params =>", utmParams);
 
-            // Define size mappings
             const mapping1 = googletag.sizeMapping()
               .addSize([1400, 0], [[728, 90], 'fluid'])
               .addSize([1200, 0], [[728, 90], 'fluid'])
@@ -89,39 +88,20 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               .addSize([300, 0], ['fluid', [320, 50], [300, 50], [320, 100], [300, 100], [300, 250], [300, 600]])
               .build();
 
-            const mapping4 = googletag.sizeMapping()
-              .addSize([1400, 0], [[728, 90], 'fluid'])
-              .addSize([1200, 0], [[728, 90], 'fluid'])
-              .addSize([1000, 0], [[728, 90], 'fluid'])
-              .addSize([700, 0], ['fluid', [468, 60], [320, 50], [300, 50], [320, 100], [300, 100], [300, 250]])
-              .addSize([600, 0], ['fluid', [468, 60], [320, 50], [300, 50], [320, 100], [300, 100], [300, 250]])
-              .addSize([400, 0], ['fluid', [320, 50], [300, 50], [320, 100], [300, 100], [300, 250]])
-              .addSize([300, 0], ['fluid', [320, 50], [300, 50], [320, 100], [300, 100], [300, 250]])
-              .build();
-
-            // Define ad slots and display them
-            googletag.defineSlot('/22047902240/wifinews/homepage_top_leaderboard', ['fluid', [320, 100], [320, 50], [300, 250], [468, 60], [728, 90]], 'div-gpt-ad-6641866-1')
+            googletag.defineSlot('/22047902240/wifinews/article_top_leaderboard', ['fluid', [320, 100], [320, 50], [300, 250], [468, 60], [728, 90]], 'div-gpt-ad-6641866-1')
               .defineSizeMapping(mapping1)
               .addService(googletag.pubads());
 
-            googletag.defineSlot('/22047902240/wifinews/homepage_mpu_hpa', ['fluid', [300, 250], [300, 600], [320, 50], [320, 100], [468, 60], [728, 90]], 'div-gpt-ad-6641866-2')
+            googletag.defineSlot('/22047902240/wifinews/article_mpu_hpa', ['fluid', [300, 250], [300, 600], [320, 50], [320, 100], [468, 60], [728, 90]], 'div-gpt-ad-6641866-2')
               .defineSizeMapping(mapping3)
               .addService(googletag.pubads());
 
-            googletag.defineSlot('/22047902240/wifinews/homepage_mpu_hpa_2', ['fluid', [300, 250], [300, 600], [320, 50], [320, 100], [468, 60], [728, 90]], 'div-gpt-ad-6641866-3')
-              .defineSizeMapping(mapping3)
-              .addService(googletag.pubads());
-
-            googletag.defineSlot('/22047902240/wifinews/Homepage_bottom_1', ['fluid', [300, 250], [320, 100], [320, 50], [468, 60], [728, 90]], 'div-gpt-ad-6641866-4')
+            googletag.defineSlot('/22047902240/wifinews/article_bottom_1', ['fluid', [300, 250], [320, 100], [320, 50], [468, 60], [728, 90]], 'div-gpt-ad-6641866-3')
               .defineSizeMapping(mapping1)
               .addService(googletag.pubads());
 
-            googletag.defineSlot('/22047902240/wifinews/Homepage_bottom_2', ['fluid', [300, 250], [320, 50], [320, 100], [468, 60], [728, 90]], 'div-gpt-ad-6641866-5')
+            googletag.defineSlot('/22047902240/wifinews/article_bottom_2', ['fluid', [300, 250], [320, 50], [320, 100], [468, 60], [728, 90]], 'div-gpt-ad-6641866-4')
               .defineSizeMapping(mapping1)
-              .addService(googletag.pubads());
-
-            googletag.defineSlot('/22047902240/wifinews/homepage_sticky', ['fluid', [320, 50], [320, 100], [300, 250], [468, 60], [728, 90]], 'div-gpt-ad-6641866-6')
-              .defineSizeMapping(mapping4)
               .addService(googletag.pubads());
 
             googletag.pubads().enableSingleRequest();
@@ -133,12 +113,11 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             googletag.display('div-gpt-ad-6641866-2');
             googletag.display('div-gpt-ad-6641866-3');
             googletag.display('div-gpt-ad-6641866-4');
-            googletag.display('div-gpt-ad-6641866-5');
-            googletag.display('div-gpt-ad-6641866-6');
           });
         `}
       </Script>
       <div>
+        {/* Article Header */}
         <header className='py-6'>
           <div className='container mx-auto max-w-4xl px-4'>
             <h1 className='text-3xl font-bold'>{article.title}</h1>
@@ -151,13 +130,20 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             </div>
           </div>
         </header>
+
+        {/* Top Ad */}
+        <div className='my-6 flex justify-center'>
+          <div id='div-gpt-ad-6641866-1'></div>
+        </div>
+
+        {/* Article Content */}
         <main className='container mx-auto max-w-4xl px-4 py-8'>
           <div className='relative h-64 w-full md:h-96'>
             <Image
               src={urlFor(article.image).url()}
               alt={article.title}
-              layout='fill'
-              objectFit='cover'
+              fill={true}
+              style={{ objectFit: 'cover' }}
               className='rounded-lg'
             />
           </div>
@@ -168,10 +154,19 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             />
           </article>
         </main>
+
+        {/* Bottom Ads */}
+        <div className='my-6 flex justify-center'>
+          <div id='div-gpt-ad-6641866-3'></div>
+        </div>
+        <div className='my-6 flex justify-center'>
+          <div id='div-gpt-ad-6641866-4'></div>
+        </div>
       </div>
-      {/* Bottom Ad */}
+
+      {/* Sticky Ad */}
       <div className='fixed bottom-12 left-0 right-0 z-50 flex justify-center'>
-        <div id='div-gpt-ad-6641866-6' className='w-full max-w-lg'></div>
+        <div id='div-gpt-ad-6641866-2' className='w-full max-w-lg'></div>
       </div>
     </>
   );
