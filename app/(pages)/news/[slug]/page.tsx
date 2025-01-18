@@ -47,19 +47,6 @@ const portableTextComponents: PortableTextComponents = {
   },
 };
 
-// Helper function to increment views in Sanity
-async function incrementViews(documentId: string) {
-  try {
-    await sanityClient
-      .patch(documentId)
-      .setIfMissing({ views: 0 })
-      .inc({ views: 1 })
-      .commit();
-  } catch (error) {
-    console.error('Failed to update views:', error);
-  }
-}
-
 // Main Article Page component
 export default async function ArticlePage({ params }: ArticlePageProps) {
   const { slug } = params;
@@ -70,9 +57,6 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   if (!article) {
     notFound();
   }
-
-  // Increment views on the server-side
-  await incrementViews(article._id);
 
   return (
     <>
