@@ -7,12 +7,15 @@ import { sanityClient, urlFor } from '@/app/_cms';
 import Script from 'next/script';
 import { getUtmParams } from '@/app/_utils/utm.util';
 
+// GROQ query to fetch article by slug
 const query = `*[_type == "news" && slug.current == $slug][0]{
+  _id,
   title,
   content,
   date,
   category,
-  image
+  image,
+  views
 }`;
 
 type ArticlePageProps = {
@@ -21,6 +24,7 @@ type ArticlePageProps = {
   };
 };
 
+// Portable Text components for rich text rendering
 const portableTextComponents: PortableTextComponents = {
   types: {
     code: ({ value }: any) => (
@@ -43,13 +47,32 @@ const portableTextComponents: PortableTextComponents = {
   },
 };
 
+// Helper function to increment views in Sanity
+async function incrementViews(documentId: string) {
+  try {
+    await sanityClient
+      .patch(documentId)
+      .setIfMissing({ views: 0 })
+      .inc({ views: 1 })
+      .commit();
+  } catch (error) {
+    console.error('Failed to update views:', error);
+  }
+}
+
+// Main Article Page component
 export default async function ArticlePage({ params }: ArticlePageProps) {
   const { slug } = params;
+
+  // Fetch the article data
   const article = await sanityClient.fetch(query, { slug });
 
   if (!article) {
     notFound();
   }
+
+  // Increment views on the server-side
+  await incrementViews(article._id);
 
   return (
     <>
@@ -59,12 +82,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
           window.googletag.cmd.push(function () {
             const utmParams = ${JSON.stringify(getUtmParams())};
-            console.log("homepage utm params =>",utmParams);
-
-      // Set the targeting key for Medium as requested by the client
-      if (utmParams['Medium']) {
-        googletag.pubads().setTargeting('Medium', utmParams['Medium']);
-      }
+            console.log("homepage utm params =>", utmParams);
 
             // Define size mappings
             const mapping1 = googletag.sizeMapping()
@@ -122,13 +140,11 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               .defineSizeMapping(mapping4)
               .addService(googletag.pubads());
 
-            // Enable services and set targeting
             googletag.pubads().enableSingleRequest();
             googletag.pubads().collapseEmptyDivs();
             googletag.pubads().setCentering(true);
             googletag.enableServices();
 
-            // Display the ad slots
             googletag.display('div-gpt-ad-6641866-1');
             googletag.display('div-gpt-ad-6641866-2');
             googletag.display('div-gpt-ad-6641866-3');
@@ -139,9 +155,6 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         `}
       </Script>
       <div>
-        <div className='my-6 flex w-full items-center justify-center'>
-          <div id='div-gpt-ad-6641866-1'></div>
-        </div>
         <header className='py-6'>
           <div className='container mx-auto max-w-4xl px-4'>
             <h1 className='text-3xl font-bold'>{article.title}</h1>

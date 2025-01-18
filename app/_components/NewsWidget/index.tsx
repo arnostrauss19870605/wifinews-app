@@ -35,7 +35,7 @@ export default function NewsWidget() {
 
         <div className='mt-4'>
           <h2 className='mb-2 text-center text-lg font-semibold'>
-            Popular Readings
+            Most Recent
           </h2>
           <div className='space-y-4'>
             {popularArticles.map((article) => (
