@@ -1,54 +1,64 @@
-import { revalidateTag } from 'next/cache';
+import { revalidatePath } from 'next/cache';
 import { type NextRequest } from 'next/server';
 import { parseBody } from 'next-sanity/webhook';
 
+interface WebhookPayload {
+  _type: string;
+  slug?: { current: string };
+  // Add other properties as necessary
+}
+
 export async function POST(req: NextRequest) {
   try {
-    // Log that the webhook has been received
     console.log('Webhook received at:', new Date().toISOString());
 
-    // Parse the request body and validate the signature
-    const { isValidSignature, body } = await parseBody<{ _type: string }>(
+    const { isValidSignature, body } = await parseBody<WebhookPayload>(
       req,
       process.env.SANITY_REVALIDATE_SECRET
     );
 
-    // Log the raw body and signature validity
-    console.log('Webhook body:', body);
-    console.log('Is signature valid?', isValidSignature);
-
     if (!isValidSignature) {
-      const message = 'Invalid signature';
-      console.warn('Invalid webhook signature:', { body });
-      return new Response(JSON.stringify({ message, isValidSignature, body }), {
+      return new Response(JSON.stringify({ message: 'Invalid signature' }), {
         status: 401,
         headers: { 'Content-Type': 'application/json' },
       });
     }
 
     if (!body?._type) {
-      const message = 'Bad Request: Missing _type in body';
-      console.warn('Webhook missing _type:', { body });
-      return new Response(JSON.stringify({ message, body }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' },
-      });
+      return new Response(
+        JSON.stringify({ message: 'Bad Request: Missing _type in body' }),
+        {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
     }
 
-    // Log the revalidation request
-    console.log(`Revalidating tag: ${body._type}`);
-    await revalidateTag(body._type);
+    // Revalidate individual article page if slug is provided
+    if (body.slug?.current) {
+      const articlePath = `/news/${body.slug.current}`;
+      console.log(`Revalidating individual article path: ${articlePath}`);
+      await revalidatePath(articlePath);
+    }
 
-    console.log(`Successfully revalidated tag: ${body._type}`);
+    // Revalidate the /news page
+    console.log('Revalidating /news page');
+    await revalidatePath('/news');
+
     return new Response(
-      JSON.stringify({ success: true, revalidatedType: body._type }),
+      JSON.stringify({
+        success: true,
+        revalidated: [
+          '/news',
+          body.slug ? `/news/${body.slug.current}` : null,
+        ].filter(Boolean),
+      }),
       {
         status: 200,
         headers: { 'Content-Type': 'application/json' },
       }
     );
   } catch (err: any) {
-    // Log the error for debugging
     console.error('Webhook processing error:', err);
     return new Response(
       JSON.stringify({ error: err.message || 'Internal Server Error' }),
