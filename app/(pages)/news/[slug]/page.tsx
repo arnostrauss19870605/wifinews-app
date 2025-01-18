@@ -148,7 +148,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             <div className='mt-2 flex items-center text-sm text-gray-600'>
               <FaCalendarAlt className='mr-2' />
               <span>{new Date(article.date).toLocaleDateString()}</span>
-              <span className='ml-4 rounded bg-red-500 px-2 py-1 text-xs font-semibold text-white'>
+              <span className='ml-4 rounded bg-red-500 px-2 py-1 text-xs font-semibold uppercase text-white'>
                 {article.category}
               </span>
             </div>
