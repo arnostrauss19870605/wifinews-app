@@ -3,10 +3,10 @@ import React, { useState, useEffect } from 'react';
 import Script from 'next/script';
 import ProgressIndicator from '@/app/_components/ProgressIndicator';
 import DiscussionForum from '@/app/_components/DiscussionForum';
-import News from '@/app/(pages)/news/page';
 import { getUtmParams, appendUtmParams } from '@/app/_utils/utm.util';
 import { FaWifi } from 'react-icons/fa';
 import utmToRedirectMap from '@/app/_data/utm-to-redirect-map';
+import NewsWidget from '@/app/_components/NewsWidget';
 
 function getRedirectUrl(utmMedium: string | undefined): string {
   const defaultUrl = 'https://bobbies.hotspot.yourspot.co.za/lv/login';
@@ -250,7 +250,7 @@ function Forti_2() {
         </div>
         <DiscussionForum />
         <div className='my-10'>
-          <News />
+          <NewsWidget />
         </div>
       </div>
 
