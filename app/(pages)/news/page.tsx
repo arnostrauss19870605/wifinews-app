@@ -22,14 +22,34 @@ export default async function NewsPage({
 
   // GROQ query with slicing
   const query = `*[_type == "news"] | order(date desc) [${start}...${end}] {
-    _id,
-    title,
-    description,
-    date,
-    category,
-    image,
-    slug
-  }`;
+  _id,
+  title,
+  description,
+  date,
+  "category": {
+    "title": select(
+      category == "breaking" => "Breaking News",
+      category == "world" => "World",
+      category == "sports" => "Sports",
+      category == "entertainment" => "Entertainment",
+      category == "technology" => "Technology",
+      category == "mzansi-trends" => "Mzansi Trends",
+      category == "gossip-celebs" => "Gossip & Celebs",
+      category == "eish-moments" => "Eish Moments",
+      category == "money-matters" => "Money Matters",
+      category == "lifestyle-vibes" => "Lifestyle & Vibes",
+      category == "community-news" => "Community News",
+      category == "street-politics" => "Street Politics",
+      category == "sport-kasi-action" => "Sport & Kasi Action",
+      category == "tech-gadgets" => "Tech & Gadgets",
+      category == "mzansi-stories" => "Mzansi Stories",
+      category == "world-news" => "World News"
+    ),
+    "value": category
+  },
+  image,
+  slug
+}`;
 
   // Fetch total count for pagination
   const totalQuery = `count(*[_type == "news"])`;
@@ -135,7 +155,7 @@ export default async function NewsPage({
                   <div className='flex flex-col justify-between p-4'>
                     <div>
                       <div className='mb-2 inline-block rounded bg-red-500 px-3 py-1 text-xs font-bold uppercase text-white'>
-                        {article.category}
+                        {article.category.title}
                       </div>
                       <h3 className='mb-3 text-lg font-semibold text-gray-800 transition-colors group-hover:text-[#FB4543]'>
                         {article.title}

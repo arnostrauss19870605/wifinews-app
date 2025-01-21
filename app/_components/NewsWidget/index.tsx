@@ -1,4 +1,4 @@
-import { sanityClient, urlFor } from '@/app/_cms'; // Import Sanity client and image helper
+import { sanityClient } from '@/app/_cms';
 import { FiArrowRight, FiBookOpen, FiTrendingUp } from 'react-icons/fi';
 import React from 'react';
 
@@ -6,7 +6,9 @@ type Article = {
   _id: string;
   title: string;
   slug: { current: string };
-  category: string;
+  category: {
+    title: string;
+  };
   description: string;
   date: string;
   image?: {
@@ -18,7 +20,27 @@ const featuredQuery = `*[_type == "news" && isFeatured == true] | order(date des
   _id,
   title,
   slug,
-  category,
+  "category": {
+    "title": select(
+      category == "breaking" => "Breaking News",
+      category == "world" => "World",
+      category == "sports" => "Sports",
+      category == "entertainment" => "Entertainment",
+      category == "technology" => "Technology",
+      category == "mzansi-trends" => "Mzansi Trends",
+      category == "gossip-celebs" => "Gossip & Celebs",
+      category == "eish-moments" => "Eish Moments",
+      category == "money-matters" => "Money Matters",
+      category == "lifestyle-vibes" => "Lifestyle & Vibes",
+      category == "community-news" => "Community News",
+      category == "street-politics" => "Street Politics",
+      category == "sport-kasi-action" => "Sport & Kasi Action",
+      category == "tech-gadgets" => "Tech & Gadgets",
+      category == "mzansi-stories" => "Mzansi Stories",
+      category == "world-news" => "World News"
+    ),
+    "value": category
+  },
   description,
   date,
   image
@@ -28,7 +50,27 @@ const recentQuery = `*[_type == "news" && isFeatured != true] | order(date desc)
   _id,
   title,
   slug,
-  category,
+  "category": {
+    "title": select(
+      category == "breaking" => "Breaking News",
+      category == "world" => "World",
+      category == "sports" => "Sports",
+      category == "entertainment" => "Entertainment",
+      category == "technology" => "Technology",
+      category == "mzansi-trends" => "Mzansi Trends",
+      category == "gossip-celebs" => "Gossip & Celebs",
+      category == "eish-moments" => "Eish Moments",
+      category == "money-matters" => "Money Matters",
+      category == "lifestyle-vibes" => "Lifestyle & Vibes",
+      category == "community-news" => "Community News",
+      category == "street-politics" => "Street Politics",
+      category == "sport-kasi-action" => "Sport & Kasi Action",
+      category == "tech-gadgets" => "Tech & Gadgets",
+      category == "mzansi-stories" => "Mzansi Stories",
+      category == "world-news" => "World News"
+    ),
+    "value": category
+  },
   description,
   date,
   image
@@ -54,7 +96,7 @@ export default async function NewsWidget() {
             <div>
               <div className='flex items-center text-sm text-gray-500'>
                 <FiBookOpen className='mr-1 uppercase' />
-                <span>{article.category}</span>
+                <span>{article.category.title}</span>
               </div>
               <h2 className='mt-2 text-lg font-semibold'>{article.title}</h2>
               <p className='mt-2 text-sm text-gray-600'>
@@ -83,7 +125,7 @@ export default async function NewsWidget() {
                 <h4 className='text-sm font-medium'>{article.title}</h4>
                 <hr className='my-2 border-gray-300' />
                 <p className='text-xs uppercase text-gray-500'>
-                  {article.category}
+                  {article.category.title}
                 </p>
               </div>
               <a href={`/news/${article.slug.current}`}>

@@ -13,7 +13,27 @@ const query = `*[_type == "news" && slug.current == $slug][0]{
   title,
   content,
   date,
-  category,
+  "category": {
+    "title": select(
+      category == "breaking" => "Breaking News",
+      category == "world" => "World",
+      category == "sports" => "Sports",
+      category == "entertainment" => "Entertainment",
+      category == "technology" => "Technology",
+      category == "mzansi-trends" => "Mzansi Trends",
+      category == "gossip-celebs" => "Gossip & Celebs",
+      category == "eish-moments" => "Eish Moments",
+      category == "money-matters" => "Money Matters",
+      category == "lifestyle-vibes" => "Lifestyle & Vibes",
+      category == "community-news" => "Community News",
+      category == "street-politics" => "Street Politics",
+      category == "sport-kasi-action" => "Sport & Kasi Action",
+      category == "tech-gadgets" => "Tech & Gadgets",
+      category == "mzansi-stories" => "Mzansi Stories",
+      category == "world-news" => "World News"
+    ),
+    "value": category
+  },
   image,
   views
 }`;
@@ -130,7 +150,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               <FaCalendarAlt className='mr-2' />
               <span>{new Date(article.date).toLocaleDateString()}</span>
               <span className='ml-4 rounded bg-red-500 px-2 py-1 text-xs font-semibold uppercase text-white'>
-                {article.category}
+                {article.category.title}
               </span>
             </div>
           </div>
