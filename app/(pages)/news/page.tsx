@@ -7,21 +7,41 @@ import { BsFire } from 'react-icons/bs';
 import { sanityClient, urlFor } from '@/app/_cms';
 import { getUtmParams } from '@/app/_utils/utm.util';
 
-const query = `*[_type == "news"] | order(date desc) {
-  _id,
-  title,
-  description,
-  date,
-  category,
-  image,
-  slug
-}`;
+const ITEMS_PER_PAGE = 6;
 
-export default async function NewsPage() {
+export default async function NewsPage({
+  searchParams,
+}: {
+  searchParams: { page?: string };
+}) {
+  const currentPage = parseInt(searchParams.page || '1', 10);
+
+  // Compute the range for pagination
+  const start = (currentPage - 1) * ITEMS_PER_PAGE;
+  const end = start + ITEMS_PER_PAGE;
+
+  // GROQ query with slicing
+  const query = `*[_type == "news"] | order(date desc) [${start}...${end}] {
+    _id,
+    title,
+    description,
+    date,
+    category,
+    image,
+    slug
+  }`;
+
+  // Fetch total count for pagination
+  const totalQuery = `count(*[_type == "news"])`;
+  const totalCount = await sanityClient.fetch(totalQuery);
+
+  // Fetch paginated news articles
   const newsArticles = await sanityClient.fetch(query);
 
+  const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
+
   return (
-    <>
+    <div style={{ minHeight: 'calc(100vh - 220px)' }}>
       {/* Ad Setup Script */}
       <Script id='gpt-news-setup' strategy='afterInteractive'>
         {`
@@ -132,6 +152,37 @@ export default async function NewsPage() {
                 </Link>
               ))}
             </div>
+
+            {/* Pagination Controls */}
+            <div className='mt-16 flex justify-center space-x-4'>
+              {currentPage > 1 && (
+                <Link href={`?page=${currentPage - 1}`}>
+                  <button className='rounded bg-gray-200 px-4 py-2 hover:bg-gray-300'>
+                    Previous
+                  </button>
+                </Link>
+              )}
+              {Array.from({ length: totalPages }, (_, i) => (
+                <Link key={i} href={`?page=${i + 1}`}>
+                  <button
+                    className={`rounded px-4 py-2 ${
+                      currentPage === i + 1
+                        ? 'bg-black text-white'
+                        : 'bg-gray-200 hover:bg-gray-300'
+                    }`}
+                  >
+                    {i + 1}
+                  </button>
+                </Link>
+              ))}
+              {currentPage < totalPages && (
+                <Link href={`?page=${currentPage + 1}`}>
+                  <button className='rounded bg-gray-200 px-4 py-2 hover:bg-gray-300'>
+                    Next
+                  </button>
+                </Link>
+              )}
+            </div>
           </div>
         </section>
       </div>
@@ -148,6 +199,6 @@ export default async function NewsPage() {
       <div className='fixed bottom-12 left-0 right-0 z-50 flex justify-center'>
         <div id='div-gpt-ad-6641866-2' className='w-full max-w-lg'></div>
       </div>
-    </>
+    </div>
   );
 }

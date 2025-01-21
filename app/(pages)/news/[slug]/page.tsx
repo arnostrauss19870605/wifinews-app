@@ -59,7 +59,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   }
 
   return (
-    <>
+    <div style={{ minHeight: 'calc(100vh - 220px)' }}>
       <Script id='gpt-article-setup' strategy='afterInteractive'>
         {`
           window.googletag = window.googletag || { cmd: [] };
@@ -168,7 +168,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       <div className='fixed bottom-12 left-0 right-0 z-50 flex justify-center'>
         <div id='div-gpt-ad-6641866-2' className='w-full max-w-lg'></div>
       </div>
-    </>
+    </div>
   );
 }
 
