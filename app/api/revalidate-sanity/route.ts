@@ -44,6 +44,8 @@ export async function POST(req: NextRequest) {
     // Revalidate the /news page
     console.log('Revalidating /news page');
     await revalidatePath('/news');
+    console.log('Revalidating home page');
+    await revalidatePath('/');
 
     return new Response(
       JSON.stringify({
