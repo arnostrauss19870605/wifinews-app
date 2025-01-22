@@ -44,6 +44,8 @@ export async function POST(req: NextRequest) {
     // Revalidate the /news page
     console.log('Revalidating /news page');
     await revalidatePath('/news');
+
+    // Revalidate the home page
     console.log('Revalidating home page');
     await revalidatePath('/');
 
@@ -53,6 +55,7 @@ export async function POST(req: NextRequest) {
         revalidated: [
           '/news',
           body.slug ? `/news/${body.slug.current}` : null,
+          '/',
         ].filter(Boolean),
       }),
       {
