@@ -6,8 +6,40 @@ import { FaCalendarAlt } from 'react-icons/fa';
 import { BsFire } from 'react-icons/bs';
 import { sanityClient, urlFor } from '@/app/_cms';
 import { getUtmParams } from '@/app/_utils/utm.util';
+import { Metadata } from 'next';
 
 const ITEMS_PER_PAGE = 6;
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: 'Latest News | Wifi News',
+    description:
+      'Stay updated with the latest news, stories, and events across various categories.',
+    openGraph: {
+      title: 'Latest News | Wifi News',
+      description:
+        'Explore breaking news, technology updates, sports highlights, and more.',
+      url: 'https://wifinews.co.za/news/news',
+      siteName: 'Wifi News',
+      images: [
+        {
+          url: 'https://wifinews.co.za/news/og-image.jpg',
+          width: 1200,
+          height: 630,
+          alt: 'News',
+        },
+      ],
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: 'News | My News Site',
+      description:
+        'Explore breaking news, technology updates, sports highlights, and more.',
+      images: ['https://wifinews.co.za/news/twitter-image.jpg'],
+    },
+  };
+}
 
 export default async function NewsPage({
   searchParams,

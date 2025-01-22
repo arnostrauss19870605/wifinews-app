@@ -7,6 +7,38 @@ import { sanityClient, urlFor } from '@/app/_cms';
 import Script from 'next/script';
 import { getUtmParams } from '@/app/_utils/utm.util';
 
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string };
+}) {
+  const article = await sanityClient.fetch(
+    `*[_type == "news" && slug.current == $slug][0]`,
+    { slug: params.slug }
+  );
+
+  if (!article) {
+    return { title: 'Not Found', description: 'Article not found.' };
+  }
+
+  return {
+    title: `${article.title} | Wifi News`,
+    description: article.description || 'Read the latest news and updates.',
+    openGraph: {
+      title: article.title,
+      description: article.description || 'Read the latest news and updates.',
+      url: `https://wifinews.co.za/news/${params.slug}`,
+      images: [{ url: urlFor(article.image).url(), alt: article.title }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: article.title,
+      description: article.description || 'Read the latest news and updates.',
+      images: [urlFor(article.image).url()],
+    },
+  };
+}
+
 // GROQ query to fetch article by slug
 const query = `*[_type == "news" && slug.current == $slug][0]{
   _id,
