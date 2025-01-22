@@ -1,4 +1,3 @@
-'use client';
 import Script from 'next/script';
 import DiscussionForum from '@/app/_components/DiscussionForum';
 import { getUtmParams } from '@/app/_utils/utm.util';
