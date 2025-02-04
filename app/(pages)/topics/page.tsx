@@ -98,96 +98,94 @@ const TopicsMainScreen = () => {
 
   return (
     <>
-      {/* GPT Configuration and Ad Display */}
-      <Script id='gpt-home-setup' strategy='afterInteractive'>
+      {/* --- Load GPT Library --- */}
+      <Script
+        src='https://securepubads.g.doubleclick.net/tag/js/gpt.js'
+        strategy='afterInteractive'
+        async
+      />
+
+      {/* --- GPT Topics Configuration --- */}
+      <Script id='gpt-topics-setup' strategy='afterInteractive'>
         {`
           window.googletag = window.googletag || { cmd: [] };
-
-          window.googletag.cmd.push(function () {
+          googletag.cmd.push(function () {
             const utmParams = ${JSON.stringify(getUtmParams())};
-            console.log("homepage utm params =>",utmParams);
-
-      // Set the targeting key for Medium as requested by the client
-      if (utmParams['Medium']) {
-        googletag.pubads().setTargeting('Medium', utmParams['Medium']);
-      }
-
-            // Define size mappings
-            const mapping1 = googletag.sizeMapping()
-              .addSize([1400, 0], [[728, 90], 'fluid'])
-              .addSize([1200, 0], [[728, 90], 'fluid'])
-              .addSize([1000, 0], [[728, 90], 'fluid'])
-              .addSize([700, 0], [[468, 60], [320, 50], [300, 50], 'fluid', [300, 250], [320, 100], [300, 100]])
-              .addSize([600, 0], [[468, 60], [320, 50], [300, 50], 'fluid', [300, 100], [320, 100], [300, 250]])
-              .addSize([400, 0], [[320, 50], [300, 50], 'fluid', [320, 100], [300, 250], [300, 100]])
-              .addSize([300, 0], [[320, 50], [300, 250], [320, 100], [300, 50], [300, 100], 'fluid'])
+            const utm_medium = utmParams['Medium'] || "";
+            
+            var mapping1 = googletag.sizeMapping()
+              .addSize([0, 0], [[0, 0]])
+              .addSize([300, 0], [[300,50],[300,100],[320,50],[320,100],[300,250],'fluid',[300,600]])
+              .addSize([400, 0], ['fluid',[300,50],[300,100],[320,50],[320,100],[300,250],[336,280],[300,600]])
+              .addSize([600, 0], ['fluid',[300,50],[300,100],[320,50],[320,100],[300,250],[336,280],[468,60],[300,600]])
+              .addSize([700, 0], ['fluid',[300,50],[300,100],[320,50],[320,100],[300,250],[336,280],[468,60],[300,600]])
+              .addSize([1000, 0], ['fluid',[300,50],[300,100],[320,50],[320,100],[300,250],[336,280],[300,600],[468,60],[728,90]])
+              .addSize([1200, 0], ['fluid',[300,50],[300,100],[320,50],[320,100],[300,250],[300,600],[336,280],[468,60],[728,90]])
+              .addSize([1400, 0], ['fluid',[300,50],[300,100],[320,50],[320,100],[300,250],[336,280],[300,600],[468,60],[728,90]])
+              .addSize([1600, 0], ['fluid',[300,50],[300,100],[320,50],[320,100],[300,250],[300,600],[336,280],[468,60],[728,90]])
+              .addSize([2000, 0], ['fluid',[300,50],[300,250],[300,600],[300,100],[320,50],[320,100],[336,280],[468,60],[728,90]])
               .build();
-
-            const mapping3 = googletag.sizeMapping()
-              .addSize([1400, 0], ['fluid', [728, 90], [300, 250], [300, 600], [468, 60]])
-              .addSize([1200, 0], ['fluid', [728, 90], [468, 60], [300, 250], [300, 600]])
-              .addSize([1000, 0], ['fluid', [728, 90], [468, 60], [300, 250], [300, 600]])
-              .addSize([700, 0], ['fluid', [468, 60], [320, 50], [300, 50], [320, 100], [300, 100], [300, 250], [300, 600]])
-              .addSize([600, 0], ['fluid', [468, 60], [320, 50], [300, 50], [320, 100], [300, 100], [300, 250], [300, 600]])
-              .addSize([400, 0], ['fluid', [320, 50], [300, 50], [320, 100], [300, 100], [300, 250], [300, 600]])
-              .addSize([300, 0], ['fluid', [320, 50], [300, 50], [320, 100], [300, 100], [300, 250], [300, 600]])
+              
+            var mapping3 = googletag.sizeMapping()
+              .addSize([0, 0], [[0, 0]])
+              .addSize([300, 0], ['fluid',[300,50],[300,100],[320,50],[320,100],[300,250]])
+              .addSize([400, 0], ['fluid',[300,50],[300,100],[320,50],[320,100],[300,250],[336,280]])
+              .addSize([600, 0], ['fluid',[300,50],[300,100],[320,50],[320,100],[300,250],[336,280],[468,60]])
+              .addSize([700, 0], ['fluid',[300,50],[300,100],[320,50],[320,100],[300,250],[336,280],[468,60]])
+              .addSize([1000, 0], ['fluid',[300,50],[300,100],[320,50],[320,100],[300,250],[336,280],[468,60],[728,90]])
+              .addSize([1200, 0], ['fluid',[300,250],[300,50],[300,100],[320,50],[320,100],[336,280],[468,60],[728,90]])
+              .addSize([1400, 0], ['fluid',[300,50],[300,100],[320,50],[320,100],[300,250],[336,280],[468,60],[728,90]])
+              .addSize([1600, 0], ['fluid',[300,50],[300,100],[320,50],[320,100],[300,250],[336,280],[468,60],[728,90]])
+              .addSize([2000, 0], ['fluid',[300,50],[300,100],[320,50],[320,100],[300,250],[336,280],[468,60],[728,90]])
               .build();
-
-            const mapping4 = googletag.sizeMapping()
-              .addSize([1400, 0], [[728, 90], 'fluid'])
-              .addSize([1200, 0], [[728, 90], 'fluid'])
-              .addSize([1000, 0], [[728, 90], 'fluid'])
-              .addSize([700, 0], ['fluid', [468, 60], [320, 50], [300, 50], [320, 100], [300, 100], [300, 250]])
-              .addSize([600, 0], ['fluid', [468, 60], [320, 50], [300, 50], [320, 100], [300, 100], [300, 250]])
-              .addSize([400, 0], ['fluid', [320, 50], [300, 50], [320, 100], [300, 100], [300, 250]])
-              .addSize([300, 0], ['fluid', [320, 50], [300, 50], [320, 100], [300, 100], [300, 250]])
-              .build();
-
-            // Define ad slots and display them
-            googletag.defineSlot('/22047902240/wifinews/homepage_top_leaderboard', ['fluid', [320, 100], [320, 50], [300, 250], [468, 60], [728, 90]], 'div-gpt-ad-6641866-1')
+            
+            // Define the Topics ad slots:
+            // 1. Topics Middle300x250 slot:
+            googletag.defineSlot(
+              '/22047902240/wifinews/topics_middle300x250',
+              ['fluid',[300,50],[300,100],[320,50],[320,100],[300,250],[300,600],[336,280],[468,60],[728,90]],
+              'div-gpt-ad-2159374-3'
+            )
               .defineSizeMapping(mapping1)
               .addService(googletag.pubads());
-
-            googletag.defineSlot('/22047902240/wifinews/homepage_mpu_hpa', ['fluid', [300, 250], [300, 600], [320, 50], [320, 100], [468, 60], [728, 90]], 'div-gpt-ad-6641866-2')
+            
+            // 2. Topics Top300x250 slot:
+            googletag.defineSlot(
+              '/22047902240/wifinews/topics_top300x250',
+              ['fluid',[300,50],[300,100],[320,50],[320,100],[336,280],[468,60],[728,90],[300,250],[300,600]],
+              'div-gpt-ad-2159374-2'
+            )
+              .defineSizeMapping(mapping1)
+              .addService(googletag.pubads());
+            
+            // 3. Topics Top320x50 slot:
+            googletag.defineSlot(
+              '/22047902240/wifinews/topics_top320x50',
+              ['fluid',[300,50],[300,100],[320,50],[320,100],[300,250],[336,280],[468,60],[728,90]],
+              'div-gpt-ad-2159374-1'
+            )
               .defineSizeMapping(mapping3)
               .addService(googletag.pubads());
-
-            googletag.defineSlot('/22047902240/wifinews/homepage_mpu_hpa_2', ['fluid', [300, 250], [300, 600], [320, 50], [320, 100], [468, 60], [728, 90]], 'div-gpt-ad-6641866-3')
-              .defineSizeMapping(mapping3)
-              .addService(googletag.pubads());
-
-            googletag.defineSlot('/22047902240/wifinews/Homepage_bottom_1', ['fluid', [300, 250], [320, 100], [320, 50], [468, 60], [728, 90]], 'div-gpt-ad-6641866-4')
-              .defineSizeMapping(mapping1)
-              .addService(googletag.pubads());
-
-            googletag.defineSlot('/22047902240/wifinews/Homepage_bottom_2', ['fluid', [300, 250], [320, 50], [320, 100], [468, 60], [728, 90]], 'div-gpt-ad-6641866-5')
-              .defineSizeMapping(mapping1)
-              .addService(googletag.pubads());
-
-            googletag.defineSlot('/22047902240/wifinews/homepage_sticky', ['fluid', [320, 50], [320, 100], [300, 250], [468, 60], [728, 90]], 'div-gpt-ad-6641866-6')
-              .defineSizeMapping(mapping4)
-              .addService(googletag.pubads());
-
-            // Enable services and set targeting
+            
             googletag.pubads().enableSingleRequest();
+            googletag.pubads().setTargeting('Medium', [utm_medium]);
             googletag.pubads().collapseEmptyDivs();
             googletag.pubads().setCentering(true);
             googletag.enableServices();
-
-            // Display the ad slots
-            googletag.display('div-gpt-ad-6641866-1');
-            googletag.display('div-gpt-ad-6641866-2');
-            googletag.display('div-gpt-ad-6641866-3');
-            googletag.display('div-gpt-ad-6641866-4');
-            googletag.display('div-gpt-ad-6641866-5');
-            googletag.display('div-gpt-ad-6641866-6');
           });
         `}
       </Script>
-      <div className='min-h-screen px-4 py-8'>
-        <div className='my-4 flex w-full items-center justify-center'>
-          <div id='div-gpt-ad-6641866-1'></div>
+
+      {/* --- Top Ad Slot (Topics Top320x50) placed above the header --- */}
+      <div className='my-4 flex w-full items-center justify-center'>
+        <div id='div-gpt-ad-2159374-1'>
+          <Script id='display-slot-2159374-1-top' strategy='afterInteractive'>
+            {`googletag.cmd.push(function() { googletag.display('div-gpt-ad-2159374-1'); });`}
+          </Script>
         </div>
+      </div>
+
+      <div className='min-h-screen px-4 py-8'>
         <h1 className='mb-12 mt-2 text-center text-4xl font-bold text-gray-800'>
           Discussion Topics
         </h1>
@@ -252,6 +250,16 @@ const TopicsMainScreen = () => {
             )}
           </div>
         </div>
+
+        {/* --- Insert Mid Ad Slot (Topics Middle300x250) above the topics table --- */}
+        <div className='mb-4 flex w-full items-center justify-center'>
+          <div id='div-gpt-ad-2159374-3'>
+            <Script id='display-slot-2159374-3' strategy='afterInteractive'>
+              {`googletag.cmd.push(function() { googletag.display('div-gpt-ad-2159374-3'); });`}
+            </Script>
+          </div>
+        </div>
+
         <div className='overflow-hidden rounded-lg shadow-md'>
           <div className='overflow-x-auto'>
             <table className='min-w-full table-fixed border-collapse bg-white'>
@@ -298,7 +306,11 @@ const TopicsMainScreen = () => {
                         }
                       >
                         <td
-                          className={`border-b border-gray-300 px-4 py-4 text-sm text-gray-800 ${topic.title.length > 40 ? 'max-w-[240px] overflow-hidden text-ellipsis whitespace-nowrap' : ''}`}
+                          className={`border-b border-gray-300 px-4 py-4 text-sm text-gray-800 ${
+                            topic.title.length > 40
+                              ? 'max-w-[240px] overflow-hidden text-ellipsis whitespace-nowrap'
+                              : ''
+                          }`}
                         >
                           {topic.title}
                         </td>
@@ -339,9 +351,14 @@ const TopicsMainScreen = () => {
           </button>
         </div>
       </div>
-      {/* Sticky Ad */}
+
+      {/* --- Sticky Ad Slot (Topics Top300x250) placed at the bottom --- */}
       <div className='fixed bottom-12 left-0 right-0 z-[9999] flex justify-center'>
-        <div id='div-gpt-ad-6641866-6' className='w-full max-w-[768px]'></div>
+        <div id='div-gpt-ad-2159374-2' className='w-full max-w-[768px]'>
+          <Script id='display-slot-2159374-2' strategy='afterInteractive'>
+            {`googletag.cmd.push(function() { googletag.display('div-gpt-ad-2159374-2'); });`}
+          </Script>
+        </div>
       </div>
     </>
   );

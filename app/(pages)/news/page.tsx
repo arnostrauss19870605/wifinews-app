@@ -47,118 +47,145 @@ export default async function NewsPage({
   searchParams: { page?: string };
 }) {
   const currentPage = parseInt(searchParams.page || '1', 10);
-
-  // Compute the range for pagination
   const start = (currentPage - 1) * ITEMS_PER_PAGE;
   const end = start + ITEMS_PER_PAGE;
 
-  // GROQ query with slicing
+  // Query to fetch paginated news articles
   const query = `*[_type == "news"] | order(date desc) [${start}...${end}] {
-  _id,
-  title,
-  description,
-  date,
-  "category": {
-    "title": select(
-      category == "breaking" => "Breaking News",
-      category == "world" => "World",
-      category == "sports" => "Sports",
-      category == "entertainment" => "Entertainment",
-      category == "technology" => "Technology",
-      category == "mzansi-trends" => "Mzansi Trends",
-      category == "gossip-celebs" => "Gossip & Celebs",
-      category == "eish-moments" => "Eish Moments",
-      category == "money-matters" => "Money Matters",
-      category == "lifestyle-vibes" => "Lifestyle & Vibes",
-      category == "community-news" => "Community News",
-      category == "street-politics" => "Street Politics",
-      category == "sport-kasi-action" => "Sport & Kasi Action",
-      category == "tech-gadgets" => "Tech & Gadgets",
-      category == "mzansi-stories" => "Mzansi Stories",
-      category == "world-news" => "World News"
-    ),
-    "value": category
-  },
-  image,
-  slug
-}`;
+    _id,
+    title,
+    description,
+    date,
+    "category": {
+      "title": select(
+        category == "breaking" => "Breaking News",
+        category == "world" => "World",
+        category == "sports" => "Sports",
+        category == "entertainment" => "Entertainment",
+        category == "technology" => "Technology",
+        category == "mzansi-trends" => "Mzansi Trends",
+        category == "gossip-celebs" => "Gossip & Celebs",
+        category == "eish-moments" => "Eish Moments",
+        category == "money-matters" => "Money Matters",
+        category == "lifestyle-vibes" => "Lifestyle & Vibes",
+        category == "community-news" => "Community News",
+        category == "street-politics" => "Street Politics",
+        category == "sport-kasi-action" => "Sport & Kasi Action",
+        category == "tech-gadgets" => "Tech & Gadgets",
+        category == "mzansi-stories" => "Mzansi Stories",
+        category == "world-news" => "World News"
+      ),
+      "value": category
+    },
+    image,
+    slug
+  }`;
 
-  // Fetch total count for pagination
+  // Total articles count (for pagination)
   const totalQuery = `count(*[_type == "news"])`;
   const totalCount = await sanityClient.fetch(totalQuery);
-
-  // Fetch paginated news articles
   const newsArticles = await sanityClient.fetch(query);
-
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
+
+  // For inserting an ad mid-way, split the articles into two batches.
+  // (Assuming a two‑column layout on large screens, two rows = 4 articles.)
+  const firstBatch = newsArticles.slice(0, 4);
+  const secondBatch = newsArticles.slice(4);
 
   return (
     <div style={{ minHeight: 'calc(100vh - 220px)' }}>
-      {/* Ad Setup Script */}
-      <Script id='gpt-news-setup' strategy='afterInteractive'>
+      {/* 1. Load the GPT Library */}
+      <Script
+        src='https://securepubads.g.doubleclick.net/tag/js/gpt.js'
+        strategy='afterInteractive'
+        async
+      />
+
+      {/* 2. GPT Setup Script – define size mappings and ad slots */}
+      <Script id='gpt-setup' strategy='afterInteractive'>
         {`
-          window.googletag = window.googletag || { cmd: [] };
-
-          window.googletag.cmd.push(function () {
-            const utmParams = ${JSON.stringify(getUtmParams())};
-            console.log("News Page UTM params =>", utmParams);
-
-            const mapping1 = googletag.sizeMapping()
-              .addSize([1400, 0], [[728, 90], 'fluid'])
-              .addSize([1200, 0], [[728, 90], 'fluid'])
-              .addSize([1000, 0], [[728, 90], 'fluid'])
-              .addSize([700, 0], [[468, 60], [320, 50], [300, 50], 'fluid', [300, 250], [320, 100], [300, 100]])
-              .addSize([600, 0], [[468, 60], [320, 50], [300, 50], 'fluid', [300, 100], [320, 100], [300, 250]])
-              .addSize([400, 0], [[320, 50], [300, 50], 'fluid', [320, 100], [300, 250], [300, 100]])
-              .addSize([300, 0], [[320, 50], [300, 250], [320, 100], [300, 50], [300, 100], 'fluid'])
+          window.googletag = window.googletag || {cmd: []};
+          googletag.cmd.push(function() {
+            var mapping1 = googletag.sizeMapping()
+              .addSize([0, 0], [[0, 0]])
+              .addSize([300, 0], [[300, 50], [300, 100], [320, 50], [320, 100], [300, 250], 'fluid', [300, 600]])
+              .addSize([400, 0], ['fluid', [300, 50], [300, 100], [320, 50], [320, 100], [300, 250], [336, 280], [300, 600]])
+              .addSize([600, 0], ['fluid', [300, 50], [300, 100], [320, 50], [320, 100], [300, 250], [336, 280], [468, 60], [300, 600]])
+              .addSize([700, 0], ['fluid', [300, 50], [300, 0], [320, 50], [320, 100], [300, 250], [336, 280], [468, 60], [300, 600]])
+              .addSize([1000, 0], ['fluid', [300, 50], [300, 100], [320, 50], [320, 100], [300, 250], [336, 280], [300, 600], [468, 60], [728, 90]])
+              .addSize([1200, 0], ['fluid', [300, 50], [300, 100], [320, 50], [320, 100], [300, 250], [300, 600], [336, 280], [468, 60], [728, 90]])
+              .addSize([1400, 0], ['fluid', [300, 50], [300, 100], [320, 50], [320, 100], [300, 250], [336, 280], [300, 600], [468, 60], [728, 90]])
+              .addSize([1600, 0], ['fluid', [300, 50], [300, 100], [320, 50], [320, 100], [300, 250], [300, 600], [336, 280], [468, 60], [728, 90]])
+              .addSize([2000, 0], ['fluid', [300, 50], [300, 250], [300, 600], [300, 100], [320, 50], [320, 100], [336, 280], [468, 60], [728, 90]])
               .build();
-
-            const mapping3 = googletag.sizeMapping()
-              .addSize([1400, 0], ['fluid', [728, 90], [300, 250], [300, 600], [468, 60]])
-              .addSize([1200, 0], ['fluid', [728, 90], [468, 60], [300, 250], [300, 600]])
-              .addSize([1000, 0], ['fluid', [728, 90], [468, 60], [300, 250], [300, 600]])
-              .addSize([700, 0], ['fluid', [468, 60], [320, 50], [300, 50], [320, 100], [300, 100], [300, 250], [300, 600]])
-              .addSize([600, 0], ['fluid', [468, 60], [320, 50], [300, 50], [320, 100], [300, 100], [300, 250], [300, 600]])
-              .addSize([400, 0], ['fluid', [320, 50], [300, 50], [320, 100], [300, 100], [300, 250], [300, 600]])
-              .addSize([300, 0], ['fluid', [320, 50], [300, 50], [320, 100], [300, 100], [300, 250], [300, 600]])
+              
+            var mapping3 = googletag.sizeMapping()
+              .addSize([0, 0], [[0, 0]])
+              .addSize([300, 0], ['fluid', [300, 50], [300, 100], [320, 50], [320, 100], [300, 250]])
+              .addSize([400, 0], ['fluid', [300, 50], [300, 100], [320, 50], [320, 100], [300, 250], [336, 280]])
+              .addSize([600, 0], ['fluid', [300, 50], [300, 100], [320, 50], [320, 100], [300, 250], [336, 280], [468, 60]])
+              .addSize([700, 0], ['fluid', [300, 50], [300, 100], [320, 50], [320, 100], [300, 250], [336, 280], [468, 60]])
+              .addSize([1000, 0], ['fluid', [300, 50], [300, 100], [320, 50], [320, 100], [300, 250], [336, 280], [468, 60], [728, 90]])
+              .addSize([1200, 0], ['fluid', [300, 250], [300, 50], [300, 100], [320, 50], [320, 100], [336, 280], [468, 60], [728, 90]])
+              .addSize([1400, 0], ['fluid', [300, 50], [300, 100], [320, 50], [320, 100], [300, 250], [336, 280], [468, 60], [728, 90]])
+              .addSize([1600, 0], ['fluid', [300, 50], [300, 100], [320, 50], [320, 100], [300, 250], [336, 280], [468, 60], [728, 90]])
+              .addSize([2000, 0], ['fluid', [300, 50], [300, 100], [320, 50], [320, 100], [300, 250], [336, 280], [468, 60], [728, 90]])
               .build();
-
-            googletag.defineSlot('/22047902240/wifinews/news_top_leaderboard', ['fluid', [320, 100], [320, 50], [300, 250], [468, 60], [728, 90]], 'div-gpt-ad-6641866-1')
+              
+            var utmParams = ${JSON.stringify(getUtmParams())};
+            var utm_medium = utmParams.medium || "";
+            
+            // Define the three ad slots:
+            // Slot for topics_middle300x250:
+            googletag.defineSlot('/22047902240/wifinews/topics_middle300x250', 
+              ['fluid',[300,50],[300,100],[320,50],[320,100],[300,250],[300,600],[336,280],[468,60],[728,90]],
+              'div-gpt-ad-2159374-3')
               .defineSizeMapping(mapping1)
               .addService(googletag.pubads());
-
-            googletag.defineSlot('/22047902240/wifinews/news_mpu_hpa', ['fluid', [300, 250], [300, 600], [320, 50], [320, 100], [468, 60], [728, 90]], 'div-gpt-ad-6641866-2')
+              
+            // Slot for topics_top300x250:
+            googletag.defineSlot('/22047902240/wifinews/topics_top300x250', 
+              ['fluid',[300,50],[300,100],[320,50],[320,100],[336,280],[468,60],[728,90],[300,250],[300,600]],
+              'div-gpt-ad-2159374-2')
+              .defineSizeMapping(mapping1)
+              .addService(googletag.pubads());
+              
+            // Slot for topics_top320x50:
+            googletag.defineSlot('/22047902240/wifinews/topics_top320x50', 
+              ['fluid',[300,50],[300,100],[320,50],[320,100],[300,250],[336,280],[468,60],[728,90]],
+              'div-gpt-ad-2159374-1')
               .defineSizeMapping(mapping3)
               .addService(googletag.pubads());
-
-            googletag.defineSlot('/22047902240/wifinews/news_bottom_1', ['fluid', [300, 250], [320, 100], [320, 50], [468, 60], [728, 90]], 'div-gpt-ad-6641866-3')
-              .defineSizeMapping(mapping1)
-              .addService(googletag.pubads());
-
-            googletag.defineSlot('/22047902240/wifinews/news_bottom_2', ['fluid', [300, 250], [320, 50], [320, 100], [468, 60], [728, 90]], 'div-gpt-ad-6641866-4')
-              .defineSizeMapping(mapping1)
-              .addService(googletag.pubads());
-
+              
             googletag.pubads().enableSingleRequest();
+            googletag.pubads().setTargeting('Medium', [utm_medium]);
             googletag.pubads().collapseEmptyDivs();
             googletag.pubads().setCentering(true);
             googletag.enableServices();
-
-            googletag.display('div-gpt-ad-6641866-1');
-            googletag.display('div-gpt-ad-6641866-2');
-            googletag.display('div-gpt-ad-6641866-3');
-            googletag.display('div-gpt-ad-6641866-4');
           });
         `}
       </Script>
 
-      <div className='mx-auto max-w-6xl px-4 py-8'>
-        {/* Top Ad */}
-        <div className='my-6 flex w-full items-center justify-center'>
-          <div id='div-gpt-ad-6641866-1'></div>
+      {/* --- Sticky Ad Slot 2 (for all screens lg and up) --- */}
+      <div className='fixed right-0 top-1/3 z-50 hidden lg:block'>
+        <div id='div-gpt-ad-2159374-2'>
+          <Script id='display-slot-2' strategy='afterInteractive'>
+            {`googletag.cmd.push(function() { googletag.display('div-gpt-ad-2159374-2'); });`}
+          </Script>
         </div>
+      </div>
 
-        {/* Latest News Section */}
+      {/* --- Top Ad Slot 1 --- */}
+      <div className='my-6 flex justify-center'>
+        <div id='div-gpt-ad-2159374-1'>
+          <Script id='display-slot-1-top' strategy='afterInteractive'>
+            {`googletag.cmd.push(function() { googletag.display('div-gpt-ad-2159374-1'); });`}
+          </Script>
+        </div>
+      </div>
+
+      <div className='mx-auto max-w-6xl px-4 py-8'>
+        {/* --- News Articles Section --- */}
         <section className='latest-posts'>
           <div className='container mx-auto max-w-4xl px-4'>
             <h2 className='mb-8 flex items-center text-3xl font-bold'>
@@ -166,24 +193,22 @@ export default async function NewsPage({
               <span className='mr-2 text-[#FB4543]'>Latest</span> News
             </h2>
             <div className='grid gap-8 sm:grid-cols-1 lg:grid-cols-2'>
-              {newsArticles.map((article: any) => (
-                <Link
+              {/* Render first batch of articles */}
+              {firstBatch.map((article: any) => (
+                <a
                   key={article._id}
                   href={`/news/${article?.slug?.current}`}
                   className='news-card group flex flex-col overflow-hidden rounded-lg border border-gray-200 shadow-sm transition-shadow hover:shadow-lg'
                 >
-                  {/* Image Section */}
                   <div className='relative h-48 w-full'>
                     <Image
                       src={urlFor(article.image).url()}
                       alt={article.title}
-                      fill={true}
+                      fill
                       style={{ objectFit: 'cover' }}
                       className='rounded-t-lg'
                     />
                   </div>
-
-                  {/* Content Section */}
                   <div className='flex flex-col justify-between p-4'>
                     <div>
                       <div className='mb-2 inline-block rounded bg-red-500 px-3 py-1 text-xs font-bold uppercase text-white'>
@@ -201,11 +226,56 @@ export default async function NewsPage({
                       {new Date(article.date).toLocaleDateString()}
                     </div>
                   </div>
-                </Link>
+                </a>
+              ))}
+
+              {/* --- Insert Mid-Page Ad Slot 3 (after the first two rows) --- */}
+              <div className='col-span-full flex justify-center'>
+                <div id='div-gpt-ad-2159374-3'>
+                  <Script id='display-slot-3' strategy='afterInteractive'>
+                    {`googletag.cmd.push(function() { googletag.display('div-gpt-ad-2159374-3'); });`}
+                  </Script>
+                </div>
+              </div>
+
+              {/* Render remaining articles */}
+              {secondBatch.map((article: any) => (
+                <a
+                  key={article._id}
+                  href={`/news/${article?.slug?.current}`}
+                  className='news-card group flex flex-col overflow-hidden rounded-lg border border-gray-200 shadow-sm transition-shadow hover:shadow-lg'
+                >
+                  <div className='relative h-48 w-full'>
+                    <Image
+                      src={urlFor(article.image).url()}
+                      alt={article.title}
+                      fill
+                      style={{ objectFit: 'cover' }}
+                      className='rounded-t-lg'
+                    />
+                  </div>
+                  <div className='flex flex-col justify-between p-4'>
+                    <div>
+                      <div className='mb-2 inline-block rounded bg-red-500 px-3 py-1 text-xs font-bold uppercase text-white'>
+                        {article.category.title}
+                      </div>
+                      <h3 className='mb-3 text-lg font-semibold text-gray-800 transition-colors group-hover:text-[#FB4543]'>
+                        {article.title}
+                      </h3>
+                      <p className='line-clamp-3 text-gray-700'>
+                        {article.description}
+                      </p>
+                    </div>
+                    <div className='mt-4 flex items-center text-sm text-gray-500'>
+                      <FaCalendarAlt className='mr-2' />
+                      {new Date(article.date).toLocaleDateString()}
+                    </div>
+                  </div>
+                </a>
               ))}
             </div>
 
-            {/* Pagination Controls */}
+            {/* --- Pagination Controls --- */}
             <div className='mt-16 flex justify-center space-x-4'>
               {currentPage > 1 && (
                 <Link href={`?page=${currentPage - 1}`}>
@@ -239,17 +309,13 @@ export default async function NewsPage({
         </section>
       </div>
 
-      {/* Bottom Ads */}
+      {/* --- Bottom Ad Slot 1 --- */}
       <div className='my-6 flex justify-center'>
-        <div id='div-gpt-ad-6641866-3'></div>
-      </div>
-      <div className='my-6 flex justify-center'>
-        <div id='div-gpt-ad-6641866-4'></div>
-      </div>
-
-      {/* Sticky Ad */}
-      <div className='fixed bottom-12 left-0 right-0 z-50 flex justify-center'>
-        <div id='div-gpt-ad-6641866-2' className='w-full max-w-lg'></div>
+        <div id='div-gpt-ad-2159374-1'>
+          <Script id='display-slot-1-bottom' strategy='afterInteractive'>
+            {`googletag.cmd.push(function() { googletag.display('div-gpt-ad-2159374-1'); });`}
+          </Script>
+        </div>
       </div>
     </div>
   );
