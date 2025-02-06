@@ -182,7 +182,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           </div>
         </div>
       </header>
-      <main className='container mx-auto max-w-4xl px-4 py-8'>
+      <main className='container mx-auto max-w-4xl px-4 pb-8 pt-2'>
         <div className='relative h-64 w-full md:h-96'>
           <Image
             src={urlFor(article.image).url()}

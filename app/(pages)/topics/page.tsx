@@ -185,7 +185,7 @@ const TopicsMainScreen = () => {
         </div>
       </div>
 
-      <div className='min-h-screen px-4 py-8'>
+      <div className='min-h-screen px-4 pb-8 pt-2'>
         <h1 className='mb-12 mt-2 text-center text-4xl font-bold text-gray-800'>
           Discussion Topics
         </h1>

@@ -187,7 +187,7 @@ export default async function NewsPage({
         </div>
       </div>
 
-      <div className='mx-auto max-w-6xl px-4 py-8'>
+      <div className='mx-auto max-w-6xl px-4 pb-8 pt-2'>
         {/* --- News Articles Section --- */}
         <section className='latest-posts'>
           <div className='container mx-auto max-w-4xl px-4'>
