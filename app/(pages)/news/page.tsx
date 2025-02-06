@@ -179,7 +179,7 @@ export default async function NewsPage({
       </div>
 
       {/* --- Top Ad Slot 1 --- */}
-      <div className='my-6 flex justify-center'>
+      <div className='my-2 flex justify-center'>
         <div id='div-gpt-ad-2159374-1'>
           <Script id='display-slot-1-top' strategy='afterInteractive'>
             {`googletag.cmd.push(function() { googletag.display('div-gpt-ad-2159374-1'); });`}
