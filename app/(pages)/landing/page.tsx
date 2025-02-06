@@ -208,7 +208,10 @@ const Landing: React.FC = () => {
         </div>
 
         {/* Ad slots */}
-        <div className='fixed bottom-12 left-0 right-0 z-[9999] flex justify-center'>
+        <div
+          className='fixed bottom-5 left-1/2 z-50 hidden -translate-x-1/2 transform lg:block'
+          style={{ marginBottom: '20px' }}
+        >
           <div id='div-gpt-ad-7092085-3' className='w-full max-w-[768px]'></div>
         </div>
 
