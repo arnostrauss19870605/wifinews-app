@@ -212,7 +212,7 @@ const Landing: React.FC = () => {
           className='fixed bottom-5 left-1/2 z-50 hidden -translate-x-1/2 transform lg:block'
           style={{ marginBottom: '20px' }}
         >
-          <div id='div-gpt-ad-7092085-3' className='w-full max-w-[768px]'></div>
+          <div id='div-gpt-ad-7092085-3' className='mx-auto'></div>
         </div>
 
         <div className='my-4 flex w-full items-center justify-center'>
