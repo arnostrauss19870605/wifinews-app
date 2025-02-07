@@ -46,6 +46,8 @@ const RewardedAds: React.FC<RewardedAdsProps> = ({ onPause, onPage }) => {
           if (trigger) {
             trigger.style.display = 'flex';
             document.body.style.overflow = 'hidden';
+            document.body.style.position = 'fixed';
+            document.body.style.width = '100%';
 
             const watchAdButton = document.getElementById('watchAdBtn');
             const noThanksButton = document.getElementById('noThanksBtn');
