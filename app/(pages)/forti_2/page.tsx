@@ -239,7 +239,7 @@ function Forti_2() {
         </div>
 
         <div
-          className='fixed bottom-5 left-1/2 z-50 -translate-x-1/2 transform'
+          className='fixed bottom-0 left-1/2 z-50 -translate-x-1/2 transform'
           style={{ marginBottom: '0px' }}
         >
           <div id='div-gpt-ad-7171086-3' className='mx-auto'></div>
