@@ -325,7 +325,7 @@ function Register() {
       {/* Sticky Ad */}
       <div
         className='fixed bottom-5 left-1/2 z-50 -translate-x-1/2 transform'
-        style={{ marginBottom: '20px' }}
+        style={{ marginBottom: '0px' }}
       >
         <div id='div-gpt-ad-6641866-6' className='mx-auto'></div>
       </div>
