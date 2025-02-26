@@ -67,7 +67,7 @@ function Login() {
         style={{ minHeight: 'calc(100vh - 190px)' }}
       >
         <div className='w-full max-w-md space-y-8'>
-          <h2 className='text-center text-2xl font-bold uppercase text-gray-900'>
+          <h2 className='pt-10 text-center text-2xl font-bold uppercase text-gray-900'>
             Login
           </h2>
 
