@@ -132,6 +132,16 @@ export default async function NewsPage({
               .addSize([2000, 0], ['fluid', [300, 50], [300, 100], [320, 50], [320, 100], [300, 250], [336, 280], [468, 60], [728, 90]])
               .build();
               
+            var mapping4 = googletag.sizeMapping()
+              .addSize([1400, 0], [[728, 90], 'fluid'])
+              .addSize([1200, 0], [[728, 90], 'fluid'])
+              .addSize([1000, 0], [[728, 90], 'fluid'])
+              .addSize([700, 0], ['fluid', [468, 60], [320, 50], [300, 50], [320, 100], [300, 100], [300, 250]])
+              .addSize([600, 0], ['fluid', [468, 60], [320, 50], [300, 50], [320, 100], [300, 100], [300, 250]])
+              .addSize([400, 0], ['fluid', [320, 50], [300, 50], [320, 100], [300, 100], [300, 250]])
+              .addSize([300, 0], ['fluid', [320, 50], [300, 50], [320, 100], [300, 100], [300, 250]])
+              .build();   
+              
             var utmParams = ${JSON.stringify(getUtmParams())};
             var utm_medium = utmParams.medium || "";
             
@@ -147,7 +157,7 @@ export default async function NewsPage({
             googletag.defineSlot('/22047902240/wifinews/topics_top300x250', 
               ['fluid', [320, 50], [320, 100], [300, 250], [468, 60], [728, 90]],
               'div-gpt-ad-2159374-2')
-              .defineSizeMapping(mapping1)
+              .defineSizeMapping(mapping4)
               .addService(googletag.pubads());
               
             // Slot for topics_top320x50:
