@@ -1,5 +1,6 @@
 'use client';
 import Image from 'next/image';
+import Link from 'next/link';
 import logo from '../../_assets/images/logo.png';
 import { usePathname } from 'next/navigation';
 
@@ -7,7 +8,6 @@ const Footer = () => {
   const pathname = usePathname();
 
   const hideFooter = pathname === '/landing' || pathname === '/interstitial';
-
   if (hideFooter) {
     return null;
   }
@@ -24,8 +24,11 @@ const Footer = () => {
           priority
         />
       </div>
-      <div className='text-center text-sm text-gray-400'>
-        © copyright. All rights are reserved
+      <div className='flex flex-col items-center space-y-2 text-center text-sm text-gray-400 md:flex-row md:space-x-4 md:space-y-0'>
+        <div>© Copyright. All rights reserved</div>
+        <Link href='/privacy-policy' className='hover:underline'>
+          Privacy Policy
+        </Link>
       </div>
     </footer>
   );
