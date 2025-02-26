@@ -152,7 +152,7 @@ const TopicsMainScreen = () => {
             // 2. Topics Top300x250 slot:
             googletag.defineSlot(
               '/22047902240/wifinews/topics_top300x250',
-              ['fluid',[300,50],[300,100],[320,50],[320,100],[336,280],[468,60],[728,90],[300,250],[300,600]],
+              ['fluid', [320, 50], [320, 100], [300, 250], [468, 60], [728, 90]],
               'div-gpt-ad-2159374-2'
             )
               .defineSizeMapping(mapping1)
