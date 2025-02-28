@@ -112,9 +112,6 @@ function Exit_1() {
           <NewsWidgetClient />
         </div>
         <div className='my-4 flex w-full items-center justify-center'>
-          <div id='div-gpt-ad-5795880-2'></div>
-        </div>
-        <div className='my-4 flex w-full items-center justify-center'>
           <div id='div-gpt-ad-5795880-5'></div>
         </div>
 
