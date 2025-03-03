@@ -38,6 +38,7 @@ function Navigation() {
     { name: 'Home', href: '/' },
     { name: 'News', href: '/news' },
     { name: 'Topics', href: '/topics' },
+    { name: 'About Us', href: '/about' },
   ];
 
   useEffect(() => {
