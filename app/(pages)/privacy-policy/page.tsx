@@ -153,7 +153,7 @@ export default function PrivacyPolicy() {
             <li>Data portability</li>
           </ul>
           <p className='mt-2'>
-            To exercise your rights, contact us at [Your Contact Email].
+            To exercise your rights, contact us at info@entelek.co.za.
           </p>
         </div>
         <div>
@@ -169,9 +169,7 @@ export default function PrivacyPolicy() {
             <li>Opt out of data sales (we do not sell personal data)</li>
             <li>Request deletion of data</li>
           </ul>
-          <p className='mt-2'>
-            To submit a request, email [Your Contact Email].
-          </p>
+          <p className='mt-2'>To submit a request, email info@entelek.co.za.</p>
         </div>
       </section>
 
