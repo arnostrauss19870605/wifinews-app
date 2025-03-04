@@ -9,7 +9,7 @@ function Main() {
   return (
     <div>
       {/* GPT Configuration and Ad Display */}
-      <Script id='gpt-home-setup' strategy='afterInteractive'>
+      <Script id='gpt-home-setup' strategy='lazyOnload'>
         {`
           window.googletag = window.googletag || { cmd: [] };
 
@@ -66,14 +66,6 @@ function Main() {
               .defineSizeMapping(mapping3)
               .addService(googletag.pubads());
 
-            googletag.defineSlot('/22047902240/wifinews/Homepage_bottom_1', ['fluid', [300, 250], [320, 100], [320, 50], [468, 60], [728, 90]], 'div-gpt-ad-6641866-4')
-              .defineSizeMapping(mapping1)
-              .addService(googletag.pubads());
-
-            googletag.defineSlot('/22047902240/wifinews/Homepage_bottom_2', ['fluid', [300, 250], [320, 50], [320, 100], [468, 60], [728, 90]], 'div-gpt-ad-6641866-5')
-              .defineSizeMapping(mapping1)
-              .addService(googletag.pubads());
-
             googletag.defineSlot('/22047902240/wifinews/homepage_sticky', ['fluid', [320, 50], [320, 100], [300, 250], [468, 60], [728, 90]], 'div-gpt-ad-6641866-6')
               .defineSizeMapping(mapping4)
               .addService(googletag.pubads());
@@ -108,12 +100,6 @@ function Main() {
       </div>
       <div className='my-10'>
         <NewsWidget />
-      </div>
-      <div className='my-2 flex w-full items-center justify-center'>
-        <div id='div-gpt-ad-6641866-4'></div>
-      </div>
-      <div className='my-2 flex w-full items-center justify-center'>
-        <div id='div-gpt-ad-6641866-5'></div>
       </div>
 
       {/* Sticky Ad */}
