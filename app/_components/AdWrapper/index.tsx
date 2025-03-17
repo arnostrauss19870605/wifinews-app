@@ -34,7 +34,10 @@ const AdWrapper: React.FC<AdWrapperProps> = ({ children }) => {
   }, []);
 
   return (
-    <div className='relative mt-1 inline-block border' ref={adContainerRef}>
+    <div
+      className='relative my-2 flex w-full items-center justify-center border pt-4'
+      ref={adContainerRef}
+    >
       {isAdLoaded && (
         <div className='absolute left-0 top-0 rounded-bl-[4px] bg-white/80 px-[6px] py-[2px] text-[12px] font-thin uppercase text-gray-800'>
           Advertisement

@@ -89,7 +89,7 @@ function Main() {
       </Script>
 
       <AdWrapper>
-        <div className='my-2 flex w-full items-center justify-center'>
+        <div className='flex w-full items-center justify-center'>
           <div id='div-gpt-ad-6641866-1'></div>
         </div>
       </AdWrapper>
