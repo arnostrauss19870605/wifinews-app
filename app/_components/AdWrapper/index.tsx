@@ -35,7 +35,7 @@ const AdWrapper: React.FC<AdWrapperProps> = ({ children }) => {
 
   return (
     <div
-      className='relative my-2 flex w-full items-center justify-center border pt-4'
+      className='pt-7] relative my-2 flex w-full items-center justify-center'
       ref={adContainerRef}
     >
       {isAdLoaded && (
