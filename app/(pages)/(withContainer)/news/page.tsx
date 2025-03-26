@@ -14,40 +14,17 @@ function getPaginationItems(
   currentPage: number,
   totalPages: number
 ): (number | string)[] {
-  if (totalPages <= 3) {
+  if (totalPages <= 4) {
     return Array.from({ length: totalPages }, (_, i) => i + 1);
   }
 
-  let startPage = Math.max(currentPage - 1, 1);
-  let endPage = Math.min(currentPage + 1, totalPages);
-
-  if (currentPage === 1) {
-    endPage = 3;
-  } else if (currentPage === totalPages) {
-    startPage = totalPages - 2;
+  if (currentPage <= 2) {
+    return [1, 2, '...', totalPages];
+  } else if (currentPage >= totalPages - 1) {
+    return [1, '...', totalPages - 1, totalPages];
+  } else {
+    return [1, currentPage, '...', totalPages];
   }
-
-  const pages: (number | string)[] = [];
-
-  if (startPage > 1) {
-    pages.push(1);
-    if (startPage > 2) {
-      pages.push('...');
-    }
-  }
-
-  for (let i = startPage; i <= endPage; i++) {
-    pages.push(i);
-  }
-
-  if (endPage < totalPages) {
-    if (endPage < totalPages - 1) {
-      pages.push('...');
-    }
-    pages.push(totalPages);
-  }
-
-  return pages;
 }
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -131,7 +108,7 @@ export default async function NewsPage({
   const firstBatch = newsArticles.slice(0, 4);
   const secondBatch = newsArticles.slice(4);
 
-  // Calculate pagination items using the updated helper
+  // Calculate pagination items using the updated helper (max 4 items)
   const paginationItems = getPaginationItems(currentPage, totalPages);
 
   return (
