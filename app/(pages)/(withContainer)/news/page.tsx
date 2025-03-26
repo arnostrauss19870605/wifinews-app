@@ -10,12 +10,10 @@ import { Metadata } from 'next';
 
 const ITEMS_PER_PAGE = 6;
 
-// Updated pagination helper function
 function getPaginationItems(
   currentPage: number,
   totalPages: number
 ): (number | string)[] {
-  // If there are 3 or fewer pages, return them all.
   if (totalPages <= 3) {
     return Array.from({ length: totalPages }, (_, i) => i + 1);
   }
@@ -23,7 +21,6 @@ function getPaginationItems(
   let startPage = Math.max(currentPage - 1, 1);
   let endPage = Math.min(currentPage + 1, totalPages);
 
-  // Adjust if current page is at the boundaries.
   if (currentPage === 1) {
     endPage = 3;
   } else if (currentPage === totalPages) {
@@ -32,7 +29,6 @@ function getPaginationItems(
 
   const pages: (number | string)[] = [];
 
-  // Always include the first page if not in the middle block.
   if (startPage > 1) {
     pages.push(1);
     if (startPage > 2) {
@@ -40,12 +36,10 @@ function getPaginationItems(
     }
   }
 
-  // Add middle pages (at most 3 pages)
   for (let i = startPage; i <= endPage; i++) {
     pages.push(i);
   }
 
-  // Always include the last page if not in the middle block.
   if (endPage < totalPages) {
     if (endPage < totalPages - 1) {
       pages.push('...');
