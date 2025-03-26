@@ -10,34 +10,50 @@ import { Metadata } from 'next';
 
 const ITEMS_PER_PAGE = 6;
 
-function getPaginationItems(currentPage: any, totalPages: any) {
-  const delta = 2;
-  const range = [];
-  const rangeWithDots = [];
-  let l;
+// Updated pagination helper function
+function getPaginationItems(
+  currentPage: number,
+  totalPages: number
+): (number | string)[] {
+  // If there are 3 or fewer pages, return them all.
+  if (totalPages <= 3) {
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
+  }
 
-  for (let i = 1; i <= totalPages; i++) {
-    if (
-      i === 1 ||
-      i === totalPages ||
-      (i >= currentPage - delta && i <= currentPage + delta)
-    ) {
-      range.push(i);
+  let startPage = Math.max(currentPage - 1, 1);
+  let endPage = Math.min(currentPage + 1, totalPages);
+
+  // Adjust if current page is at the boundaries.
+  if (currentPage === 1) {
+    endPage = 3;
+  } else if (currentPage === totalPages) {
+    startPage = totalPages - 2;
+  }
+
+  const pages: (number | string)[] = [];
+
+  // Always include the first page if not in the middle block.
+  if (startPage > 1) {
+    pages.push(1);
+    if (startPage > 2) {
+      pages.push('...');
     }
   }
 
-  for (let i of range) {
-    if (l) {
-      if (i - l === 2) {
-        rangeWithDots.push(l + 1);
-      } else if (i - l > 2) {
-        rangeWithDots.push('...');
-      }
-    }
-    rangeWithDots.push(i);
-    l = i;
+  // Add middle pages (at most 3 pages)
+  for (let i = startPage; i <= endPage; i++) {
+    pages.push(i);
   }
-  return rangeWithDots;
+
+  // Always include the last page if not in the middle block.
+  if (endPage < totalPages) {
+    if (endPage < totalPages - 1) {
+      pages.push('...');
+    }
+    pages.push(totalPages);
+  }
+
+  return pages;
 }
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -121,19 +137,19 @@ export default async function NewsPage({
   const firstBatch = newsArticles.slice(0, 4);
   const secondBatch = newsArticles.slice(4);
 
-  // Calculate pagination items
+  // Calculate pagination items using the updated helper
   const paginationItems = getPaginationItems(currentPage, totalPages);
 
   return (
     <div style={{ minHeight: 'calc(100vh - 220px)' }}>
-      {/* 1. Load the GPT Library */}
+      {/* Load the GPT Library */}
       <Script
         src='https://securepubads.g.doubleclick.net/tag/js/gpt.js'
         strategy='afterInteractive'
         async
       />
 
-      {/* 2. GPT Setup Script – define size mappings and ad slots */}
+      {/* GPT Setup Script – define size mappings and ad slots */}
       <Script id='gpt-setup' strategy='afterInteractive'>
         {`
           window.googletag = window.googletag || {cmd: []};
@@ -205,7 +221,7 @@ export default async function NewsPage({
         `}
       </Script>
 
-      {/* --- Sticky Ad Slot 2 (for all screens lg and up) --- */}
+      {/* --- Sticky Ad Slot 2 (for larger screens) --- */}
       <div
         className='fixed bottom-0 left-1/2 z-50 -translate-x-1/2 transform'
         style={{ marginBottom: '0px' }}
@@ -318,7 +334,7 @@ export default async function NewsPage({
             </div>
 
             {/* --- Pagination Controls --- */}
-            <div className='mt-16 flex justify-center space-x-4'>
+            <div className='mt-16 flex flex-wrap justify-center gap-2'>
               {currentPage > 1 && (
                 <Link href={`?page=${currentPage - 1}`}>
                   <button className='rounded bg-gray-200 px-4 py-2 hover:bg-gray-300'>
