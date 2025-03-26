@@ -10,21 +10,20 @@ import { Metadata } from 'next';
 
 const ITEMS_PER_PAGE = 6;
 
-function getPaginationItems(
+function getSimplePaginationItems(
   currentPage: number,
   totalPages: number
-): (number | string)[] {
-  if (totalPages <= 4) {
+): number[] {
+  if (totalPages <= 3) {
     return Array.from({ length: totalPages }, (_, i) => i + 1);
   }
-
-  if (currentPage <= 2) {
-    return [1, 2, '...', totalPages];
-  } else if (currentPage >= totalPages - 1) {
-    return [1, '...', totalPages - 1, totalPages];
-  } else {
-    return [1, currentPage, '...', totalPages];
+  if (currentPage === 1) {
+    return [1, 2, 3];
   }
+  if (currentPage === totalPages) {
+    return [totalPages - 2, totalPages - 1, totalPages];
+  }
+  return [currentPage - 1, currentPage, currentPage + 1];
 }
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -99,7 +98,7 @@ export default async function NewsPage({
   }`;
 
   // Total articles count (for pagination)
-  const totalQuery = `count(*[_type == "news"])`;
+  const totalQuery = 'count(*[_type == "news"])';
   const totalCount = await sanityClient.fetch(totalQuery);
   const newsArticles = await sanityClient.fetch(query);
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
@@ -108,8 +107,11 @@ export default async function NewsPage({
   const firstBatch = newsArticles.slice(0, 4);
   const secondBatch = newsArticles.slice(4);
 
-  // Calculate pagination items using the updated helper (max 4 items)
-  const paginationItems = getPaginationItems(currentPage, totalPages);
+  // Calculate simplified pagination items (up to three page numbers)
+  const simplePaginationItems = getSimplePaginationItems(
+    currentPage,
+    totalPages
+  );
 
   return (
     <div style={{ minHeight: 'calc(100vh - 220px)' }}>
@@ -314,31 +316,19 @@ export default async function NewsPage({
                 </Link>
               )}
 
-              {paginationItems.map((item, index) => {
-                if (item === '...') {
-                  return (
-                    <span
-                      key={index}
-                      className='rounded px-4 py-2 text-gray-500'
-                    >
-                      ...
-                    </span>
-                  );
-                }
-                return (
-                  <Link key={item} href={`?page=${item}`}>
-                    <button
-                      className={`rounded px-4 py-2 ${
-                        currentPage === item
-                          ? 'bg-black text-white'
-                          : 'bg-gray-200 hover:bg-gray-300'
-                      }`}
-                    >
-                      {item}
-                    </button>
-                  </Link>
-                );
-              })}
+              {simplePaginationItems.map((item) => (
+                <Link key={item} href={`?page=${item}`}>
+                  <button
+                    className={`rounded px-4 py-2 ${
+                      currentPage === item
+                        ? 'bg-black text-white'
+                        : 'bg-gray-200 hover:bg-gray-300'
+                    }`}
+                  >
+                    {item}
+                  </button>
+                </Link>
+              ))}
 
               {currentPage < totalPages && (
                 <Link href={`?page=${currentPage + 1}`}>
