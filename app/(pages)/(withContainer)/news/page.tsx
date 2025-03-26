@@ -10,6 +10,36 @@ import { Metadata } from 'next';
 
 const ITEMS_PER_PAGE = 6;
 
+function getPaginationItems(currentPage: any, totalPages: any) {
+  const delta = 2;
+  const range = [];
+  const rangeWithDots = [];
+  let l;
+
+  for (let i = 1; i <= totalPages; i++) {
+    if (
+      i === 1 ||
+      i === totalPages ||
+      (i >= currentPage - delta && i <= currentPage + delta)
+    ) {
+      range.push(i);
+    }
+  }
+
+  for (let i of range) {
+    if (l) {
+      if (i - l === 2) {
+        rangeWithDots.push(l + 1);
+      } else if (i - l > 2) {
+        rangeWithDots.push('...');
+      }
+    }
+    rangeWithDots.push(i);
+    l = i;
+  }
+  return rangeWithDots;
+}
+
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: 'Latest News | Wifi News',
@@ -87,10 +117,12 @@ export default async function NewsPage({
   const newsArticles = await sanityClient.fetch(query);
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
 
-  // For inserting an ad mid-way, split the articles into two batches.
-  // (Assuming a two‑column layout on large screens, two rows = 4 articles.)
+  // For inserting an ad mid‐way, split the articles into two batches.
   const firstBatch = newsArticles.slice(0, 4);
   const secondBatch = newsArticles.slice(4);
+
+  // Calculate pagination items
+  const paginationItems = getPaginationItems(currentPage, totalPages);
 
   return (
     <div style={{ minHeight: 'calc(100vh - 220px)' }}>
@@ -112,9 +144,9 @@ export default async function NewsPage({
               .addSize([400, 0], ['fluid', [300, 50], [300, 100], [320, 50], [320, 100], [300, 250], [336, 280], [300, 600]])
               .addSize([600, 0], ['fluid', [300, 50], [300, 100], [320, 50], [320, 100], [300, 250], [336, 280], [468, 60], [300, 600]])
               .addSize([700, 0], ['fluid', [300, 50], [300, 0], [320, 50], [320, 100], [300, 250], [336, 280], [468, 60], [300, 600]])
-              .addSize([1000, 0], ['fluid', [300, 50], [300, 100], [320, 50], [320, 100], [300, 250], [336, 280], [300, 600], [468, 60], [728, 90]])
+              .addSize([1000, 0], ['fluid', [300, 50], [300, 100], [320, 50], [320, 100], [300, 250], [336, 280], [468, 60], [728, 90]])
               .addSize([1200, 0], ['fluid', [300, 50], [300, 100], [320, 50], [320, 100], [300, 250], [300, 600], [336, 280], [468, 60], [728, 90]])
-              .addSize([1400, 0], ['fluid', [300, 50], [300, 100], [320, 50], [320, 100], [300, 250], [336, 280], [300, 600], [468, 60], [728, 90]])
+              .addSize([1400, 0], ['fluid', [300, 50], [300, 100], [320, 50], [320, 100], [300, 250], [336, 280], [468, 60], [728, 90]])
               .addSize([1600, 0], ['fluid', [300, 50], [300, 100], [320, 50], [320, 100], [300, 250], [300, 600], [336, 280], [468, 60], [728, 90]])
               .addSize([2000, 0], ['fluid', [300, 50], [300, 250], [300, 600], [300, 100], [320, 50], [320, 100], [336, 280], [468, 60], [728, 90]])
               .build();
@@ -146,21 +178,18 @@ export default async function NewsPage({
             var utm_medium = utmParams.medium || "";
             
             // Define the three ad slots:
-            // Slot for topics_middle300x250:
             googletag.defineSlot('/22047902240/wifinews/topics_middle300x250', 
               ['fluid',[300,50],[300,100],[320,50],[320,100],[300,250],[300,600],[336,280],[468,60],[728,90]],
               'div-gpt-ad-2159374-3')
               .defineSizeMapping(mapping1)
               .addService(googletag.pubads());
               
-            // Slot for topics_top300x250:
             googletag.defineSlot('/22047902240/wifinews/topics_top300x250', 
               ['fluid', [320, 50], [320, 100], [300, 250], [468, 60], [728, 90]],
               'div-gpt-ad-2159374-2')
               .defineSizeMapping(mapping4)
               .addService(googletag.pubads());
               
-            // Slot for topics_top320x50:
             googletag.defineSlot('/22047902240/wifinews/topics_top320x50', 
               ['fluid',[300,50],[300,100],[320,50],[320,100],[300,250],[336,280],[468,60],[728,90]],
               'div-gpt-ad-2159374-1')
@@ -297,19 +326,33 @@ export default async function NewsPage({
                   </button>
                 </Link>
               )}
-              {Array.from({ length: totalPages }, (_, i) => (
-                <Link key={i} href={`?page=${i + 1}`}>
-                  <button
-                    className={`rounded px-4 py-2 ${
-                      currentPage === i + 1
-                        ? 'bg-black text-white'
-                        : 'bg-gray-200 hover:bg-gray-300'
-                    }`}
-                  >
-                    {i + 1}
-                  </button>
-                </Link>
-              ))}
+
+              {paginationItems.map((item, index) => {
+                if (item === '...') {
+                  return (
+                    <span
+                      key={index}
+                      className='rounded px-4 py-2 text-gray-500'
+                    >
+                      ...
+                    </span>
+                  );
+                }
+                return (
+                  <Link key={item} href={`?page=${item}`}>
+                    <button
+                      className={`rounded px-4 py-2 ${
+                        currentPage === item
+                          ? 'bg-black text-white'
+                          : 'bg-gray-200 hover:bg-gray-300'
+                      }`}
+                    >
+                      {item}
+                    </button>
+                  </Link>
+                );
+              })}
+
               {currentPage < totalPages && (
                 <Link href={`?page=${currentPage + 1}`}>
                   <button className='rounded bg-gray-200 px-4 py-2 hover:bg-gray-300'>
