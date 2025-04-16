@@ -94,9 +94,26 @@ function Main() {
         </div>
       </AdWrapper>
       <DiscussionForum />
+      <AdWrapper>
+        <div className='my-2 flex w-full items-center justify-center'>
+          <div id='div-gpt-ad-6641866-2'></div>
+        </div>
+      </AdWrapper>
       <RecentTopicsWidget />
+      <AdWrapper>
+        <div className='my-2 flex w-full items-center justify-center'>
+          <div id='div-gpt-ad-6641866-3'></div>
+        </div>
+      </AdWrapper>
       <div className='my-10'>
         <NewsWidget />
+      </div>
+      {/* Sticky Ad */}
+      <div
+        className='fixed bottom-0 left-1/2 z-50 -translate-x-1/2 transform'
+        style={{ marginBottom: '0px' }}
+      >
+        <div id='div-gpt-ad-6641866-6' className='mx-auto'></div>
       </div>
     </div>
   );
