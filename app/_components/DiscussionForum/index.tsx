@@ -4,7 +4,9 @@ import Link from 'next/link';
 function DiscussionForum() {
   return (
     <div className='container my-4 rounded-md bg-white shadow-md'>
-      <h2 className='mb-2 text-center text-xl font-semibold'>Have Your Say!</h2>
+      <h2 className='mb-2 text-center text-xl font-semibold'>
+        Have Your Say!!
+      </h2>
       <p className='my-2 px-2 text-center text-sm'>
         With all the happenings in our country, good and bad, we have created a
         forum where you can discuss these matters with others in your community.
